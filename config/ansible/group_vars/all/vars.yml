@@ -1,0 +1,21 @@
+---
+
+project_name:               'sea-games'
+
+git_repos:                  'git@git.web-essentials.asia:SEA-GAMES-23/sea-games-helper-app.git'
+
+major_release_version:      '1'
+minor_release_version:      '12'
+
+android_build_path:         'android'
+android_apk_file:           '{{ android_build_path }}/app/build/outputs/apk/release/app-release.apk'
+android_aab_file:           '{{ android_build_path }}/app/build/outputs/bundle/release/app-release.aab'
+andriod_sdk_path:           '{{ jenkin_home }}/Android/Sdk'
+
+android_release_key_src:    '/opt/Android/{{ project_name }}/release-key.keystore'
+android_release_path:       '/storage/satis/web/apk/{{ project_name }}'
+android_apk_release_file:   '{{ stage }}-{{ build_id }}-{{ ansible_date_time.date }}-app-release.apk'
+android_aab_release_file:   '{{ stage }}-{{ build_id }}-{{ ansible_date_time.date }}-app-release.aab'
+
+store_pass:                 '{{ store_pass_vault }}'
+key_pass:                   '{{ key_pass_vault }}'
