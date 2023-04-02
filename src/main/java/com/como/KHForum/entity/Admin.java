@@ -2,6 +2,7 @@ package com.como.KHForum.entity;
 
 import java.time.LocalDate;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,36 +10,37 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "orators")
+@Table(name = "admin")
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class Orator {
+@Setter
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstname;
     private String lastname;
-    private String gender;
+    @Email
+    private String email;
     private LocalDate dob;
-    private String number;
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private User accountId;
+    private User account_id;
 
-    public Orator(String firstname, String lastname, String gender, LocalDate dob, String number) {
+    public Admin(String firstname, String lastname, String email, LocalDate dob) {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.gender = gender;
+        this.email = email;
         this.dob = dob;
-        this.number = number;
-    }    
+    }
+    
 }

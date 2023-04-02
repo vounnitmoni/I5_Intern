@@ -1,4 +1,4 @@
-package com.como.KHForum.entity;
+package com.como.KHForum.entity.enums;
 
 public enum ERole {
     ROLE_USER,

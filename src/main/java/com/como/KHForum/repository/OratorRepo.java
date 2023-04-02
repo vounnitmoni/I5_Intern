@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.como.KHForum.entity.Orator;
 
 @Repository
-public interface OratorRepo extends JpaRepository<Long, Orator>{
-    
+public interface OratorRepo extends JpaRepository<Orator, Long>{
+    Orator findByAccountId(Long account_id);
 }

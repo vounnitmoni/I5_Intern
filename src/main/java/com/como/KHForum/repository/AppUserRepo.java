@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.como.KHForum.entity.AppUser;
 
 @Repository
-public interface AppUserRepo extends JpaRepository<Long, AppUser>{
-    
+public interface AppUserRepo extends JpaRepository<AppUser, Long>{
+    AppUser findByAccountId(Long account_id);
 }
