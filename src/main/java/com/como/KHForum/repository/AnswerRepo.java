@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.como.KHForum.entity.Answer;
 
 @Repository
-public interface AnswerRepo extends JpaRepository<Answer, Long>{
+public interface AnswerRepo extends JpaRepository<Answer, Long> {
     
 }

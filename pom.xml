@@ -16,8 +16,6 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	 <pre> <security:intercept-url pattern="/api/**" filters="none" /> </pre>
-	
 	
 	<dependencies>
 		<dependency>

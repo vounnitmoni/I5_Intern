@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,61 +16,57 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "app_users")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+@Table(name = "app_user")
 @Getter
+@Setter
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstname;
     private String lastname;
-    private String gender;
-    @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate dob; 
-    private String number;
+    private Integer gender;
+    @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate dob;
+    private String country_code;
+    private String area_number;
 
-    @OneToMany(mappedBy = "author_id")
-    @JsonManagedReference
-    private Set<Answer> author_answers = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_commnunity",
+    @ManyToMany
+    @JoinTable(name = "user_community",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "community_id")
     )
-    private Set<Community> user_communities = new HashSet<>();
+    private Set<Community> user_community = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "user_category",
         joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> user_Categories = new HashSet<>();
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> user_category = new HashSet<>(); 
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id", referencedColumnName = "id", insertable = false, updatable =  false)
+    @JoinColumn(name = "account_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User accountId;
-    @Column(name = "account_id")
-    private Long account_id;
-    public AppUser(Long id, String firstname, String lastname, String gender, LocalDate dob, String number,
-            Long account_id) {
-        this.id = id;
+    @Column(name = "account_id") private Long account_id;
+
+    @Override
+    public String toString(){
+        return country_code + " " + area_number;
+    }
+
+    public AppUser(String firstname, String lastname, Integer gender, LocalDate dob, String country_code,
+            String area_number, Long account_id) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.gender = gender;
         this.dob = dob;
-        this.number = number;
+        this.country_code = country_code;
+        this.area_number = area_number;
         this.account_id = account_id;
     }
-    
-    
 }
