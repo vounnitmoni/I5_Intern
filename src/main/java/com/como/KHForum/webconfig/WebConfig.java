@@ -67,6 +67,7 @@ public class WebConfig {
             .requestMatchers("/error").permitAll()
             .requestMatchers("/error/**").permitAll()
             .requestMatchers("/api/user/**").hasRole("USER")
+            .requestMatchers("/api/all/**").hasAnyRole("USER","ORATOR")
             .requestMatchers("/api/orator/**").hasRole("ORATOR").anyRequest().authenticated());
             
         

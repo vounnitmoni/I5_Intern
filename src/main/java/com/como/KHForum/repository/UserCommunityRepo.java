@@ -1,12 +1,11 @@
 package com.como.KHForum.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.como.KHForum.entity.Community;
+import com.como.KHForum.entity.UserCommunity;
 
 @Repository
-public interface CommunityRepo extends JpaRepository<Community, Long> {
+public interface UserCommunityRepo extends JpaRepository<UserCommunity, Long> {
     
 }

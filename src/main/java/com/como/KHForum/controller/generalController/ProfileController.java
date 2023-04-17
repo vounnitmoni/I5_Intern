@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.payload.request.generalRequest.EditProfileRequest;
+import com.como.KHForum.payload.request.generalRequest.UpdateProfileRequest;
 import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.UserRepo;
@@ -22,7 +24,7 @@ import com.como.KHForum.webconfig.session.UserSessions;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("api/all/profile")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasRole('ORATOR') or hasRole('USER')")
 public class ProfileController {
@@ -33,15 +35,13 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<?> profile(){
-        final Long id = userSessions.getUserId();
-        Optional<AppUser> appUserInfo = appUserRepo.findAppUserByAuthId(id);
+        Optional<AppUser> appUserInfo = appUserRepo.findAppUserByAuthId(userSessions.getUserId());
         return ResponseEntity.ok(appUserInfo);
     }
 
     @PutMapping("/edit")
     public ResponseEntity<?> editProfile(@Valid @RequestBody EditProfileRequest request){
-        final Long id = userSessions.getUserId();
-        Optional<AppUser> appUserInfo = appUserRepo.findAppUserByAuthId(id);
+        Optional<AppUser> appUserInfo = appUserRepo.findAppUserByAuthId(userSessions.getUserId());
         appUserInfo.map((user)->{
             try {
                 if(request.getFirstname() == user.getFirstname() || request.getFirstname() == "" || request.getFirstname() == null){}else{user.setFirstname(request.getFirstname());}
@@ -52,5 +52,18 @@ public class ProfileController {
             return appUserRepo.save(user);
         });
         return ResponseEntity.ok(new SuccessMessageResponse("Your information was successfully updated!", true));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileRequest request){
+        AppUser user = new AppUser(request.getFirstname(), 
+                                   request.getLastname(), 
+                                   request.getGender(), 
+                                   request.getDob(), 
+                                   request.getCountry_code(), 
+                                   request.getArea_number(), 
+                                   userSessions.getUserId());
+        appUserRepo.save(user);
+        return ResponseEntity.ok().body(new SuccessMessageResponse("Your informations is updated!", true));
     }
 }

@@ -1,7 +1,8 @@
 package com.como.KHForum.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,9 +32,12 @@ public class Community {
     private LocalDateTime create_stamp;
     private Integer report;
     private Boolean pending;
+
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private User creatorId;
+    
     @Column(name = "creator_id")
     private Long creator_id;
 
@@ -43,8 +47,5 @@ public class Community {
         this.report = report;
         this.creator_id = creator_id;
         this.pending = pending;
-    }
-
-    
-    
+    }    
 }
