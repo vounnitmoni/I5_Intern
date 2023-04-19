@@ -3,10 +3,13 @@ package com.como.KHForum.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.como.KHForum.entity.enums.EIsa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,10 +33,10 @@ public class UserCommunity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private AppUser user_id;
+    private User user_id;
 
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "community_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -46,14 +49,16 @@ public class UserCommunity {
     private LocalTime join_time;
     private LocalDate join_date;
     private Boolean isAllowed;
-    private Boolean isAdmin;
+    @Column(columnDefinition = "ENUM('ISA_ADMIN', 'ISA_REVIEVER', 'ISA_MEMBER')")
+    @Enumerated(EnumType.STRING)
+    private EIsa isA;
 
-    public UserCommunity(Long userId, Long communityId, LocalTime join_time, LocalDate join_date, Boolean isAllowed, Boolean isAdmin) {
+    public UserCommunity(Long userId, Long communityId, LocalTime join_time, LocalDate join_date, Boolean isAllowed, EIsa isA) {
         this.userId = userId;
         this.communityId = communityId;
         this.join_time = join_time;
         this.join_date = join_date;
         this.isAllowed = isAllowed;
-        this.isAdmin = isAdmin;
+        this.isA = isA;
     }  
 }

@@ -1,12 +1,9 @@
 package com.como.KHForum.entity;
 
-import org.springframework.data.relational.core.sql.FalseCondition;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,30 +16,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_categories")
+@Table(name = "community_category")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserCategory {
+public class CommunityCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(targetEntity = Community.class)
+    @JoinColumn(name = "community_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private User user_id;
-    @Column(name = "user_id") private Long userId;
-
-    @ManyToOne(targetEntity = Category.class, fetch = FetchType.EAGER)
+    private Community communityId;
+    @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name = "category_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private Category category_id;
-    @Column(name = "category_id") private Long categoryId;
+    private Category categoryId;
 
-    public UserCategory(Long userId, Long categoryId) {
-        this.userId = userId;
-        this.categoryId = categoryId;
-    }    
+    @Column(name = "community_id") private Long community_id;
+    @Column(name = "category_id") private Long category_id;
+
+    public CommunityCategory(Long community_id, Long category_id) {
+        this.community_id = community_id;
+        this.category_id = category_id;
+    }   
 }

@@ -7,12 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.webconfig.service.UserDetailsImpl;
 
 @Component
-@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(scopeName = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserSessions {
     
     @Autowired AppUserRepo appUserRepo;

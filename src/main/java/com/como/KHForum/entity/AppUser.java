@@ -40,21 +40,21 @@ public class AppUser {
     private String country_code;
     private String area_number;
 
-    @ManyToMany
-    @JoinTable(name = "user_community",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "community_id")
-    )
-    @JsonIgnore
-    private Set<Community> user_community = new HashSet<>();
+    // @ManyToMany
+    // @JoinTable(name = "user_community",
+    //     joinColumns = @JoinColumn(name = "user_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "community_id")
+    // )
+    // @JsonIgnore
+    // private Set<Community> user_community = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_category",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
-    )
-    @JsonIgnore
-    private Set<Category> user_category = new HashSet<>(); 
+    // @ManyToMany(fetch = FetchType.LAZY)
+    // @JoinTable(name = "user_category",
+    //     joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+    //     inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    // )
+    // @JsonIgnore
+    // private Set<Category> user_category = new HashSet<>(); 
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id", insertable = false, updatable = false)
