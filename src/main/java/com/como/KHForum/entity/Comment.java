@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,19 +39,27 @@ public class Comment {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime create_stamp;
     
+    @Nullable
     private Long parent_id;
+
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    private User userId;
+    @Column(name = "user_id") private Long user_id;
     
     @ManyToOne(targetEntity = Answer.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "answer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Answer answerId;
     @Column(name = "answer_id") private Long answer_id;
 
-    public Comment(String comment, LocalDateTime create_stamp, Long parent_id, Answer answerId, Long answer_id) {
+    public Comment(String comment, LocalDateTime create_stamp, Long parent_id, Long answer_id, Long user_id) {
         this.comment = comment;
         this.create_stamp = create_stamp;
         this.parent_id = parent_id;
-        this.answerId = answerId;
         this.answer_id = answer_id;
+        this.user_id = user_id;
     }
     
     

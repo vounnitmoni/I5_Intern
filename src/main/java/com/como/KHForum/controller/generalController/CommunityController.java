@@ -108,7 +108,7 @@ public class CommunityController {
         return ResponseEntity.ok(new CommunityData(null, null));
     }
 
-    @PostMapping("{id}/join")
+    @PostMapping("/{id}/join")
     public ResponseEntity<?> joinCommunity(@PathVariable Long id){
         //need a boolean isJoined!
         UserCommunity userCommunity = new UserCommunity(userSessions.getUserId(), 

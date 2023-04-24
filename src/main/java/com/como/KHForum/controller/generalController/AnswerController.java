@@ -21,6 +21,7 @@ import com.como.KHForum.repository.AnswerCollectionInfoRepo;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
 
+
 @RestController
 @RequestMapping("api/all/answer")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -50,11 +51,21 @@ public class AnswerController {
 
     //     }
     // }
+    // protected Boolean isDoubleVote(){
+    //     if()
+    // }
 
     @PostMapping("{answer_id}/vote")
     public ResponseEntity<?> voteAnswer(@RequestBody VoteRequest request, @PathVariable Long answer_id){
         AnswerCollectionInfo answerCollectionInfo = new AnswerCollectionInfo(userSessions.getUserId(), answer_id, request.getVoted(), request.getReported());
-        answerCollectionInfoRepo.saveAndFlush(answerCollectionInfo);
+        // switch(answerRepo.findAllById(answer_id).getVote()){
+        //     case "true":
+        //         if(request.getVoted() == true){return ResponseEntity.badRequest().body(new IllegalArgumentException());}
+        //         else{answerCollectionInfoRepo.saveAndFlush(answerCollectionInfo);}
+        //     case "false":
+        //         if(request.getVoted() == false){return ResponseEntity.badRequest().body(new IllegalArgumentException());}
+        //         else{answerCollectionInfoRepo.saveAndFlush(answerCollectionInfo);}
+        // }
 
         Thread asyncOpt = new Thread(()->{
            try {
