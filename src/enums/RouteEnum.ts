@@ -3,4 +3,6 @@ export enum ROUTES {
   SCHEDULE = 'ScheduleScreen',
   NOTIFICATION = 'NotificationScreen',
   SUPPORT = 'SupportScreen',
+  LOGIN = 'LoginScreen',
+  REGISTER = 'RegisterScreen',
 }

@@ -3,6 +3,7 @@ enum FontWeight {
   fontWeightRegular = '400',
   fontWeightSemiBold = '700',
   fontWeightBold = '900',
+
 }
 
 export default {

@@ -8,11 +8,39 @@
  * @format
  */
 
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import AuthNavigator from './src/compoments/Nagivation/AuthNavigator';
 
 const AppProvider: React.FC<PropsWithChildren> = ({children}) => {
-  return <NavigationContainer>{children}</NavigationContainer>;
+  const [accessToken, setAccessToken] = useState('');
+
+  useEffect(() => {
+    // Auth.currentAuthenticatedUser()
+    //   .then(user => {
+    //     setAccessToken(user.signInUserSession.accessToken.jwtToken);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+  });
+
+  if (accessToken === '') {
+    return (
+      <NavigationContainer>
+        {/* <UpgradeDialog /> */}
+        <AuthNavigator />
+      </NavigationContainer>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      {/* <UpgradeDialog /> */}
+      {children}
+    </NavigationContainer>
+  );
 };
 
 export default AppProvider;
+

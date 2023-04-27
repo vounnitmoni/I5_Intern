@@ -20,8 +20,8 @@ const bottoms = [
   {
     name: ROUTES.SCHEDULE,
     component: ScheduleScreen,
-    label: 'Schedule',
-    icon: 'videocam-outline',
+    label: 'Question',
+    icon: 'questioncircleo',
   },
   {
     name: ROUTES.NOTIFICATION,

@@ -8,4 +8,13 @@ export type RootStackParamList = {
   SupportScreen: undefined;
 };
 
+export type AuthStackParamList = {
+  RegisterScreen: undefined;
+  LoginScreen: undefined;
+  // ConfirmScreen: {
+  //   email: string;
+  // };
+};
+
+export type AuthNavigationProps = NativeStackScreenProps<AuthStackParamList>;
 export type RootNavigationProps = NativeStackScreenProps<RootStackParamList>;
