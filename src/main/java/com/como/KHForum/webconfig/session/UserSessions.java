@@ -15,7 +15,7 @@ import com.como.KHForum.webconfig.service.UserDetailsImpl;
 public class UserSessions {
     
     @Autowired AppUserRepo appUserRepo;
-
+    
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     UserDetailsImpl authUser = (UserDetailsImpl) auth.getPrincipal();
 
