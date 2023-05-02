@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
-import {Button, Icon, Input, Text} from '@rneui/themed';
+import {StyleSheet, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {Button, Icon, Image, Input, Text} from '@rneui/themed';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Controller, useForm} from 'react-hook-form';
 import {Stack, Inline} from '@mobily/stacks';
@@ -10,10 +10,13 @@ import {AuthStackParamList} from '../../compoments/Nagivation/TypeNavigation';
 // import SocialSignIn from '../../compoments/SocialSignIn';
 import variables from '../../assets/styles/variables';
 import styles from '../../assets/styles';
+import API from '../../api';
 
 type FormValues = {
   username: string;
+  email: string;
   password: string;
+  role: string;
 };
 
 type RegisterScreen = StackNavigationProp<AuthStackParamList, ROUTES.REGISTER>;
@@ -32,32 +35,38 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
   } = useForm<FormValues>({
     defaultValues: {
       username: undefined,
+      email: undefined,
       password: undefined,
+      role: undefined,
     },
   });
 
   const onSubmit = (formData: FormValues) => {
     setIsLoading(true);
-    // Auth.signUp({
-    //   username: formData.email,
-    //   password: formData.password,
-    // })
-    //   .then(() => {
-    //     setIsLoading(false);
-    //     navigation.navigate(ROUTES.CONFIRM, {
-    //       email: formData.email,
-    //     });
-    //   }).catch(err => {
-    //     setIsLoading(false);
-    //     if (err.message) {
-    //       setError(err.message);
-    //     }
-    //   });
+    API.Register({
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      role: ["user"],
+    }).then(res => res.json())
+    .then(async res =>{
+      setIsLoading(false);
+      if(res.success === true){
+        navigation.navigate('LoginScreen')
+      }else{
+        Alert.alert("Error")
+      }
+    }).catch(e => (e as Error).message);
   };
 
   return (
     <ScrollView style={componentStyles.container}>
       <Stack space={8} paddingX={4}>
+
+        <Stack space={2}>
+          <Image source={require('./../../assets/images/logo.png')} style={{width: 200, height:100}}/>
+        </Stack>
+
         <Stack space={2}>
           <Text h3 style={componentStyles.title}>
             {t('register.title')}
@@ -67,16 +76,37 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
 
         <Stack space={4}>
           <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: t('error.required.message'),
+                },
+              }}
+              render={({field: {onChange, value}}) => (
+                <Input
+                  label={<Text>{t('form.username.label')}</Text>}
+                  placeholder={t('form.username.placeholder')}
+                  leftIcon={<Icon name="user" type="feather" size={20} />}
+                  onChangeText={onChange}
+                  value={value}
+                  errorMessage={errors.username && errors.username.message}
+                  renderErrorMessage={!!errors.username}
+                />
+              )}
+              name="username"
+            />
+          <Controller
             control={control}
             rules={{
               required: {
                 value: true,
                 message: t('error.required.message'),
               },
-            //   pattern: {
-            //     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            //     message: t('error.invalid_email.message'),
-            //   },
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: t('error.invalid_email.message'),
+              },
             }}
             render={({field: {onChange, value}}) => (
               <Input
@@ -85,11 +115,11 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
                 leftIcon={<Icon name="mail" type="feather" size={20} />}
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.username && errors.username.message}
-                renderErrorMessage={!!errors.username}
+                errorMessage={errors.email && errors.email.message}
+                renderErrorMessage={!!errors.email}
               />
             )}
-            name="username"
+            name="email"
           />
 
           <Controller

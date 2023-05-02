@@ -7,9 +7,12 @@ import _ from 'lodash';
 
 import settingReducer from './settingReducer';
 import settings from '../../config/settings';
+import AuthReducer from './onClickRecursiveReducer';
+import onClickRecursiveReducer from './onClickRecursiveReducer';
 
 const rootReducers = {
   setting: settingReducer,
+  circular: onClickRecursiveReducer,
 };
 
 const middlewares = [thunk];
@@ -40,7 +43,10 @@ const persistedReducer = persistReducer(
 );
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer:{
+    persistedReducer,     
+    onClickRecursiveReducer,
+  },
   middleware: middlewares,
 });
 

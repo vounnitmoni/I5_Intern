@@ -1,36 +1,36 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {Button, Icon, Input, Text} from '@rneui/themed';
+import {StyleSheet, View, TouchableOpacity, Alert} from 'react-native';
+import {Button, Icon, Image, Input, Text} from '@rneui/themed';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Controller, useForm} from 'react-hook-form';
 import {Stack, Inline} from '@mobily/stacks';
 import {useTranslation} from 'react-i18next';
 import {ROUTES} from '../../enums/RouteEnum';
-import {AuthStackParamList} from '../../compoments/Nagivation/TypeNavigation';
+import {AuthStackParamList, RootStackParamList} from '../../compoments/Nagivation/TypeNavigation';
 import variables from '../../assets/styles/variables';
 import styles from '../../assets/styles';
-import { login } from '../../api/API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import API from '../../api';
+import { useNavigation } from '@react-navigation/native';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { circularClick } from '../../store/onClickRecursiveReducer';
 
 type FormValues = {
   username: string;
   password: string;
 };
 
-type token = {
-  tokenize : string;
-}
-type json = {
-  json: () => token
-}
-
 type LoginScreen = StackNavigationProp<AuthStackParamList, ROUTES.LOGIN>;
 
 const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
+  const rootNav = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState('');
-
+  const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
+  const dispatch = useAppDispatch();
+  
   const {
     handleSubmit,
     control,
@@ -44,30 +44,37 @@ const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
 
   const onSubmit = (formData: FormValues) => {
     setIsLoading(true);
-
-    login({
+    API.Login({
       username: formData.username,
       password: formData.password,
-    }).then((res : json)=>{
-      AsyncStorage.setItem('AccessToken', JSON.);
+    }).then(res => res.json())
+    .then(async (data) => {
+      setData(data)
       setIsLoading(false);
-    }).catch((e : any) =>{
-      setError((e as Error).message)
-      setIsLoading(false);
+        if(data.accessToken){
+          // document.cookie =`attcookie=${data.token}`
+          AsyncStorage.setItem("token", data.accessToken);
+          // rootNav.navigate(ROUTES.HOME)
+          console.log(data.accessToken)
+        }else{
+          Alert.alert("Wrong username and password!")
+        }
     })
-    // Auth.signIn(formData.email, formData.password)
-    //   .then(() => {
-    //     setIsLoading(false);
-    //   })
-    //   .catch(err => {
-    //     setError(err.message);
-    //     setIsLoading(false);
-    //   });
+    .then(()=>{
+      if(action == true){
+          dispatch(circularClick(false));
+      }else{
+          dispatch(circularClick(true));
+      }
+    }).catch(e=> (e as Error).message)
   };
 
   return (
     <View style={componentStyles.container}>
       <Stack space={8} paddingX={4}>
+        <Stack space={2}>
+            <Image source={require('./../../assets/images/logo.png')} style={{width: 200, height:100}}/>
+        </Stack>
         <Stack space={2}>
           <Text h3 style={componentStyles.title}>
             {t('login.title')}
@@ -83,16 +90,16 @@ const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
                 value: true,
                 message: t('error.required.message'),
               },
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t('error.invalid_email.message'),
-              },
+              // pattern: {
+              //   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              //   message: t('error.invalid_email.message'),
+              // },
             }}
             render={({field: {onChange, value}}) => (
               <Input
-                label={<Text>{t('form.email.label')}</Text>}
-                placeholder={t('form.email.placeholder')}
-                leftIcon={<Icon name="mail" type="feather" size={20} />}
+                label={<Text>{t('form.username.label')}</Text>}
+                placeholder={t('form.username.placeholder')}
+                leftIcon={<Icon name="user" type="feather" size={20} />}
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.username && errors.username.message}

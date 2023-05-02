@@ -11,19 +11,26 @@
 import React, {PropsWithChildren, useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthNavigator from './src/compoments/Nagivation/AuthNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppSelector } from './src/store/hooks';
 
 const AppProvider: React.FC<PropsWithChildren> = ({children}) => {
-  const [accessToken, setAccessToken] = useState('');
-
-  useEffect(() => {
-    // Auth.currentAuthenticatedUser()
-    //   .then(user => {
-    //     setAccessToken(user.signInUserSession.accessToken.jwtToken);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-  });
+  const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
+  const [accessToken, setAccessToken] = useState<string | null>('');
+  const token = async () =>{
+    const test = await AsyncStorage.getItem("token").then((res)=> {
+      if(res == null){
+        setAccessToken('');
+      }else{
+        setAccessToken(res);
+      }
+    })
+  }
+  
+    useEffect(()=>{
+      token();
+      console.log(action)
+    },[action]);
 
   if (accessToken === '') {
     return (

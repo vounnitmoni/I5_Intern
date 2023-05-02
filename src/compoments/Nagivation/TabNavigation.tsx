@@ -15,24 +15,28 @@ const bottoms = [
     name: ROUTES.HOME,
     component: HomeScreen,
     label: 'Home',
+    type: 'ionicon',
     icon: 'md-home-outline',
   },
   {
     name: ROUTES.SCHEDULE,
     component: ScheduleScreen,
     label: 'Question',
-    icon: 'questioncircleo',
+    type: '',
+    icon: 'question-answer',
   },
   {
     name: ROUTES.NOTIFICATION,
     component: NotificationScreen,
     label: 'Notification',
+    type: 'ionicon',
     icon: 'md-notifications-outline',
   },
   {
     name: ROUTES.SUPPORT,
     component: SupportScreen,
     label: 'Settings',
+    type: 'ionicon',
     icon: 'settings-outline',
   },
 ];
@@ -66,7 +70,7 @@ const TabNavigation = () => {
               tabBarIcon: ({color, size}) => (
                 <Icon
                   name={item.icon}
-                  type="ionicon"
+                  type={item.type}
                   color={color}
                   size={size}
                 />
