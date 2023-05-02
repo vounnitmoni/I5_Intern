@@ -5,4 +5,7 @@ export enum ROUTES {
   SUPPORT = 'SupportScreen',
   LOGIN = 'LoginScreen',
   REGISTER = 'RegisterScreen',
+  NAVIGATOR= 'Navigator',
+  QUESTION= 'QuestionScreen',
+  RIGHTDRAWER='RightDrawer',
 }

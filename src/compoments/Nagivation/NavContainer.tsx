@@ -4,21 +4,22 @@ import TabNavigation from './TabNavigation';
 import {RootStackParamList} from './TypeNavigation';
 import Header from '../Header';
 import Navigator from './Navigator';
+import RightDrawer from './RightDrawer';
 
 const Stack = createStackNavigator<RootStackParamList>();
-const RootNavigation = () => {
+const NavContainer = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: ()=> <Header />
+        headerShown: false,
       }}
     >
       <Stack.Group>
-        <Stack.Screen name="TabNavigation" component={TabNavigation} />
-        {/* <Stack.Screen name="Navigator" component={Navigator}/> */}
+        <Stack.Screen name='Navigator' component={Navigator}/>
+        <Stack.Screen name='RightDrawer' component={RightDrawer}/>
       </Stack.Group>
     </Stack.Navigator>
   );
 };
 
-export default RootNavigation;
+export default NavContainer;

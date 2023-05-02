@@ -18,6 +18,8 @@ import AppProvider from './AppProvider';
 import Navigator from './src/compoments/Nagivation/Navigator';
 import {persistor, store} from './src/store';
 import './i18n.config';
+import RightDrawer from './src/compoments/Nagivation/RightDrawer';
+import NavContainer from './src/compoments/Nagivation/NavContainer';
 
 const theme = createTheme({
   lightColors: {
@@ -66,7 +68,7 @@ function App(): JSX.Element {
             />
 
             <AppProvider>
-              <Navigator />
+                <NavContainer/>
             </AppProvider>
           </SafeAreaProvider>
         </ThemeProvider>

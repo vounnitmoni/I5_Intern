@@ -10,4 +10,7 @@ export default class API {
     static async Register(body: any){
         return api.request('/auth/signup', 'POST', body);
     }
+    static async AskQuestion(body: any){
+        return api.request('/all/question/create', 'POST', body);
+    }
 }

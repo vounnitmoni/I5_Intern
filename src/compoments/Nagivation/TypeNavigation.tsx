@@ -6,6 +6,9 @@ export type RootStackParamList = {
   ScheduleScreen: undefined;
   NotificationScreen: undefined;
   SupportScreen: undefined;
+  Navigator: undefined;
+  QuestionScreen: undefined;
+  RightDrawer: undefined;
 };
 
 export type AuthStackParamList = {

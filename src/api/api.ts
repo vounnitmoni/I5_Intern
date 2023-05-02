@@ -9,7 +9,7 @@ var api = {
             method : method,
             // mode : Body.profilePic == {} ? 'cors' : 'no-cors',
             headers: {
-                "Accept": "application/json",
+                Accept: "application/json",
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "http://10.10.10.219:8080",
                 "Access-Control-Allow-Credentials": "true",

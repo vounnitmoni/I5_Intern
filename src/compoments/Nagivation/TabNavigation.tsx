@@ -2,11 +2,11 @@ import React from 'react';
 import {Icon} from '@rneui/themed';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../../screens/Home';
-import ScheduleScreen from '../../screens/Schedule';
 import SupportScreen from '../../screens/Support';
 import {ROUTES} from '../../enums/RouteEnum';
 import variables from '../../assets/styles/variables';
 import NotificationScreen from '../../screens/Notfication';
+import QuestionScreen from '../../screens/Question';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +19,8 @@ const bottoms = [
     icon: 'md-home-outline',
   },
   {
-    name: ROUTES.SCHEDULE,
-    component: ScheduleScreen,
+    name: ROUTES.QUESTION,
+    component: QuestionScreen,
     label: 'Question',
     type: '',
     icon: 'question-answer',
