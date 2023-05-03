@@ -50,4 +50,13 @@ public class CategoryController {
         return ResponseEntity.ok(new SuccessMessageResponse("categories added!", true));
     }
 
+    //list all category
+    @PostMapping("/list")
+    public ResponseEntity<?> list20Category(@RequestBody Integer amount){
+        Set<String> categories = new HashSet<>();
+        for(Integer i = 0; i<=amount; i++){
+            
+        }
+        return null;
+    }
 }

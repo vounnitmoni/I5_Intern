@@ -33,6 +33,7 @@ public class Questionnaire {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Size(max = 200) private String question;
+    @Size(max = 500) private String body;
     @JsonFormat(pattern = "HH:mm:ss") private LocalTime time;
     @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate create_stmp; 
     @JsonFormat(pattern = "yyyy-MM-dd") @Nullable private LocalDate update_stmp;
@@ -52,9 +53,10 @@ public class Questionnaire {
     private Community communityId;
     @Column(name = "community_id") private Long community_id;
 
-    public Questionnaire(String question, LocalTime time, LocalDate create_stmp, LocalDate update_stmp,
+    public Questionnaire(String question ,String body, LocalTime time, LocalDate create_stmp, LocalDate update_stmp,
             Boolean is_approve, Integer report, Long author_id, Long community_id, Integer view) {
         this.question = question;
+        this.body = body;
         this.time = time;
         this.create_stmp = create_stmp;
         this.update_stmp = update_stmp;

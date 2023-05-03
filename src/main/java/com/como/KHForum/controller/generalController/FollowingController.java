@@ -56,14 +56,23 @@ public class FollowingController {
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/isfollowed")
-    public ResponseEntity<IsFollowed> isFollowed(@RequestBody Long followee_id){
+    @PostMapping("/isfollowed")
+    public ResponseEntity<IsFollowed> isFollowed(@RequestBody Integer followee_id){
+        Long i = followee_id.longValue();
         IsFollowed followed = new IsFollowed(isFollowed);
-        if(followerRepo.isFollowed(userSessions.getUserId(), followee_id) == BigInteger.ZERO){
+        if(followerRepo.isFollowed(userSessions.getUserId(), i) == BigInteger.ZERO){
             isFollowed = true;
+            
         }else{
             isFollowed = false;
         }
         return ResponseEntity.ok(followed);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
+        Integer a = 2;
+        Long i = a.longValue();
+        return ResponseEntity.ok(followerRepo.isFollowed(userSessions.getUserId(), i));
     }
 }

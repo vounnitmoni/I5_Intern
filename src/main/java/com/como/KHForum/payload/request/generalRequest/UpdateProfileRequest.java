@@ -2,7 +2,6 @@ package com.como.KHForum.payload.request.generalRequest;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

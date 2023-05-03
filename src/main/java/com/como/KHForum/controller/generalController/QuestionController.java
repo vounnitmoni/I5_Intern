@@ -24,6 +24,8 @@ import com.como.KHForum.repository.QuestionCollectionInfoRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/all/question")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,9 +37,10 @@ public class QuestionController {
     @Autowired QuestionCollectionInfoRepo questionCollectionInfoRepo;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuestion(@RequestBody CreateQuestionRequest request){
+    public ResponseEntity<?> createQuestion(@Valid @RequestBody CreateQuestionRequest request){
         //question with regex validation, asker_id,
-        Questionnaire questionnaire = new Questionnaire(request.getQuestion(), 
+        Questionnaire questionnaire = new Questionnaire(request.getQuestion(),
+                                                        request.getBody(), 
                                                         LocalTime.now(), 
                                                         LocalDate.now(), 
                                                         LocalDate.now(),

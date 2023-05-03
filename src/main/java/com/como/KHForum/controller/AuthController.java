@@ -110,7 +110,7 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok().body(new SuccessMessageResponse("Register success", true ));
   }
 
   @PostMapping("/signout")
