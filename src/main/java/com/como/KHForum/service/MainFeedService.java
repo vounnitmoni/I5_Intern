@@ -12,24 +12,31 @@ import com.como.KHForum.payload.response.MainFeedResponse;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.CommentRepo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Service
 public class MainFeedService {
     @Autowired AnswerRepo answerRepo;
     @Autowired CommentRepo commentRepo;
 //------------------------------------------------------------------------------------------------
+    Long number = (long) 0;
+    Long last_id = (long) 0;
 //------------------------------------------------------------------------------------------------
-    public MainFeedResponse coreFeed(Long q_id){
-        final Set<Answer> answer = answerRepo.findAnswerIdByQ_id(q_id);
+    
+    public MainFeedResponse coreFeed(Long q_id, Integer flags){       
         final Set<Long> answer_id = new HashSet<>();
         final Set<Set<Comment>> comments = new HashSet<>();
+        for(int i = 1; i<=flags; i++){
+            Long a = answerRepo.findLastIdOfLastTwenty(q_id, number);
+            number = a;
+            System.out.println(number);
+        }
+
+        last_id = number;
+        Set<Answer> answer = answerRepo.findAnswerIdByQ_id(q_id, last_id);
+
         answer.forEach((e) -> {
             answer_id.add(e.getId());
-        });
+            if(number < e.getId()) number = e.getId();
+       });
 
         for(Long i : answer_id){
             comments.add(commentRepo.findCommentsByAnswer_id(i));

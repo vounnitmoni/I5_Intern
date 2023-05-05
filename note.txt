@@ -1,0 +1,3 @@
+***Flag:
+    flag is integer that its value is based on frontend request(redux dispatch increment value by 1 per each request);
+    flag is use to limit the outgrow of data retrieval for future scale.

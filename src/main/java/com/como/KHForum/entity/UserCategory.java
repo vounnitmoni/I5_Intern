@@ -1,7 +1,5 @@
 package com.como.KHForum.entity;
 
-import org.springframework.data.relational.core.sql.FalseCondition;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;

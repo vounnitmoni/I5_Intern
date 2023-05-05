@@ -45,27 +45,29 @@ public class PostCardController {
         private Set<Answer> answers = new HashSet<>();
         private Set<Set<Comment>> comments = new HashSet<>();
     }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    protected class Flag{
+        private Integer flags;
+    }
+    @Getter
+    @Setter
+    protected class FeedRequest{
+        private Long question_id;
+        private Integer flags;
+        FeedRequest(){};
+        FeedRequest (Long question_id, Integer flags){
+            this.flags = flags;
+            this.question_id = question_id;
+        }
+    }
 
 //------------------------------------------------------------------------------------------------
-    //Core
-    // @PostMapping("/test")
-    // public ResponseEntity<?> test(@RequestBody Long q_id){
-    //     final Set<Answer> answer = answerRepo.findAnswerIdByQ_id(q_id);
-    //     final Set<Long> answer_id = new HashSet<>();
-    //     final Set<Set<Comment>> comments = new HashSet<>();
-    //     answer.forEach((e) -> {
-    //         answer_id.add(e.getId());
-    //     });
-
-    //     for(Long i : answer_id){
-    //         comments.add(commentRepo.findCommentsByAnswer_id(i));
-    //     }
-    //     Payload payload = new Payload(answer, comments);
-    //     return ResponseEntity.ok(payload);
-    // }
     @PostMapping("/test")
-    public ResponseEntity<?> test(@RequestBody Long q_id){
-        MainFeedResponse payload = mainFeedService.coreFeed(q_id);
+    public ResponseEntity<?> test(){
+        MainFeedResponse payload = mainFeedService.coreFeed((long) 7, 2);
         return ResponseEntity.ok(payload);
     }
 }
