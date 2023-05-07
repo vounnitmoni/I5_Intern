@@ -51,7 +51,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
     }).then(res => res.json())
     .then(async res =>{
       setIsLoading(false);
-      if(res.success === true){
+      if(res.accessToken){
         navigation.navigate('LoginScreen')
       }else{
         Alert.alert("Error")

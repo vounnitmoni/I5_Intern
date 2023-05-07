@@ -19,10 +19,10 @@ const Dropdown: React.FC<Props> = ({ label, style }) => {
       return (
           <View style={styles.dropdown}>
             <TouchableOpacity>
-                <Text >Home</Text>
+                <Text style={{color: 'white'}}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-                <Text>Popular</Text>
+                <Text style={{color: 'white'}}>Popular</Text>
             </TouchableOpacity>
           </View>
       );
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   buttonText: {
     flex: 1,
     textAlign: 'center',
+    color: 'white',
   },
   dropdown: {
     position: 'absolute',
