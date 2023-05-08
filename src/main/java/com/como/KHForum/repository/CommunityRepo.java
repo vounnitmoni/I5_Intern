@@ -13,5 +13,8 @@ public interface CommunityRepo extends JpaRepository<Community, Long> {
     @Query(value = "select id from kh_forum.communities where name = :name", nativeQuery =  true)
     Long findCommunityIdByName(@Param("name") String name);
 
+    @Query(value = "select name from kh_forum.communities where id = :id", nativeQuery =  true)
+    String findCommunityNameById(@Param("id") Long id);
+
     
 }

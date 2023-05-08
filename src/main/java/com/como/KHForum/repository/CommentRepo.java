@@ -1,5 +1,6 @@
 package com.como.KHForum.repository;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,9 @@ public interface CommentRepo extends JpaRepository<Comment, Long>{
                                 "on kh_forum.comments.parent_id = cte.id) "+
                    "select * from cte;", nativeQuery = true)
     Set<Comment> findCommentsByAnswer_id(@Param("id") Long id);
+
+    @Query(value = "select count(id) from kh_forum.comments where answer_id in :id", nativeQuery = true)
+    Integer countCommentsByAnswer_Id(@Param("id") List<Long> id);
+
     
 }

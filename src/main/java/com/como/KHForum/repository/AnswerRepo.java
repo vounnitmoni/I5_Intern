@@ -1,6 +1,7 @@
 package com.como.KHForum.repository;
 
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,11 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
     Set<Answer> findAnswerIdByQ_id(@Param("q_id") Long q_id, @Param("last_id") Long last_id);
     @Query(value = "select id from kh_forum.answers where question_id = :q_id and id > :last_id limit 1", nativeQuery = true)
     Long findLastIdOfLastTwenty(@Param("q_id") Long q_id, @Param("last_id") Long last_id);
+
+    @Query(value = "select count(id) from kh_forum.answers where question_id = :q_id", nativeQuery = true)
+    Integer countAnswerByQ_Id(@Param("q_id") Long id);
+
+    @Query(value = "select id from kh_forum.answers where question_id = :id", nativeQuery = true)
+    List<Long> listAnswerIdByQ_Id(@Param("id") Long id);
 
 }

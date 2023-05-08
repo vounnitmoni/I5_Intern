@@ -18,6 +18,7 @@ import com.como.KHForum.repository.FollowerRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.repository.UserCategoryRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
+import com.como.KHForum.service.PostCardService.QuestionCardService;
 import com.como.KHForum.webconfig.session.UserSessions;
 
 @RestController
@@ -25,38 +26,18 @@ import com.como.KHForum.webconfig.session.UserSessions;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasRole('ORATOR') or hasRole('USER')")
 public class QuestionCardController {
-    @Autowired UserSessions userSessions;
-    @Autowired QuestionnaireRepo questionnaireRepo;
-    @Autowired AnswerRepo answerRepo;
-    @Autowired FollowerRepo followerRepo;
-    @Autowired UserCommunityRepo userCommunityRepo;
-    @Autowired UserCategoryRepo userCategoryRepo;
+    @Autowired QuestionCardService questionCardService;
     Integer number = 20;
 
+    // @GetMapping
+    // public ResponseEntity<?> post(){
+    //     return ResponseEntity.ok(post_questionnaires);
+    // }
     @GetMapping("")
     public ResponseEntity<?> post(){
-        Set<Long> community_id = userCommunityRepo.randomCommunityId(userSessions.getUserId());
-        Set<Long> followee_id = followerRepo.randomFollowee_id(userSessions.getUserId());
-        Set<Long> category_id = userCategoryRepo.randomCategories(userSessions.getUserId());
-        Set<Questionnaire> randomCommunityQuestions = questionnaireRepo.randQuestionnairesByCommunity(community_id);
-        Set<Questionnaire> randomFolloweeQuestions = questionnaireRepo.randQuestionnairesByFollowee(followee_id);
-        Set<Questionnaire> randomCategoryQuestions = questionnaireRepo.randomQuestionnairesByCategories(category_id);
-
-        Set<Questionnaire> post_questionnaires = new HashSet<>();
-        Stream.of(randomCommunityQuestions,randomCategoryQuestions, randomFolloweeQuestions).forEach(post_questionnaires::addAll);
-
-        return ResponseEntity.ok(post_questionnaires);
+        return ResponseEntity.ok().body(questionCardService.customQuestionCard());
     }
-    @GetMapping("/test")
-    public ResponseEntity<?> test(){
-        Set<Long> community_id = userCommunityRepo.randomCommunityId(userSessions.getUserId());
-        Set<Questionnaire> randomCommunityQuestions = questionnaireRepo.randQuestionnairesByCommunity(community_id);
-        return ResponseEntity.ok(randomCommunityQuestions);
-    }
-
 }
-
-
 
 //My Note:
     //need community, userinfo, question(all),
