@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,14 +47,14 @@ public class FollowingController {
         return ResponseEntity.ok(null);
     }
 
-    @PutMapping
+    @DeleteMapping
     public ResponseEntity<?> unFollow(@RequestBody Long followee_id){
-        if(followerRepo.isFollowed(userSessions.getUserId(), followee_id) == BigInteger.ZERO){
+        if(followerRepo.isFollowed(userSessions.getUserId(), followee_id) == BigInteger.ONE){
             followerRepo.deleteById(followerRepo.follower(userSessions.getUserId(), followee_id).getId());
         }else{
-            return ResponseEntity.ok(false);
+            return ResponseEntity.ok("not exist");
         }
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping("/isfollowed")
@@ -67,12 +68,5 @@ public class FollowingController {
             isFollowed = false;
         }
         return ResponseEntity.ok(followed);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test(){
-        Integer a = 2;
-        Long i = a.longValue();
-        return ResponseEntity.ok(followerRepo.isFollowed(userSessions.getUserId(), i));
     }
 }

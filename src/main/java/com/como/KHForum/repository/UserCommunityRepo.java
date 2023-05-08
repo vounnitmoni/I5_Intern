@@ -2,6 +2,7 @@ package com.como.KHForum.repository;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface UserCommunityRepo extends JpaRepository<UserCommunity, Long> {
 
     @Query(value = "select c.name from kh_forum.user_communties as uc inner join kh_forum.communities as c on uc.community_id = c.id where uc.user_id = :user_id", nativeQuery = true)
     List<String> findUserCommunityList(@Param("user_id") Long id);
+
+    //session user
+    @Query(value = "select community_id from kh_forum.user_communties as uc where user_id = :user_id order by rand() limit 8", nativeQuery = true)
+    Set<Long> randomCommunityId(@Param("user_id") Long id);
 }

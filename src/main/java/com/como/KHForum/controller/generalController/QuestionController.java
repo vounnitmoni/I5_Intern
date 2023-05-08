@@ -43,7 +43,7 @@ public class QuestionController {
                                                         request.getBody(), 
                                                         LocalTime.now(), 
                                                         LocalDate.now(), 
-                                                        LocalDate.now(),
+                                                        null,
                                                         false, 
                                                         0, 
                                                         userSessions.getUserId(),

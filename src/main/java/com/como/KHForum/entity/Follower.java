@@ -29,12 +29,12 @@ public class Follower {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "follower_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private AppUser followerId;
+    private User followerId;
     
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "followee_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private AppUser followeeId;
+    private User followeeId;
 
     @Column(name = "follower_id") private Long follower_id;
     @Column(name = "followee_id") private Long followee_id;

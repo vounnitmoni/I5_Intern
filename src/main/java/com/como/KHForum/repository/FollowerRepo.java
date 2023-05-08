@@ -1,6 +1,7 @@
 package com.como.KHForum.repository;
 
 import java.math.BigInteger;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,7 @@ public interface FollowerRepo extends JpaRepository<Follower, Long>{
 
     @Query(value = "select * from kh_forum.following where follower_id = :follower_id and followee_id = :followee_id", nativeQuery = true)
     Follower follower(@Param("follower_id") Long follower_id, @Param("followee_id") Long followee_id);
+
+    @Query(value = "select followee_id from kh_forum.following where follower_id = :follower_id order by rand() limit 7", nativeQuery = true)
+    Set<Long> randomFollowee_id(@Param("follower_id") Long follower_id);
 }
