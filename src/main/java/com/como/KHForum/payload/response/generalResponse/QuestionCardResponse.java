@@ -14,6 +14,19 @@ public class QuestionCardResponse {
     private String body;
     private String post_duration;
     private String community;
+    private String username;
     private Integer answer;
     private Integer vote;
+    
+    public QuestionCardResponse(String question, String body, String post_duration, String username, Integer answer,
+            Integer vote) {
+        this.question = question;
+        this.body = body;
+        this.post_duration = post_duration;
+        this.username = username;
+        this.answer = answer;
+        this.vote = vote;
+    }
+
+    
 }

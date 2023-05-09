@@ -1,0 +1,10 @@
++ each community info screen(need request param)
++ Each question details
++ user profile
++ community profile
+
+//back end
+ + api/all/community/{c_id}
+ + api/all/question/{q_id}
+ + api/all/user/{u_id}
+

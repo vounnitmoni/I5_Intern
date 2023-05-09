@@ -1,6 +1,5 @@
 package com.como.KHForum.service.PostCardService;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -49,9 +48,17 @@ public class QuestionCardService {
         Set<QuestionCardResponse> responses = new HashSet<>();
         questionCards().forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
-            QuestionCardResponse questionCardResponse = new QuestionCardResponse(e.getQuestion(), e.getBody(), e.getCreate_stmp().toString(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, 0);
+            QuestionCardResponse questionCardResponse = new QuestionCardResponse(e.getQuestion(), e.getBody(), e.getCreate_stmp().toString(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote());
             responses.add(questionCardResponse);
         });
+        return responses;
+    }
+
+    public Set<QuestionCardResponse> communityPost(){
+        Set<QuestionCardResponse> responses = new HashSet<>();
+        //flag!
+        QuestionCardResponse qCardResponse = new QuestionCardResponse(null, null, null, null, null, null);
+        responses.add(qCardResponse);
         return responses;
     }
 }

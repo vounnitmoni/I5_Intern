@@ -1,5 +1,7 @@
 package com.como.KHForum.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,9 @@ public interface CommunityRepo extends JpaRepository<Community, Long> {
 
     @Query(value = "select name from kh_forum.communities where id = :id", nativeQuery =  true)
     String findCommunityNameById(@Param("id") Long id);
+
+    @Query(value = "select uc.* from kh_forum.communities as uc left join kh_forum.user_communties as c on uc.id = c.community_id where c.user_id = :user_id", nativeQuery = true)
+    List<Community> findUserCommunityList(@Param("user_id") Long id);
 
     
 }

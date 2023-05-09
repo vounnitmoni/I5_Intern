@@ -32,6 +32,7 @@ public class Answer {
     private Long id;
     private String answer;
     private Integer vote;
+    private Integer report;
     private LocalTime create_time;
     private LocalDate create_date;
 
@@ -48,13 +49,14 @@ public class Answer {
     private User authorId;
     @Column(name = "author_id") private Long author_id;
     public Answer(String answer, Integer vote, LocalTime create_time, LocalDate create_date, Long question_id,
-            Long author_id) {
+            Long author_id, Integer report) {
         this.answer = answer;
         this.vote = vote;
         this.create_time = create_time;
         this.create_date = create_date;
         this.question_id = question_id;
         this.author_id = author_id;
+        this.report = report;
     }
 
     

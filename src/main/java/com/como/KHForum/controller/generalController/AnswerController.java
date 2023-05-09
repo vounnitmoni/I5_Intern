@@ -39,7 +39,8 @@ public class AnswerController {
                                    LocalTime.now(), 
                                    LocalDate.now(), 
                                    request.getQuestion_id(), 
-                                   userSessions.getUserId());
+                                   userSessions.getUserId(),
+                                   0);
         answerRepo.save(answer);
                                    
         return ResponseEntity.ok(answer);
@@ -66,21 +67,30 @@ public class AnswerController {
         //         if(request.getVoted() == false){return ResponseEntity.badRequest().body(new IllegalArgumentException());}
         //         else{answerCollectionInfoRepo.saveAndFlush(answerCollectionInfo);}
         // }
-
+        Long id = userSessions.getUserId();
         Thread asyncOpt = new Thread(()->{
            try {
                 Answer answer = answerRepo.findAllById(answer_id);
+                Long prev_vote = answerCollectionInfoRepo.findIdByAnswer_IdAndUser_Id(answer_id, id);
                 if(answerCollectionInfo.getVoted()){
                     answer.setVote(answer.getVote()+1);
                 }else{
                     answer.setVote(answer.getVote()-1);
                 }
+
+                if(answerCollectionInfo.getReported()){
+                    answer.setReport(answer.getReport()+1);
+                }else{
+                    answer.setReport(answer.getReport()-1);
+                }
+                answerCollectionInfoRepo.deleteById(prev_vote);
                 answerRepo.save(answer);
            } catch (Exception e) {
                 e.printStackTrace();
            } 
         });
         asyncOpt.start();
+        answerCollectionInfoRepo.save(answerCollectionInfo);
         return ResponseEntity.ok(answerCollectionInfo);
     }
 

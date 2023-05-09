@@ -4,7 +4,9 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,9 @@ import com.como.KHForum.entity.Community;
 import com.como.KHForum.entity.CommunityCategory;
 import com.como.KHForum.entity.UserCommunity;
 import com.como.KHForum.entity.enums.EIsa;
+import com.como.KHForum.payload.request.generalRequest.CommunityRequest;
 import com.como.KHForum.payload.request.generalRequest.CreateCommunityRequest;
+import com.como.KHForum.payload.response.CommunityResponse;
 import com.como.KHForum.repository.CategoryRepo;
 import com.como.KHForum.repository.CommunityCategoryRepo;
 import com.como.KHForum.repository.CommunityRepo;
@@ -128,7 +132,12 @@ public class CommunityController {
     //User Community List
     @GetMapping("/communities")
     public ResponseEntity<?> userCommunity(){
-        List<String> userCommunities = userCommunityRepo.findUserCommunityList(userSessions.getUserId());
-        return ResponseEntity.ok(userCommunities);
+        List<Community> userCommunities = communityRepo.findUserCommunityList(userSessions.getUserId());
+        Set<CommunityResponse> user_commu = new HashSet<>();
+        userCommunities.forEach(e ->{
+            CommunityResponse cr = new CommunityResponse(e.getId(), e.getName());
+            user_commu.add(cr);
+        });
+        return ResponseEntity.ok(user_commu);
     }
 }

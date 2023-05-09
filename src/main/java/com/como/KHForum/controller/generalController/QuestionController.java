@@ -48,7 +48,8 @@ public class QuestionController {
                                                         0, 
                                                         userSessions.getUserId(),
                                                         communityRepo.findCommunityIdByName(request.getCommunity()),
-                                                        0);
+                                                        0,
+                                                        request.getPhoto());
         questionnaireRepo.save(questionnaire);
         return ResponseEntity.ok(questionnaire);
     }

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateProfileRequest {
-    private Long account_id;
     private String firstname;
     private String lastname;
     private Integer gender;
