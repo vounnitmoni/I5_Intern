@@ -35,6 +35,7 @@ public class AppUser {
     @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate dob;
     private String country_code;
     private String area_number;
+    private String username = firstname + lastname;
 
     // @ManyToMany
     // @JoinTable(name = "user_community",

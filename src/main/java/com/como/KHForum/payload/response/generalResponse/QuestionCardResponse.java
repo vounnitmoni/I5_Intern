@@ -1,5 +1,7 @@
 package com.como.KHForum.payload.response.generalResponse;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +14,13 @@ import lombok.Setter;
 public class QuestionCardResponse {
     private String question;
     private String body;
-    private String post_duration;
+    private LocalDate post_duration;
     private String community;
     private String username;
     private Integer answer;
     private Integer vote;
     
-    public QuestionCardResponse(String question, String body, String post_duration, String username, Integer answer,
+    public QuestionCardResponse(String question, String body, LocalDate post_duration, String username, Integer answer,
             Integer vote) {
         this.question = question;
         this.body = body;

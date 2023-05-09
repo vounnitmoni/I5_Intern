@@ -23,4 +23,7 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long>{
 
     @Query(value = "select id from kh_forum.app_user where account_id = :id", nativeQuery = true)
     Long appUserID(@Param("id") Long id);
+
+    @Query(value = "select username from kh_forum.app_user where account_id = :id", nativeQuery = true)
+    String userNameByAccId(@Param("id") Long id);
 }

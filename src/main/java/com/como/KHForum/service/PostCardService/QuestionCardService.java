@@ -5,11 +5,13 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.payload.response.generalResponse.QuestionCardResponse;
 import com.como.KHForum.repository.AnswerRepo;
+import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.CommunityRepo;
 import com.como.KHForum.repository.FollowerRepo;
@@ -28,6 +30,7 @@ public class QuestionCardService {
     @Autowired UserCategoryRepo userCategoryRepo;
     @Autowired CommunityRepo communityRepo;
     @Autowired CommentRepo commentRepo;
+    @Autowired AppUserRepo appUserRepo;
 
     public Set<Questionnaire> questionCards(){
         Set<Long> community_id = userCommunityRepo.randomCommunityId(userSessions.getUserId());
@@ -48,17 +51,30 @@ public class QuestionCardService {
         Set<QuestionCardResponse> responses = new HashSet<>();
         questionCards().forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
-            QuestionCardResponse questionCardResponse = new QuestionCardResponse(e.getQuestion(), e.getBody(), e.getCreate_stmp().toString(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote());
+            QuestionCardResponse questionCardResponse = new QuestionCardResponse(e.getQuestion(), e.getBody(), e.getCreate_stmp(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote());
             responses.add(questionCardResponse);
         });
         return responses;
     }
 
-    public Set<QuestionCardResponse> communityPost(){
+    public Set<QuestionCardResponse> communityPost(Long community_id, Integer flag){
+        Integer q;
+        Long last_id;
+        if(flag == 0){
+            q= 0;
+            last_id = q.longValue();
+        }else{
+            q = 20*flag;
+            last_id = questionnaireRepo.findLastIdOfLastTwenty(community_id,q);
+        }
         Set<QuestionCardResponse> responses = new HashSet<>();
-        //flag!
-        QuestionCardResponse qCardResponse = new QuestionCardResponse(null, null, null, null, null, null);
-        responses.add(qCardResponse);
+
+        questionnaireRepo.findQuestion_IdByC_id(community_id, last_id).forEach(e ->{
+            Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
+            QuestionCardResponse qCardResponse = new QuestionCardResponse(e.getQuestion(), e.getBody(), e.getCreate_stmp(), appUserRepo.userNameByAccId(e.getAuthor_id()), count_answer, e.getVote());
+            responses.add(qCardResponse);
+        });
+       
         return responses;
     }
 }

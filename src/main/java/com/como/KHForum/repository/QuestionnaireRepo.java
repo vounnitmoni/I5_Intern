@@ -27,9 +27,9 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     Set<Questionnaire> randQuestionnairesByCommunity(@Param("id") Set<Long> id);
 
     //limit traffic 
-    @Query(value = "select * from kh_forum.questionnaire where community_id = :c_id and id > :last_id order by id desc limit 20", nativeQuery = true)
-    Set<Questionnaire> findQuestion_IdByC_id(@Param("q_id") Long q_id, @Param("last_id") Long last_id);
-    @Query(value = "select id from kh_forum.questionnaire where community_id = :c_id and id > :last_id limit 1", nativeQuery = true)
-    Long findLastIdOfLastTwenty(@Param("c_id") Long a_id, @Param("last_id") Long last_id);
+    @Query(value = "select * from kh_forum.questionnaire where community_id = :c_id and id >= :last_id order by id desc limit 20", nativeQuery = true)
+    Set<Questionnaire> findQuestion_IdByC_id(@Param("c_id") Long q_id, @Param("last_id") Long last_id);
+    @Query(value = "select max(a.id) from (select id from kh_forum.questionnaire where community_id = :id limit :quantity) as a", nativeQuery = true)
+    Long findLastIdOfLastTwenty(@Param("id") Long id, @Param("quantity") Integer q);
 
 }
