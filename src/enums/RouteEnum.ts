@@ -8,5 +8,5 @@ export enum ROUTES {
   NAVIGATOR= 'Navigator',
   QUESTION= 'QuestionScreen',
   RIGHTDRAWER='RightDrawer',
-  SPECIFIC_QUESTION = 'SpecificQuestionScreen'
+  SPECIFIC_QUESTION = 'SpecificQuestionScreen',
 }
