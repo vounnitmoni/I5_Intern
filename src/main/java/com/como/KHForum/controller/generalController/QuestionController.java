@@ -89,7 +89,7 @@ public class QuestionController {
     public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
         Questionnaire q = questionnaireRepo.findAllById(q_id);
         Integer count_answer = answerRepo.countAnswerByQ_Id(q.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(q.getId()));
-        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote());
+        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote(), q.getPhoto());
         return ResponseEntity.ok().body(r);
     }
 }

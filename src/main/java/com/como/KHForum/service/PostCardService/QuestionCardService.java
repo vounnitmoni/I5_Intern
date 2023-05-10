@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.como.KHForum.entity.Questionnaire;
@@ -52,7 +51,7 @@ public class QuestionCardService {
         Set<RandomQuestionResponse> responses = new HashSet<>();
         questionCards().forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
-            RandomQuestionResponse questionCardResponse = new RandomQuestionResponse(e.getId(), e.getQuestion(), e.getBody(), e.getCreate_stmp(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote());
+            RandomQuestionResponse questionCardResponse = new RandomQuestionResponse(e.getId(), e.getQuestion(), e.getBody(), e.getCreate_stmp(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote(), e.getPhoto());
             responses.add(questionCardResponse);
         });
         return responses;
@@ -72,7 +71,7 @@ public class QuestionCardService {
 
         questionnaireRepo.findQuestion_IdByC_id(community_id, last_id).forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
-            QuestionCardResponse qCardResponse = new QuestionCardResponse(e.getId(), e.getQuestion(), e.getBody(), e.getCreate_stmp(), appUserRepo.userNameByAccId(e.getAuthor_id()), count_answer, e.getVote());
+            QuestionCardResponse qCardResponse = new QuestionCardResponse(e.getId(), e.getQuestion(), e.getBody(), e.getCreate_stmp(), appUserRepo.userNameByAccId(e.getAuthor_id()), count_answer, e.getVote(), e.getPhoto());
             responses.add(qCardResponse);
         });   
         return responses;

@@ -23,7 +23,6 @@ import com.como.KHForum.entity.Community;
 import com.como.KHForum.entity.CommunityCategory;
 import com.como.KHForum.entity.UserCommunity;
 import com.como.KHForum.entity.enums.EIsa;
-import com.como.KHForum.payload.request.generalRequest.CommunityRequest;
 import com.como.KHForum.payload.request.generalRequest.CreateCommunityRequest;
 import com.como.KHForum.payload.response.CommunityResponse;
 import com.como.KHForum.repository.CategoryRepo;

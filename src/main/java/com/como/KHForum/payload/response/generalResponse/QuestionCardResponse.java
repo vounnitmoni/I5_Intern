@@ -1,6 +1,7 @@
 package com.como.KHForum.payload.response.generalResponse;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +19,6 @@ public class QuestionCardResponse {
     private LocalDate post_duration;
     private String username;
     private Integer answer;
-    private Integer vote;   
+    private Integer vote; 
+    private List<byte[]> photo;  
 }
