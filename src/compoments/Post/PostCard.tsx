@@ -5,29 +5,40 @@ import BottomOption from "./BottomOptionCard";
 import HeaderCard from "./HeaderCard";
 import {useState, useEffect} from 'react';
 import {TouchableOpacity} from 'react-native'
+import { useAppSelector } from "../../store/hooks";
+import ImageSlide from "./ImageSlider";
 
 
 const PostCard : React.FC<{
     title: string | undefined;
     description?: string | undefined;
     community: string | undefined;
-    image?: string | undefined;
+    image?: string[] | undefined;
     vote: number | undefined;
     answer: number | undefined;
-    onPress?: ()=> {};
-}> = ({title, description, image, community,answer, vote, onPress}) =>{
+    botton?: boolean;
+    onPress?: ()=> {} | void;
+}> = ({title, description, image, community,answer , vote, botton= true, onPress}) =>{
     const [line, setLine] = useState(0);
+    const [margin, setMargin] = useState(0);
+    const bool = useAppSelector(state => state.onClickRecursiveReducer.bool)
     useEffect(()=>{
         if(image){
             setLine(2);
         }else{
             setLine(3)
         }
-    },[image])
+    },[image, bool])
+
+    useEffect(()=>{
+        if(description == ''){
+            setMargin(-20)
+        }
+    },[bool])
 
     return(
         <TouchableOpacity style={styles.container} onPress={onPress}>
-            <Stack style={styles.wrapper} space={4}>
+            <Stack style={styles.wrapper} space={3}>
                 <HeaderCard community={community}/>
                 <Text style={styles.title}
                       numberOfLines={line} 
@@ -36,14 +47,20 @@ const PostCard : React.FC<{
                     {title}
                 </Text>
                 {image ? (
-                    <Text>Image</Text>
+                   <View style={{marginTop: 10, marginBottom: 10}}>
+                        <ImageSlide base64={image}/>
+                   </View>
                 ) : (<Text
-                    numberOfLines={3} 
-                    ellipsizeMode='tail'
-                >
+                        numberOfLines={3} 
+                        ellipsizeMode='tail'
+                        style={{marginTop: margin}}
+                    >
                         {description}
-                    </Text>)}
-                <BottomOption comment={answer} vote={vote}/>
+                    </Text>
+                )}
+                {botton ? (
+                    <BottomOption comment={answer} vote={vote}/>) : null
+                }
             </Stack>
         </TouchableOpacity>
     )

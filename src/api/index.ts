@@ -16,7 +16,7 @@ export default class API {
     static async RandomQuestion(body?: any){
         return api.request('/all/post', 'GET', body);
     }
-    static async QuestionById(q_id: number){
-        return api.request(`/all/question/${q_id}`, 'GET', null);
+    static async QuestionById(body: any, q_id: number){
+        return api.request(`/all/question/${q_id}`, 'GET', body);
     }
 }

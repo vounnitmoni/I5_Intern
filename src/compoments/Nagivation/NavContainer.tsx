@@ -18,6 +18,8 @@ const NavContainer = () => {
       <Stack.Group>
         <Stack.Screen name='Navigator' component={Navigator}/>
         <Stack.Screen name='RightDrawer' component={RightDrawer}/>
+      </Stack.Group>
+      <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
       </Stack.Group>
     </Stack.Navigator>

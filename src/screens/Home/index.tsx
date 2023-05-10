@@ -16,8 +16,9 @@ interface IData{
   body: string; 
   post_duration: Date; 
   community: string;
-  answer: number
-  vote: number
+  answer: number;
+  vote: number;
+  photo: string[];
 }
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
@@ -53,6 +54,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
               community={item.item.community}
               answer={item.item.answer}
               vote={item.item.vote}
+              image={item.item.photo}
               onPress={()=> [setId(item.item.id), navigation.navigate('SpecificQuestionScreen')]}
             />
         </View>
