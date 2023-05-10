@@ -7,16 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionCardResponse {
+@Getter
+@Setter
+public class RandomQuestionResponse {
     private Long id;
     private String question;
     private String body;
     private LocalDate post_duration;
-    private String username;
+    private String community;
     private Integer answer;
-    private Integer vote;   
+    private Integer vote; 
 }

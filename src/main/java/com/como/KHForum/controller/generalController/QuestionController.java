@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,10 @@ import com.como.KHForum.entity.QuestionCollectionInfo;
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.payload.request.generalRequest.CreateQuestionRequest;
 import com.como.KHForum.payload.request.generalRequest.VoteRequest;
+import com.como.KHForum.payload.response.generalResponse.QuestionCardResponse;
+import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
+import com.como.KHForum.repository.AnswerRepo;
+import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.CommunityRepo;
 import com.como.KHForum.repository.QuestionCollectionInfoRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
@@ -35,6 +40,8 @@ public class QuestionController {
     @Autowired UserSessions userSessions;
     @Autowired CommunityRepo communityRepo;
     @Autowired QuestionCollectionInfoRepo questionCollectionInfoRepo;
+    @Autowired AnswerRepo answerRepo;
+    @Autowired CommentRepo commentRepo;
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody CreateQuestionRequest request){
@@ -76,5 +83,13 @@ public class QuestionController {
         }); 
         asyncOpt.start();
         return ResponseEntity.ok(questionCollectionInfo);
+    }
+
+    @GetMapping("/{q_id}")
+    public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
+        Questionnaire q = questionnaireRepo.findAllById(q_id);
+        Integer count_answer = answerRepo.countAnswerByQ_Id(q.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(q.getId()));
+        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote());
+        return ResponseEntity.ok().body(r);
     }
 }

@@ -34,8 +34,8 @@ public class Questionnaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 200) private String question;
-    @Size(max = 500) private String body;
+    private String question;
+    private String body;
     @JsonFormat(pattern = "HH:mm:ss") private LocalTime time;
     @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate create_stmp; 
     @JsonFormat(pattern = "yyyy-MM-dd") @Nullable private LocalDate update_stmp;
