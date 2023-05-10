@@ -8,11 +8,14 @@ import {TouchableOpacity} from 'react-native'
 
 
 const PostCard : React.FC<{
-    title: string;
-    description?: string;
-    image?: string;
-    onPress?: ()=> void;
-}> = ({title, description, image, onPress}) =>{
+    title: string | undefined;
+    description?: string | undefined;
+    community: string | undefined;
+    image?: string | undefined;
+    vote: number | undefined;
+    answer: number | undefined;
+    onPress?: ()=> {};
+}> = ({title, description, image, community,answer, vote, onPress}) =>{
     const [line, setLine] = useState(0);
     useEffect(()=>{
         if(image){
@@ -23,9 +26,9 @@ const PostCard : React.FC<{
     },[image])
 
     return(
-        <TouchableOpacity style={styles.container} onPress={()=> null}>
+        <TouchableOpacity style={styles.container} onPress={onPress}>
             <Stack style={styles.wrapper} space={4}>
-                <HeaderCard community="com/Cambodia"/>
+                <HeaderCard community={community}/>
                 <Text style={styles.title}
                       numberOfLines={line} 
                       ellipsizeMode='tail'
@@ -40,7 +43,7 @@ const PostCard : React.FC<{
                 >
                         {description}
                     </Text>)}
-                <BottomOption comment={30} vote={60}/>
+                <BottomOption comment={answer} vote={vote}/>
             </Stack>
         </TouchableOpacity>
     )

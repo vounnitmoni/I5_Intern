@@ -13,4 +13,10 @@ export default class API {
     static async AskQuestion(body: any){
         return api.request('/all/question/create', 'POST', body);
     }
+    static async RandomQuestion(body?: any){
+        return api.request('/all/post', 'GET', body);
+    }
+    static async QuestionById(q_id: number){
+        return api.request(`/all/question/${q_id}`, 'GET', null);
+    }
 }

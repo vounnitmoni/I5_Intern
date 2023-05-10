@@ -66,7 +66,7 @@ const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
       }else{
           dispatch(circularClick(true));
       }
-    }).catch(e=> (e as Error).message)
+    }).catch(e=> (e as Error).message);
   };
 
   return (

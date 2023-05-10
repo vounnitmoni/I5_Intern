@@ -5,8 +5,8 @@ import {useState, useMemo, useEffect} from 'react';
 
 
 const BottomOption : React.FC <{
-    vote: number;
-    comment: number;
+    vote: number | undefined;
+    comment: number | undefined;
 }> = ({vote = 0 , comment = 0}) =>{
     const [votes, setVotes] = useState(vote);
     const [comments, setComments] = useState(comment);

@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Navigator: undefined;
   QuestionScreen: undefined;
   RightDrawer: undefined;
+  SpecificQuestionScreen: undefined;
 };
 
 export type AuthStackParamList = {

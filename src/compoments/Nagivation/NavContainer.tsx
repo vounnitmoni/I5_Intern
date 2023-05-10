@@ -5,6 +5,7 @@ import {RootStackParamList} from './TypeNavigation';
 import Header from '../Header';
 import Navigator from './Navigator';
 import RightDrawer from './RightDrawer';
+import SpecificQuestionScreen from '../../screens/SpecifiQuestionScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -17,6 +18,7 @@ const NavContainer = () => {
       <Stack.Group>
         <Stack.Screen name='Navigator' component={Navigator}/>
         <Stack.Screen name='RightDrawer' component={RightDrawer}/>
+        <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );

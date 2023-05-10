@@ -5,6 +5,25 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    // "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   }
+    // "compilerOptions": {
+    //     "strictNullChecks": true,
+    //     "moduleResolution": "node",
+    //     "jsx": "react",
+    //     "noUnusedParameters": true,
+    //     "noUnusedLocals": true,
+    //     "allowSyntheticDefaultImports":true,
+    //     "target": "es5",
+    //     "module": "ES2015",
+    //     "declaration": true,
+    //     "outDir": "./lib",
+    //     "noImplicitAny": true,
+    //     "importHelpers": true
+    //   },
+    //   "include": [
+    //     "src/**/*",
+    //     "index.d.ts",   // declaration file path
+    //   ],
+    //   "compileOnSave": false
 }

@@ -3,7 +3,7 @@ import { Icon, Text } from "@rneui/themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 const HeaderCard : React.FC <{
-    community: string;
+    community: string | undefined;
     communityOnPress?: ()=> void;
     dotsOnPress?: ()=> void;
 }> = ({community, communityOnPress, dotsOnPress}) =>{
