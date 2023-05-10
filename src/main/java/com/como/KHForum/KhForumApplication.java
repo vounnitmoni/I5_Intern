@@ -9,5 +9,4 @@ public class KhForumApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KhForumApplication.class, args);
 	}
-
 }

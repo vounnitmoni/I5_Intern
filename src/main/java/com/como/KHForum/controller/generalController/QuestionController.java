@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.como.KHForum.entity.File;
 import com.como.KHForum.entity.QuestionCollectionInfo;
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.payload.request.generalRequest.CreateQuestionRequest;
@@ -25,6 +28,7 @@ import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.CommunityRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.QuestionCollectionInfoRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
@@ -42,6 +46,7 @@ public class QuestionController {
     @Autowired QuestionCollectionInfoRepo questionCollectionInfoRepo;
     @Autowired AnswerRepo answerRepo;
     @Autowired CommentRepo commentRepo;
+    @Autowired FileRepo fileRepo;
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody CreateQuestionRequest request){
@@ -55,9 +60,12 @@ public class QuestionController {
                                                         0, 
                                                         userSessions.getUserId(),
                                                         communityRepo.findCommunityIdByName(request.getCommunity()),
-                                                        0,
-                                                        request.getPhoto());
-        questionnaireRepo.save(questionnaire);
+                                                        0);
+        questionnaireRepo.saveAndFlush(questionnaire);
+        request.getPhoto().forEach(e->{
+            File q_photo = new File(questionnaire.getId(), e);
+            fileRepo.save(q_photo); 
+        });                                            
         return ResponseEntity.ok(questionnaire);
     }
 
@@ -89,7 +97,7 @@ public class QuestionController {
     public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
         Questionnaire q = questionnaireRepo.findAllById(q_id);
         Integer count_answer = answerRepo.countAnswerByQ_Id(q.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(q.getId()));
-        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote(), q.getPhoto());
+        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote(), fileRepo.fileByQ_id(q_id));
         return ResponseEntity.ok().body(r);
     }
 }

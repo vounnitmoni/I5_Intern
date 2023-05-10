@@ -1,9 +1,5 @@
 package com.como.KHForum.controller.QuestionCardController;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,17 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.como.KHForum.entity.Questionnaire;
-import com.como.KHForum.repository.AnswerRepo;
-import com.como.KHForum.repository.FollowerRepo;
-import com.como.KHForum.repository.QuestionnaireRepo;
-import com.como.KHForum.repository.UserCategoryRepo;
-import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.service.PostCardService.QuestionCardService;
-import com.como.KHForum.webconfig.session.UserSessions;
 
 @RestController
 @RequestMapping("api/all/post")

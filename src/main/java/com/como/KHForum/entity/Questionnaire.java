@@ -40,10 +40,6 @@ public class Questionnaire {
     @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate create_stmp; 
     @JsonFormat(pattern = "yyyy-MM-dd") @Nullable private LocalDate update_stmp;
     
-    @Lob
-    @Column(name = "photo", columnDefinition="BLOB")
-    private List<byte[]> photo;
-    
     private Boolean is_approve;
     private Integer report;
     private Integer vote;
@@ -61,7 +57,7 @@ public class Questionnaire {
     @Column(name = "community_id") private Long community_id;
 
     public Questionnaire(String question ,String body, LocalTime time, LocalDate create_stmp, LocalDate update_stmp,
-            Boolean is_approve, Integer report, Long author_id, Long community_id, Integer vote, List<byte[]> photo) {
+            Boolean is_approve, Integer report, Long author_id, Long community_id, Integer vote) {
         this.question = question;
         this.body = body;
         this.time = time;
@@ -72,7 +68,6 @@ public class Questionnaire {
         this.author_id = author_id;
         this.community_id = community_id;
         this.vote = vote;
-        this.photo = photo;
     }
 
     
