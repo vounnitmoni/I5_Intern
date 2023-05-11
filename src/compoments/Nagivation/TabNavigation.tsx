@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Icon} from '@rneui/themed';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../../screens/Home';
@@ -60,24 +60,47 @@ const TabNavigation = () => {
         },
       }}>
       {bottoms.map((item, index) => {
-        return (
-          <Tab.Screen
-            key={index}
-            name={item.name}
-            component={item.component}
-            options={{
-              tabBarLabel: item.label,
-              tabBarIcon: ({color, size}) => (
-                <Icon
-                  name={item.icon}
-                  type={item.type}
-                  color={color}
-                  size={size}
-                />
-              ),
-            }}
-          />
-        );
+        if(item.label == 'Question'){
+          return(
+              <Tab.Screen
+                key={index}
+                name={item.name}
+                component={item.component}
+                options={{
+                  tabBarLabel: item.label,
+                  tabBarIcon: ({color, size}) => (
+                    <Icon
+                      name={item.icon}
+                      type={item.type}
+                      color={color}
+                      size={size}
+                    />
+                  ),
+                  tabBarStyle:{display: 'none'}
+                  
+                }}
+              />
+            );
+        }else{
+          return(
+            <Tab.Screen
+              key={index}
+              name={item.name}
+              component={item.component}
+              options={{
+                tabBarLabel: item.label,
+                tabBarIcon: ({color, size}) => (
+                  <Icon
+                    name={item.icon}
+                    type={item.type}
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
+          )
+        }
       })}
     </Tab.Navigator>
   );

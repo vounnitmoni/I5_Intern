@@ -1,7 +1,8 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Text } from "@rneui/themed"
 import { useState } from "react"
-import {View, StyleSheet, Dimensions} from 'react-native'
+import {View, StyleSheet, Dimensions, ScrollView, StyleProp, ViewStyle} from 'react-native'
+import BottomOption from './BottomOptionCard'
 
 
 const CommentCard : React.FC<{
@@ -9,38 +10,37 @@ const CommentCard : React.FC<{
     styleProp?: {
         minusMaxWidth: number;
     };
+    style?: StyleProp<ViewStyle>
 }> = ({children, styleProp={minusMaxWidth: 5}}) =>{
     const [height, setHeight] = useState();
     const onLayout=(event : any)=> {
-        const {height, width} = event.nativeEvent.layout;
+        const {height} = event.nativeEvent.layout;
         setHeight(height)
     }
     var screen = Dimensions.get("screen").width;
     return(
-        <View style={styles.container}>
-            <Stack space={3}>
-                <Inline space={2}>
-                    <View style={[styles.verticalLine, {height : height}]} />
-                    <Stack onLayout={onLayout} style={styles.wrapper} space={1} >
+            <View style={{flex: 1}}>
+            <Inline space={2} style={{alignItems: 'flex-end'}}>
+                <View style={{width: 1, backgroundColor: '#909090', height: height}}></View>
+                <View onLayout={onLayout} style={{width: screen - screen*styleProp.minusMaxWidth/100, alignItems: 'flex-end'}}>
+                    <View style={{width: '99%'}}>
                         <Inline space={2}>
                             <Text>Profile</Text>
                             <Text>Voun Nitmoni</Text>
                             <Text style={{opacity: 0.5}}>1d</Text>
                         </Inline>
-                        <Text style={{maxWidth: screen - screen*styleProp?.minusMaxWidth/100}}>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem sequi temporibus explicabo suscipit obcaecati incidunt facilis ex, expedita cumque commodi maiores accusamus pariatur non architecto culpa perferendis, nisi nam. Alias!
-                        </Text>
-                        <Inline space={2} alignX={"right"}>
-                            <Text>Comment</Text>
-                            <Text>Vote</Text>
-                            <Text>3Dots</Text>
-                        </Inline>
                         <View>
-                            {children}
+                            <Text style={{maxWidth: '95%'}}>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque eos maxime explicabo repudiandae animi est provident, dolorem a molestiae, quas recusandae impedit sint, cumque perferendis. Voluptas quasi corporis accusantium quas.
+                            </Text>
                         </View>
-                    </Stack>
-                </Inline>
-            </Stack>
+                        <View style={{alignItems: 'flex-end', paddingRight: 10}}>
+                            <BottomOption vote={undefined} comment={undefined} />
+                        </View>
+                        {children}
+                    </View>
+                </View>
+            </Inline>
         </View>
     )
 }
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     wrapper:{
-        paddingLeft: 12
+    
     },
     verticalLine:{
-        width: 0.4,
+        width: 1,
         backgroundColor: '#909090',
         marginLeft: 12
     }

@@ -7,6 +7,7 @@ import API from '../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { circularClick } from '../../store/onClickRecursiveReducer';
+import PostCard from '../../compoments/Post/PostCard';
 
 const SupportScreen = () => {
   const {t} = useTranslation();

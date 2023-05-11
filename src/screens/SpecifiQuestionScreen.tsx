@@ -5,6 +5,7 @@ import API from "../api"
 import PostCard from "../compoments/Post/PostCard";
 import { circularClick } from "../store/onClickRecursiveReducer";
 import { View } from "react-native";
+import ImageSlide from "../compoments/Post/ImageSlider";
 
 interface IData{
     id: number;
@@ -32,6 +33,7 @@ const SpecificQuestionScreen = () =>{
             }
         })
         .catch(e => (e as Error).message);
+        console.log(object?.photo)
     }, [])
     return(
        <View>

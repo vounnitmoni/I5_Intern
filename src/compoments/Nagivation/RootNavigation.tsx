@@ -10,7 +10,7 @@ const RootNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: ()=> <Header />
+        headerShown: false
       }}
     >
       <Stack.Group>

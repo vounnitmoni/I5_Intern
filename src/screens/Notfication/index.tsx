@@ -2,18 +2,25 @@ import React from 'react';
 import {Text} from '@rneui/themed';
 import CommentCard from '../../compoments/Post/CommentCard';
 import {View} from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler';
+import { Stack } from '@mobily/stacks';
 const NotificationScreen = () => {
   return (
-    <View>
+    <ScrollView>
+      <Stack space={3}>
         <CommentCard>
-          <CommentCard styleProp={{minusMaxWidth: 15}}>
-            <CommentCard styleProp={{minusMaxWidth: 23}}>
-              <CommentCard styleProp={{minusMaxWidth: 33}}/>
-              <CommentCard styleProp={{minusMaxWidth: 33}}/>
+            <CommentCard styleProp={{minusMaxWidth: 10}}>
+            <CommentCard styleProp={{minusMaxWidth: 15}}>
+            <CommentCard styleProp={{minusMaxWidth: 20}}>
+            <CommentCard styleProp={{minusMaxWidth: 25}}> 
+              </CommentCard>
+              </CommentCard>
+              </CommentCard>
             </CommentCard>
           </CommentCard>
-        </CommentCard>
-    </View>
+          <CommentCard />
+      </Stack>
+    </ScrollView>
   )
 };
 

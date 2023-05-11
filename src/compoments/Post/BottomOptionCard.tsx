@@ -1,10 +1,11 @@
 import { Inline } from "@mobily/stacks";
 import { Icon, Text } from "@rneui/themed"
-import {TouchableOpacity, StyleSheet} from 'react-native'
+import {TouchableOpacity, StyleSheet, StyleProp, ViewStyle} from 'react-native'
 import {useState, useMemo, useEffect} from 'react';
 
 
 const BottomOption : React.FC <{
+    style?: StyleProp<ViewStyle>;
     vote: number | undefined;
     comment: number | undefined;
 }> = ({vote = 0 , comment = 0}) =>{

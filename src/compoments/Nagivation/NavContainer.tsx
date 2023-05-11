@@ -6,13 +6,14 @@ import Header from '../Header';
 import Navigator from './Navigator';
 import RightDrawer from './RightDrawer';
 import SpecificQuestionScreen from '../../screens/SpecifiQuestionScreen';
+import QuestionScreen from '../../screens/Question';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerTitle: ()=> <Header />
       }}
     >
       <Stack.Group>
@@ -21,6 +22,9 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
+      </Stack.Group>
+      <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen options={{headerShown:false}} name='QuestionScreen' component={QuestionScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );
