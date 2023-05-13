@@ -9,7 +9,7 @@ const NotificationScreen = () => {
     <ScrollView>
       <Stack space={3}>
         <CommentCard>
-            <CommentCard styleProp={{minusMaxWidth: 10}}>
+            <CommentCard ago={2200} styleProp={{minusMaxWidth: 10}}>
             <CommentCard styleProp={{minusMaxWidth: 15}}>
             <CommentCard styleProp={{minusMaxWidth: 20}}>
             <CommentCard styleProp={{minusMaxWidth: 25}}> 

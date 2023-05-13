@@ -1,22 +1,58 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Text } from "@rneui/themed"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {View, StyleSheet, Dimensions, ScrollView, StyleProp, ViewStyle} from 'react-native'
 import BottomOption from './BottomOptionCard'
 
+interface I {
+    agoData: number;
+    marker: string;
+}
 
 const CommentCard : React.FC<{
     children?: React.ReactNode | React.ReactNode[],
+    ago: number;
     styleProp?: {
         minusMaxWidth: number;
     };
     style?: StyleProp<ViewStyle>
-}> = ({children, styleProp={minusMaxWidth: 5}}) =>{
+}> = ({children, styleProp={minusMaxWidth: 5}, ago = 0}) =>{
     const [height, setHeight] = useState();
+    const [object, setObject] = useState<I>({
+        agoData: 0,
+        marker: '',
+    })
     const onLayout=(event : any)=> {
         const {height} = event.nativeEvent.layout;
         setHeight(height)
     }
+    useEffect(()=>{
+        if(ago >= 24){
+            if(ago >= 30*24){
+                if(ago>=365*24){
+                    setObject({
+                        agoData: Math.trunc(ago/(365*24)),
+                        marker: 'y'
+                    })
+                }else{
+                    setObject({
+                        agoData: Math.trunc(ago/(30*24)),
+                        marker: 'm'
+                    })
+                }
+            }else{
+                setObject({
+                    agoData : Math.trunc(ago/24),
+                    marker: 'd'
+                })
+            }
+        }else{
+            setObject({
+                agoData: ago,
+                marker: 'h',
+            })
+        }
+    },[ago])
     var screen = Dimensions.get("screen").width;
     return(
             <View style={{flex: 1}}>
@@ -27,7 +63,7 @@ const CommentCard : React.FC<{
                         <Inline space={2}>
                             <Text>Profile</Text>
                             <Text>Voun Nitmoni</Text>
-                            <Text style={{opacity: 0.5}}>1d</Text>
+                            <Text style={{opacity: 0.5}}>{object.agoData}{object.marker}</Text>
                         </Inline>
                         <View>
                             <Text style={{maxWidth: '95%'}}>
