@@ -6,21 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Stack } from '@mobily/stacks';
 const NotificationScreen = () => {
   return (
-    <ScrollView>
-      <Stack space={3}>
-        <CommentCard>
-            <CommentCard ago={2200} styleProp={{minusMaxWidth: 10}}>
-            <CommentCard styleProp={{minusMaxWidth: 15}}>
-            <CommentCard styleProp={{minusMaxWidth: 20}}>
-            <CommentCard styleProp={{minusMaxWidth: 25}}> 
-              </CommentCard>
-              </CommentCard>
-              </CommentCard>
-            </CommentCard>
-          </CommentCard>
-          <CommentCard />
-      </Stack>
-    </ScrollView>
+    null
   )
 };
 

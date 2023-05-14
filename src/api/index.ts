@@ -18,5 +18,9 @@ export default class API {
     }
     static async QuestionById(body: any, q_id: number){
         return api.request(`/all/question/${q_id}`, 'GET', body);
+    
+    }
+    static async AnswerandComment(body: any){
+        return api.request(`/all/card/comments`, 'POST', body);
     }
 }

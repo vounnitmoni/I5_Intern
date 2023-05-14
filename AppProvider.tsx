@@ -29,7 +29,6 @@ const AppProvider: React.FC<PropsWithChildren> = ({children}) => {
   
     useEffect(()=>{
       token();
-      console.log(action)
     },[action]);
 
   if (accessToken === '') {

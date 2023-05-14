@@ -10,10 +10,15 @@ import QuestionScreen from '../../screens/Question';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
+  const component = () =>{
+    return(
+      <Header />
+    )
+  }
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: ()=> <Header />
+        headerTitle: ()=> component()
       }}
     >
       <Stack.Group>

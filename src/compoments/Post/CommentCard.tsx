@@ -10,13 +10,17 @@ interface I {
 }
 
 const CommentCard : React.FC<{
-    children?: React.ReactNode | React.ReactNode[],
     ago: number;
+    profile?: string;
+    username?: string;
+    answer: string;
+    vote?: number;
+    children?: ()=> JSX.Element,
     styleProp?: {
         minusMaxWidth: number;
     };
     style?: StyleProp<ViewStyle>
-}> = ({children, styleProp={minusMaxWidth: 5}, ago = 0}) =>{
+}> = ({children, styleProp={minusMaxWidth: 5}, ago = 0, answer, profile, username, vote}) =>{
     const [height, setHeight] = useState();
     const [object, setObject] = useState<I>({
         agoData: 0,
@@ -61,13 +65,13 @@ const CommentCard : React.FC<{
                 <View onLayout={onLayout} style={{width: screen - screen*styleProp.minusMaxWidth/100, alignItems: 'flex-end'}}>
                     <View style={{width: '99%'}}>
                         <Inline space={2}>
-                            <Text>Profile</Text>
-                            <Text>Voun Nitmoni</Text>
+                            {profile ? (<Text>{profile}</Text>) : <Text>Profile</Text>} 
+                            {username ? (<Text>{username}</Text>) : <Text>Voun Nitmoni</Text>}
                             <Text style={{opacity: 0.5}}>{object.agoData}{object.marker}</Text>
                         </Inline>
                         <View>
                             <Text style={{maxWidth: '95%'}}>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque eos maxime explicabo repudiandae animi est provident, dolorem a molestiae, quas recusandae impedit sint, cumque perferendis. Voluptas quasi corporis accusantium quas.
+                                   {answer}
                             </Text>
                         </View>
                         <View style={{alignItems: 'flex-end', paddingRight: 10}}>

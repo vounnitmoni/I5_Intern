@@ -55,7 +55,6 @@ const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
           // document.cookie =`attcookie=${data.token}`
           AsyncStorage.setItem("token", data.accessToken);
           // rootNav.navigate(ROUTES.HOME)
-          console.log(data.accessToken)
         }else{
           Alert.alert("Wrong username and password!")
         }

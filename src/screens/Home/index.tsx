@@ -40,9 +40,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
       setObject(e)
     );
   },[bool])
-  const moreData = () =>{
-    console.log()
-  }
+
   return (
     <FlatList 
       data={object}
@@ -59,37 +57,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
             />
         </View>
     }
-    onEndReached={()=> [moreData(), flag()]}
-    scrollEnabled={true}
-    
   />
-
-
-
-    // <>
-    //   {object.map((item, index)=>{
-    //     return(
-    //       <PostCard key={index} 
-    //         title={item.question}
-    //         description={item.body}
-    //         community={item.community}
-    //         onPress={()=> console.log(object.map(e => e.post_duration).reverse())}
-    //       />
-    //     )
-    //   })}
-    // </>
-
-    // <>
-    //   {object.map((item,index)=> {
-    //     return(
-    //       <View key={index} style={{padding: 10}}>
-    //         <Text>{item.id}</Text>
-    //         <Text>{item.question}</Text>
-    //       </View>
-    //     )
-    //   })}
-    // </>
-
   );
 };
 
