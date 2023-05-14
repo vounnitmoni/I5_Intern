@@ -17,7 +17,7 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
     Answer findAllById(@Param("id") Long id);
 
     //limit traffic 
-    @Query(value = "select * from kh_forum.answers where question_id = :q_id and id > :last_id limit 1", nativeQuery = true)
+    @Query(value = "select * from kh_forum.answers where question_id = :q_id and id > :last_id order by vote desc limit 20", nativeQuery = true)
     Set<Answer> findAnswerIdByQ_id(@Param("q_id") Long q_id, @Param("last_id") Long last_id);
     @Query(value = "select id from kh_forum.answers where question_id = :q_id and id > :last_id limit 1", nativeQuery = true)
     Long findLastIdOfLastTwenty(@Param("q_id") Long q_id, @Param("last_id") Long last_id);

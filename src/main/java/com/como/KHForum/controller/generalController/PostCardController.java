@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Answer;
 import com.como.KHForum.entity.Comment;
+import com.como.KHForum.payload.request.FeedRequest;
 import com.como.KHForum.payload.response.MainFeedResponse;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.CommentRepo;
@@ -45,29 +46,29 @@ public class PostCardController {
         private Set<Answer> answers = new HashSet<>();
         private Set<Set<Comment>> comments = new HashSet<>();
     }
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    protected class Flag{
-        private Integer flags;
-    }
-    @Getter
-    @Setter
-    protected class FeedRequest{
-        private Long question_id;
-        private Integer flags;
-        FeedRequest(){};
-        FeedRequest (Long question_id, Integer flags){
-            this.flags = flags;
-            this.question_id = question_id;
-        }
-    }
+    // @Getter
+    // @Setter
+    // @AllArgsConstructor
+    // @NoArgsConstructor
+    // protected class Flag{
+    //     private Integer flags;
+    // }
+    // @Getter
+    // @Setter
+    // protected class FeedRequest{
+    //     private Long question_id;
+    //     private Integer flags;
+    //     FeedRequest(){};
+    //     FeedRequest (Long question_id, Integer flags){
+    //         this.flags = flags;
+    //         this.question_id = question_id;
+    //     }
+    // }
 
 //------------------------------------------------------------------------------------------------
-    @PostMapping("/test")
-    public ResponseEntity<?> test(){
-        MainFeedResponse payload = mainFeedService.coreFeed((long) 7, 2);
+    @PostMapping("/comments")
+    public ResponseEntity<?> test(@RequestBody FeedRequest request){
+        MainFeedResponse payload = mainFeedService.coreFeed(request.getQuestion_id(), request.getFlag());
         return ResponseEntity.ok(payload);
     }
 }

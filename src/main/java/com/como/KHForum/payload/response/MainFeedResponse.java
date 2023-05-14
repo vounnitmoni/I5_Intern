@@ -17,5 +17,5 @@ import lombok.Setter;
 @Setter
 public class MainFeedResponse {
     private Set<Answer> answers = new HashSet<>();
-    private Set<Set<Comment>> comments = new HashSet<>();
+    private Set<Comment> comments = new HashSet<>();
 }
