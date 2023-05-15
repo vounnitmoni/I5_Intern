@@ -29,7 +29,7 @@ const NavContainer = () => {
         <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: false}}>
-        <Stack.Screen options={{headerShown:false}} name='QuestionScreen' component={QuestionScreen}/>
+        <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );

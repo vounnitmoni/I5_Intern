@@ -1,61 +1,98 @@
-import { Inline, Stack } from "@mobily/stacks";
-import { Button, Icon } from "@rneui/themed";
-import React, { useState } from "react";
+import { Box, Inline, Stack } from "@mobily/stacks";
+import { Button, Icon, Text } from "@rneui/themed";
+import React, { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Dropdown from "../../compoments/DropDown";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
+import { ROUTES } from "../../enums/RouteEnum";
+import { useKeyboard } from "../../utils/keyboardHeight";
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { Venue } from "./photoList";
 
 interface QuestionValue{
     question: string;
     description?: string;
+    url: string;
+    photo: undefined;
+
 }
 
+interface imageData {
+    uri: string;
+    base64: string;
+}
 
-const QuestionScreen = () =>{
-    const {
-        handleSubmit,
-        control,
-        formState: {errors},
-      } = useForm<QuestionValue>({
-        defaultValues: {
-          question: undefined,
-          description: undefined,
-        },
-      });
+type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
+
+const QuestionScreen : React.FC<{navigation : navigation}> = (navigation) =>{
     const [next, setNext] = useState(false);
     const {t}=useTranslation()
+    const inputRef = useRef();
+    const keyboardHeight = useKeyboard();
+    const [photo, setPhoto] = useState<imageData[]>([]);
+    const [exist, setExist] = useState(false)
+    const openGallery = async () =>{
+        const data = await launchImageLibrary({
+                includeBase64: true,
+                mediaType: "photo"
+            }).then((e : any) => 
+                e.assets!.map((item, index)=>{
+                    console.log(index)
+                    setPhoto(prev => [
+                        ...prev, 
+                        {
+                            uri: e.assets[index].uri,
+                            base64: e.assets[index].base64,
+                        }
+                    ])
+                })
+            ).then(()=> setExist(true))
+        }
+    
     return(
-        <View style={styles.container}>
-            <Stack space={3}>
-                <View style={styles.containerChild}>
-                    <Stack space={3} style={{margin: 10}}>
-                        <TextInput multiline placeholder="Question" style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} placeholderTextColor={"#8996a1"}/>
-                        <View style={{width: '90%', borderWidth: 0.2}}/>
-                        <TextInput multiline placeholder="Text body (Optional)" style={{color: "black", fontSize: 15, width: '95%'}} placeholderTextColor={"#8996a1"}/>
-                        <View style={{width: '90%', borderWidth: 0.2}}/>
-                        <Dropdown label="community"/>
-                    </Stack>
-                </View>
+        <SafeAreaView style={styles.container}>
+            <Stack space={2} style={styles.wrapper}>
+                <Box alignX={"between"} direction={"row"} style={{alignItems: "center"}}>
+                    <TouchableOpacity>
+                        <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> navigation.navigation.goBack()}/>
+                    </TouchableOpacity>
+                    <Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={null}/>
+                </Box>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {exist && photo.map((item, index)=>{
+                        return(
+                            <Venue image={{uri : item.uri} as any} key={index}/>
+                        )
+                    })}
+                </ScrollView>
+                <TextInput 
+                    multiline 
+                    placeholder="Question" 
+                    style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} 
+                    placeholderTextColor={"#8996a1"}
+                    autoFocus={true}/>
+                <View style={{width: '90%', borderWidth: 0.2}}/>
+                <TextInput multiline placeholder="Text body (Optional)" style={{color: "black", fontSize: 15, width: '95%'}} placeholderTextColor={"#8996a1"}/>
             </Stack>
-            <Inline space={3} alignX={'right'} style={{marginRight: 10}}>
-                <Button radius={'sm'} type="solid" containerStyle={{width: 100}} buttonStyle={{backgroundColor: "red"}}>
-                    Discard
-                    <Icon name="clear" color="white" />
-                </Button>
-                <Button radius={'sm'} type="solid" containerStyle={{width: 100}} onPress={()=> setNext(true)}>
-                    Post
-                    <Icon name="navigate-next" color="white" />
-                </Button>
-            </Inline>
-        </View>
+            <View style={[styles.footer]}>
+                <Inline space={4} alignX={"left"}>
+                    <Icon name="link" type="antdesign" onPress={()=> navigation.navigation.goBack()}/>
+                    <Icon name="add-photo-alternate" type="materialicon" onPress={()=> openGallery()}/>
+                    <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> navigation.navigation.goBack()}/>
+                </Inline>
+            </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex:1
+        flex:1,
     },
     containerChild:{
         minHeight: 500,
@@ -63,5 +100,44 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 10
     },
+    wrapper:{
+        padding: 12,
+    },
+    footer: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#EE5407',
+        justifyContent: "center",
+        position: 'absolute', //Here is the trick
+        bottom: 0,
+        paddingLeft: 12
+    }
   })
 export default QuestionScreen
+
+
+
+
+
+
+//<Stack space={3}>
+            //     <View style={styles.containerChild}>
+            //         <Stack space={3} style={{margin: 10}}>
+            //             <TextInput multiline placeholder="Question" style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} placeholderTextColor={"#8996a1"}/>
+            //             <View style={{width: '90%', borderWidth: 0.2}}/>
+            //             <TextInput multiline placeholder="Text body (Optional)" style={{color: "black", fontSize: 15, width: '95%'}} placeholderTextColor={"#8996a1"}/>
+            //             <View style={{width: '90%', borderWidth: 0.2}}/>
+            //             <Dropdown label="community"/>
+            //         </Stack>
+            //     </View>
+            // </Stack>
+            // <Inline space={3} alignX={'right'} style={{marginRight: 10}}>
+            //     <Button radius={'sm'} type="solid" containerStyle={{width: 100}} buttonStyle={{backgroundColor: "red"}}>
+            //         Discard
+            //         <Icon name="clear" color="white" />
+            //     </Button>
+            //     <Button radius={'sm'} type="solid" containerStyle={{width: 100}} onPress={()=> setNext(true)}>
+            //         Post
+            //         <Icon name="navigate-next" color="white" />
+            //     </Button>
+            // </Inline>

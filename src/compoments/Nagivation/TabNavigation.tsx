@@ -7,6 +7,9 @@ import {ROUTES} from '../../enums/RouteEnum';
 import variables from '../../assets/styles/variables';
 import NotificationScreen from '../../screens/Notfication';
 import QuestionScreen from '../../screens/Question';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from './TypeNavigation';
+import { StackNavigationProp, createStackNavigator } from '@react-navigation/stack';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +44,9 @@ const bottoms = [
   },
 ];
 
-const TabNavigation = () => {
+type navigation = StackNavigationProp<RootStackParamList, ROUTES.TAB>
+
+const TabNavigation : React.FC<{navigation: navigation}> = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName={ROUTES.HOME}
@@ -66,6 +71,12 @@ const TabNavigation = () => {
                 key={index}
                 name={item.name}
                 component={item.component}
+                listeners={()=>({
+                  tabPress: (e) => {
+                    e.preventDefault();
+                    navigation.navigate('QuestionScreen');
+                  }
+                })}
                 options={{
                   tabBarLabel: item.label,
                   tabBarIcon: ({color, size}) => (
@@ -87,6 +98,7 @@ const TabNavigation = () => {
               key={index}
               name={item.name}
               component={item.component}
+              // component={item.component}
               options={{
                 tabBarLabel: item.label,
                 tabBarIcon: ({color, size}) => (

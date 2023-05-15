@@ -1,6 +1,6 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Text } from "@rneui/themed"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import {View, StyleSheet, Dimensions, ScrollView, StyleProp, ViewStyle} from 'react-native'
 import BottomOption from './BottomOptionCard'
 
@@ -15,7 +15,7 @@ const CommentCard : React.FC<{
     username?: string;
     answer: string;
     vote?: number;
-    children?: ()=> JSX.Element,
+    children?: React.ReactNode | React.ReactNode[],
     styleProp?: {
         minusMaxWidth: number;
     };

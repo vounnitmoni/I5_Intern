@@ -1,14 +1,11 @@
 import { Text } from "@rneui/themed"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import API from "../api"
 import PostCard from "../compoments/Post/PostCard";
-import { circularClick } from "../store/onClickRecursiveReducer";
 import { ScrollView, View } from "react-native";
-import ImageSlide from "../compoments/Post/ImageSlider";
 import { Stack } from "@mobily/stacks";
 import CommentCard from "../compoments/Post/CommentCard";
-import { FlatList } from "react-native-gesture-handler";
 import { IAnswerData, ICommentData, IQuestionData } from "../interfaces/IAPI";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -19,14 +16,13 @@ interface IData {
 
 const SpecificQuestionScreen = () =>{
     const question_id = useAppSelector(state => state.questionId.q_id);
-    const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
-    const dispatch = useAppDispatch();
     const [object, setObject] = useState<IQuestionData>();
     const [answerObject, setAnswerObject] = useState<IData>({
         answer: [],
         comment: [],
     });
-    const [flag, setFlag] = useState(0);
+    const flag : number = 0;
+
     useEffect(()=>{ 
         API.QuestionById({},question_id).then(res => res.json())
         .then(async e => setObject(e))
@@ -48,23 +44,37 @@ const SpecificQuestionScreen = () =>{
         })
         
     },[flag])
-    const renderAnswer = () =>{
-        return(
-            // <Stack space={3}>
-            //     {answerObject.comment.map((item, index)=>{
-            //         return(
-            //             <CommentCard
-            //                 ago={10} 
-            //                 key={index}
-            //                 answer={item.comment} 
-            //              />
-            //         )
-            //     })}
-            // </Stack>
-            <CommentCard ago={20} answer="hello"/>
-        )
-    }
+    const recursiveComment = (props : number) : React.ReactNode | React.ReactNode[] => 
+            <Stack>
+                {answerObject.comment.map((item, index)=>{
+                    {answerObject.comment.map((item1, index1)=>{
+                        if(item1.parent_id === item.id){
+                            return(
+                                <CommentCard ago={49} styleProp={{minusMaxWidth: 20}} answer={item1.comment} key={index1}/>
+                            )
+                        }
+                    })}
+                    if(item.parent_id == props){
+                        return(
+                            <CommentCard ago={49} styleProp={{minusMaxWidth: 15}} answer={item.comment} key={index} />
+                        )
+                    }
+                })}
+            </Stack>
 
+    const renderAnswer = (props: any) : React.ReactNode | React.ReactNode[] => 
+            <Stack space={3}>
+                {answerObject.comment.map((item, index)=>{
+                    if(item.answer_id == props && item.parent_id === null){
+                        return(
+                            <CommentCard key={index} styleProp={{minusMaxWidth: 10}} ago={30} answer={item.comment} children={recursiveComment(item.id)}/>
+                        )
+                    }else if(item.id){
+
+                    }
+                })}
+            </Stack>
+            
     return(
        <ScrollView >
             <Stack space={2}>
@@ -79,7 +89,7 @@ const SpecificQuestionScreen = () =>{
                     />
                 {answerObject.answer.map((item, index)=>{
                     return(
-                        <CommentCard answer={item.answer} ago={20} key={index} children={renderAnswer} />
+                        <CommentCard answer={item.answer} ago={20} key={index} children={renderAnswer(item.id)} />
                     )
                 })}
             </Stack>
