@@ -7,6 +7,7 @@ import Navigator from './Navigator';
 import RightDrawer from './RightDrawer';
 import SpecificQuestionScreen from '../../screens/SpecifiQuestionScreen';
 import QuestionScreen from '../../screens/Question';
+import CommunityListScreen from '../../screens/Question/communityList';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -30,6 +31,7 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
+        <Stack.Screen name='CommunityListScreen' component={CommunityListScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );

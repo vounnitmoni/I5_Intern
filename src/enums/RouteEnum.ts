@@ -10,4 +10,5 @@ export enum ROUTES {
   RIGHTDRAWER='RightDrawer',
   SPECIFIC_QUESTION = 'SpecificQuestionScreen',
   TAB = "TabNavigation",
+  COMMUNITYLIST= "CommunityListScreen"
 }

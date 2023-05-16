@@ -1,24 +1,25 @@
 import { Box, Inline, Stack } from "@mobily/stacks";
-import { Button, Icon, Text } from "@rneui/themed";
-import React, { useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Icon } from "@rneui/themed";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import Dropdown from "../../compoments/DropDown";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
 import { ROUTES } from "../../enums/RouteEnum";
-import { useKeyboard } from "../../utils/keyboardHeight";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { Venue } from "./photoList";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { hasCommunity } from "../../store/onClickRecursiveReducer";
+import PostQuestionReducer, { resetData, setData } from "../../store/PostQuestionReducer";
+import API from "../../api";
 
 interface QuestionValue{
     question: string;
     description?: string;
-    url: string;
-    photo: undefined;
+    community: string;
+    photo: string[];
 
 }
 
@@ -29,20 +30,51 @@ interface imageData {
 
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
 
-const QuestionScreen : React.FC<{navigation : navigation}> = (navigation) =>{
+const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
     const [next, setNext] = useState(false);
-    const {t}=useTranslation()
-    const inputRef = useRef();
-    const keyboardHeight = useKeyboard();
+    const {t}=useTranslation();
     const [photo, setPhoto] = useState<imageData[]>([]);
-    const [exist, setExist] = useState(false)
+    const [object, setObject] = useState<QuestionValue>({
+        question: '',
+        description: '',
+        photo: [],
+        community: ''
+    });
+    const [exist, setExist] = useState(false);
+    const community = useAppSelector(state => state.onClickRecursiveReducer.boolean)
+    const data = useAppSelector(state => {
+        const question = state.PostQuestionReducer.question;
+        const body = state.PostQuestionReducer.body;
+        const community = state.PostQuestionReducer.community;
+        const image = state.PostQuestionReducer.image;
+
+        return{question, body, community, image}
+    })
+    const dispatch = useAppDispatch();
+
+    const submitQuestion = () =>{
+        API.AskQuestion({
+            question: data.question,
+            body: data.body,
+            community: data.community,
+            image: photo
+        }).then(res => res.json()).then((e)=> console.log(e))
+    }
+
+    const post = () =>{
+        return dispatch(hasCommunity(false))
+    }
+
+    const reset = () =>{
+        return dispatch(resetData());
+    }
+
     const openGallery = async () =>{
         const data = await launchImageLibrary({
                 includeBase64: true,
                 mediaType: "photo"
             }).then((e : any) => 
-                e.assets!.map((item, index)=>{
-                    console.log(index)
+                e.assets!.map((item: any, index: string | number)=>{
                     setPhoto(prev => [
                         ...prev, 
                         {
@@ -51,39 +83,59 @@ const QuestionScreen : React.FC<{navigation : navigation}> = (navigation) =>{
                         }
                     ])
                 })
-            ).then(()=> setExist(true))
+            ).then(()=> {
+                setExist(true)
+                // getImages();
+            })
         }
-    
+    // const getImages = () =>{
+    //     photo.forEach(e =>{
+    //         dispatch(setData({image: e.uri}))
+    //     })
+    // }   
     return(
         <SafeAreaView style={styles.container}>
             <Stack space={2} style={styles.wrapper}>
                 <Box alignX={"between"} direction={"row"} style={{alignItems: "center"}}>
                     <TouchableOpacity>
-                        <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> navigation.navigation.goBack()}/>
+                        <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> [post(), reset(), navigation.goBack()]}/>
                     </TouchableOpacity>
-                    <Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={null}/>
+                    {community ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion(),navigation.goBack()]}/>) 
+                               : (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={()=> navigation.navigate(ROUTES.COMMUNITYLIST)}/>)}
                 </Box>
+
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {exist && photo.map((item, index)=>{
                         return(
                             <Venue image={{uri : item.uri} as any} key={index}/>
                         )
                     })}
+                    <TouchableOpacity >
+                        
+                    </TouchableOpacity>
                 </ScrollView>
                 <TextInput 
                     multiline 
                     placeholder="Question" 
                     style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} 
                     placeholderTextColor={"#8996a1"}
-                    autoFocus={true}/>
+                    autoFocus={true}
+                    onChangeText={text => dispatch(setData({question: text}))}
+                    value={data.question}/>
                 <View style={{width: '90%', borderWidth: 0.2}}/>
-                <TextInput multiline placeholder="Text body (Optional)" style={{color: "black", fontSize: 15, width: '95%'}} placeholderTextColor={"#8996a1"}/>
+                <TextInput multiline 
+                           placeholder="Text body (Optional)" 
+                           style={{color: "black", fontSize: 15, width: '95%'}} 
+                           placeholderTextColor={"#8996a1"}
+                           onChangeText={text => setObject({question: text})}
+                            value={data.body}/>
+                        
             </Stack>
             <View style={[styles.footer]}>
                 <Inline space={4} alignX={"left"}>
-                    <Icon name="link" type="antdesign" onPress={()=> navigation.navigation.goBack()}/>
+                    <Icon name="link" type="antdesign" onPress={()=> navigation.goBack()}/>
                     <Icon name="add-photo-alternate" type="materialicon" onPress={()=> openGallery()}/>
-                    <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> navigation.navigation.goBack()}/>
+                    <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> navigation.goBack()}/>
                 </Inline>
             </View>
         </SafeAreaView>

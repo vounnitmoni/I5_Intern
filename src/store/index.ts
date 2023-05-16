@@ -10,11 +10,14 @@ import settings from '../../config/settings';
 import AuthReducer from './onClickRecursiveReducer';
 import onClickRecursiveReducer from './onClickRecursiveReducer';
 import questionId from './questionId';
+import { QuestionRequestSlice } from './QuestionRequestionReducer';
+import PostQuestionReducer from './PostQuestionReducer';
 
 const rootReducers = {
   setting: settingReducer,
   circular: onClickRecursiveReducer,
   question_id: questionId,
+  question_request: PostQuestionReducer,
 };
 
 const middlewares = [thunk];
@@ -49,6 +52,7 @@ export const store = configureStore({
     persistedReducer,     
     onClickRecursiveReducer,
     questionId,
+    PostQuestionReducer,
   },
   middleware: middlewares,
 });
