@@ -2,7 +2,7 @@ import { Box, Inline, Stack } from "@mobily/stacks";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Button, CheckBox, Icon, SearchBar, Text } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import {FlatList, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, View} from "react-native"
 import API from "../../api";
 import { RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
 import { ROUTES } from "../../enums/RouteEnum";
@@ -32,8 +32,6 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
         .then(async data => setCommunity(data))
         .catch(e => (e as Error).message);
     },[])
-    console.log(community)
-    console.log(name)
     // useEffect(()=>{
     //     Alert.alert("hello")
     // },[searchText && 10000])
@@ -44,9 +42,7 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
         }
         return(
                 <TouchableOpacity onPress={()=> asyncFunction().then(()=> {
-                    if(action){
                         dispatch(hasCommunity(true))
-                    }
                 }).then(()=>{
                     navigation.goBack()
                 })}>

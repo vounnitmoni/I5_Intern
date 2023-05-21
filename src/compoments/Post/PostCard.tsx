@@ -8,7 +8,6 @@ import {TouchableOpacity} from 'react-native'
 import { useAppSelector } from "../../store/hooks";
 import ImageSlide from "./ImageSlider";
 
-
 const PostCard : React.FC<{
     title: string | undefined;
     description?: string | undefined;

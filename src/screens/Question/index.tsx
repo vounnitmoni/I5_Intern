@@ -1,6 +1,6 @@
 import { Box, Inline, Stack } from "@mobily/stacks";
 import { Button, Icon } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -18,14 +18,11 @@ import API from "../../api";
 interface QuestionValue{
     question: string;
     description?: string;
-    community: string;
-    photo: string[];
-
 }
 
 interface imageData {
+    base64: string[];
     uri: string;
-    base64: string;
 }
 
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
@@ -33,32 +30,36 @@ type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
 const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
     const [next, setNext] = useState(false);
     const {t}=useTranslation();
+    const communityStatus = useAppSelector(state => state.onClickRecursiveReducer.boolean)
     const [photo, setPhoto] = useState<imageData[]>([]);
     const [object, setObject] = useState<QuestionValue>({
         question: '',
         description: '',
-        photo: [],
-        community: ''
     });
     const [exist, setExist] = useState(false);
-    const community = useAppSelector(state => state.onClickRecursiveReducer.boolean)
-    const data = useAppSelector(state => {
-        const question = state.PostQuestionReducer.question;
-        const body = state.PostQuestionReducer.body;
-        const community = state.PostQuestionReducer.community;
-        const image = state.PostQuestionReducer.image;
-
-        return{question, body, community, image}
-    })
+    // const {question, body, community, image} = useAppSelector(state => state.PostQuestionReducer)
     const dispatch = useAppDispatch();
-
+    const communityValue = useAppSelector(state => state.PostQuestionReducer.community)
+    // const storeQuestionInfo = (
+    //     question: string,
+    //     body: string,
+    //     community: string,
+    //     image: string[],
+    // ) => {
+    //     dispatch(setData({
+    //         question,
+    //         body,
+    //         community,
+    //         image,
+    //     }))
+    // }
     const submitQuestion = () =>{
         API.AskQuestion({
-            question: data.question,
-            body: data.body,
-            community: data.community,
-            image: photo
-        }).then(res => res.json()).then((e)=> console.log(e))
+            question: object.question,
+            body: object.description,
+            community: communityValue,
+            image: photo.map((x)=> x.uri)
+        }).then(res => res.json()).then(()=>navigation.goBack())
     }
 
     const post = () =>{
@@ -78,21 +79,16 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                     setPhoto(prev => [
                         ...prev, 
                         {
-                            uri: e.assets[index].uri,
                             base64: e.assets[index].base64,
+                            uri : e.assets[index].uri
                         }
                     ])
                 })
             ).then(()=> {
                 setExist(true)
-                // getImages();
+                console.log(photo.map(e => e.base64))
             })
         }
-    // const getImages = () =>{
-    //     photo.forEach(e =>{
-    //         dispatch(setData({image: e.uri}))
-    //     })
-    // }   
     return(
         <SafeAreaView style={styles.container}>
             <Stack space={2} style={styles.wrapper}>
@@ -100,7 +96,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                     <TouchableOpacity>
                         <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> [post(), reset(), navigation.goBack()]}/>
                     </TouchableOpacity>
-                    {community ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion(),navigation.goBack()]}/>) 
+                    {communityStatus ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion(), console.log(photo.map(x=> x.uri))]}/>) 
                                : (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={()=> navigation.navigate(ROUTES.COMMUNITYLIST)}/>)}
                 </Box>
 
@@ -120,15 +116,21 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                     style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} 
                     placeholderTextColor={"#8996a1"}
                     autoFocus={true}
-                    onChangeText={text => dispatch(setData({question: text}))}
-                    value={data.question}/>
+                    onChangeText={text => setObject(prev => ({
+                        ...prev,
+                        question : text
+                    }))}
+                    value={object.question}/>
                 <View style={{width: '90%', borderWidth: 0.2}}/>
                 <TextInput multiline 
                            placeholder="Text body (Optional)" 
                            style={{color: "black", fontSize: 15, width: '95%'}} 
                            placeholderTextColor={"#8996a1"}
-                           onChangeText={text => setObject({question: text})}
-                            value={data.body}/>
+                           onChangeText={text => setObject(prev => ({
+                                ...prev,
+                                description : text
+                           }))}
+                           value={object.description}/>
                         
             </Stack>
             <View style={[styles.footer]}>

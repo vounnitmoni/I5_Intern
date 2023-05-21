@@ -26,16 +26,16 @@ export const QuestionRequestSlice = createSlice({
   name: 'authentication',
   initialState: initialState,
   reducers: {
-    // getData: (state, action: PayloadAction<nubmer>) =>{
-    //     state.answer = action.payload.answer;
-    //     state.body = action.payload.body;
-    //     state.community = action.payload.community; 
-    //     state.id = action.payload.id;
-    //     state.photo = action.payload.photo; 
-    //     state.post_stmp = action.payload.post_stmp;
-    //     state.question = action.payload.question;
-    //     state.vote = action.payload.vote;
-    // }
+    getData: (state, action: PayloadAction<IRequest>) =>{
+        state.answer = action.payload.answer;
+        state.body = action.payload.body;
+        state.community = action.payload.community; 
+        state.id = action.payload.id;
+        state.photo = action.payload.photo; 
+        state.post_stmp = action.payload.post_stmp;
+        state.question = action.payload.question;
+        state.vote = action.payload.vote;
+    }
   },
 });
 
