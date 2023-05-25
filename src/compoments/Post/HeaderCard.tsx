@@ -1,18 +1,32 @@
-import { Box } from "@mobily/stacks";
-import { Icon, Text } from "@rneui/themed";
+import { Box, Inline, Stack } from "@mobily/stacks";
+import { Icon, Image, Text } from "@rneui/themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 const HeaderCard : React.FC <{
     community: string | undefined;
+    name: string | undefined;
+    ago: number;
+    ago_status: string;
     communityOnPress?: ()=> void;
     dotsOnPress?: ()=> void;
-}> = ({community, communityOnPress, dotsOnPress}) =>{
+    usernameOnPress?: () => void;
+}> = ({community, communityOnPress, dotsOnPress, name, ago, ago_status, usernameOnPress}) =>{
     return(
         <Box alignX={"between"} direction={"row"}>
-            <TouchableOpacity onPress={communityOnPress}>
-                <Text style={styles.community}>{community}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={dotsOnPress}>
+            <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 30/2}}></Image>
+            <Stack style={{width: '80%'}}>
+                <TouchableOpacity onPress={communityOnPress}>
+                    <Text style={styles.community}>{community}</Text>
+                </TouchableOpacity>
+                <Inline>
+                    <TouchableOpacity onPress={usernameOnPress}>
+                        <Text>{name}</Text>
+                    </TouchableOpacity>
+                    <Text> • </Text>
+                    <Text>{ago}{ago_status}</Text>
+                </Inline>
+            </Stack>
+            <TouchableOpacity style={{justifyContent: "center"}} onPress={dotsOnPress}>
                 <Icon name="dots-three-vertical" type="entypo"/>
             </TouchableOpacity>
         </Box>

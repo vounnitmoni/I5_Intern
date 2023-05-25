@@ -21,7 +21,6 @@ const Header : React.FC = () =>{
                     <TouchableOpacity onPress={()=> navigation.dispatch(DrawerActions.openDrawer())}>
                         <Icon name="menu" type="ionicons"/>
                     </TouchableOpacity>
-                    <Dropdown label="Home" style={{width: 100, height: 30}}/>
                 </Inline>
                 <Inline style={styles.inlineChild2} alignX={"right"} space={2}>
                     <TouchableOpacity>

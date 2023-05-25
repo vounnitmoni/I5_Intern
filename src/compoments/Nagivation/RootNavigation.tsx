@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import {RootStackParamList} from './TypeNavigation';
-import Header from '../Header';
+import Header from './../Header';
 import Navigator from './Navigator';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -10,7 +10,7 @@ const RootNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false
+        headerTitle: () => <Header />
       }}
     >
       <Stack.Group>

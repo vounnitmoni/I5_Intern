@@ -29,18 +29,18 @@ const bottoms = [
     icon: 'question-answer',
   },
   {
+    name: ROUTES.SUPPORT,
+    component: SupportScreen,
+    label: 'Message',
+    type: 'ionicon',
+    icon: 'chat',
+  },
+  {
     name: ROUTES.NOTIFICATION,
     component: NotificationScreen,
     label: 'Notification',
     type: 'ionicon',
     icon: 'md-notifications-outline',
-  },
-  {
-    name: ROUTES.SUPPORT,
-    component: SupportScreen,
-    label: 'Settings',
-    type: 'ionicon',
-    icon: 'settings-outline',
   },
 ];
 

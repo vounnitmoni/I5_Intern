@@ -11,15 +11,10 @@ import CommunityListScreen from '../../screens/Question/communityList';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
-  const component = () =>{
-    return(
-      <Header />
-    )
-  }
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitle: ()=> component()
+        headerShown: false
       }}
     >
       <Stack.Group>

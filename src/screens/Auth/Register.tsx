@@ -52,11 +52,11 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
     .then(async res =>{
       setIsLoading(false);
       if(res.accessToken){
-        navigation.navigate('LoginScreen')
+        navigation.navigate('MoreInfoScreen');
       }else{
-        Alert.alert("Error")
+        Alert.alert(res.message)
       }
-    }).catch(e => (e as Error).message);
+    }).catch(e => console.log(e));
   };
 
   return (

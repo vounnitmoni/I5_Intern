@@ -21,14 +21,19 @@ export default class API {
     }
     static async AnswerandComment(body: any){
         return api.request(`/all/card/comments`, 'POST', body);
-    }
-    static async UserCommunity(body?: any){
-        return api.request('/all/community/communities', 'GET', body);
-    }
+    }  
     static async AnswerQuestion(body : any){
         return api.request('/api/all/answer', 'POST', body);
     }
     static async CommentAnswer(body: any, answer_id : number){
         return api.request(`api/all/comment/${answer_id}`, 'POST', body);
     }
+//-------------------------------community----------------------------------------
+    static async CreateCommunity(body: any){
+        return api.request(`api/all/community/create`, 'POST', body);
+    }
+    static async UserCommunity(body?: any){
+        return api.request('/all/community/communities', 'GET', body);
+    }
+    
 }

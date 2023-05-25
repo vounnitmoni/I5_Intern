@@ -16,8 +16,28 @@ const PostCard : React.FC<{
     vote: number | undefined;
     answer: number | undefined;
     botton?: boolean;
+    ago: number;
+    ago_status: string;
+    dotsOnpress: ()=> void;
+    usernameOnPress: ()=> void;
+    communityOnPress: ()=> void;
+    username: string;
     onPress?: ()=> {} | void;
-}> = ({title, description, image, community,answer , vote, botton= true, onPress}) =>{
+}> = ({title, 
+       description, 
+       image, 
+       community,
+       answer, 
+       vote, 
+       botton= true,
+       onPress, 
+       ago, 
+       ago_status,
+       dotsOnpress, 
+       usernameOnPress,
+       communityOnPress, 
+       username}) =>
+{
     const [line, setLine] = useState(0);
     const [margin, setMargin] = useState(0);
     const bool = useAppSelector(state => state.onClickRecursiveReducer.bool)
@@ -38,7 +58,13 @@ const PostCard : React.FC<{
     return(
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <Stack style={styles.wrapper} space={3}>
-                <HeaderCard community={community}/>
+                <HeaderCard ago={ago} 
+                            ago_status={ago_status}
+                            dotsOnPress={dotsOnpress} 
+                            usernameOnPress={usernameOnPress} 
+                            community={community} 
+                            communityOnPress={communityOnPress}
+                            name={username}/>
                 <Text style={styles.title}
                       numberOfLines={line} 
                       ellipsizeMode='tail'

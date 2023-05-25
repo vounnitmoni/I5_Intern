@@ -21,7 +21,6 @@ const Navigator = () => {
         },
       }}>
       <Drawer.Screen name="RootNavigation" component={RootNavigation} />
-      <Drawer.Screen name='RightDrawer' component={RightDrawer}/>
     </Drawer.Navigator>
   );
 };
