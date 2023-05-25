@@ -21,13 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Community;
 import com.como.KHForum.entity.CommunityCategory;
+import com.como.KHForum.entity.File;
 import com.como.KHForum.entity.UserCommunity;
+import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.entity.enums.EIsa;
 import com.como.KHForum.payload.request.generalRequest.CreateCommunityRequest;
 import com.como.KHForum.payload.response.CommunityResponse;
 import com.como.KHForum.repository.CategoryRepo;
 import com.como.KHForum.repository.CommunityCategoryRepo;
 import com.como.KHForum.repository.CommunityRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
@@ -48,6 +51,7 @@ public class CommunityController {
     @Autowired CommunityCategoryRepo communityCategoryRepo;
     @Autowired CategoryRepo categoryRepo;
     @Autowired UserCommunityRepo userCommunityRepo;
+    @Autowired FileRepo fileRepo;
 //predefine------------------------------------------------------------------------------------------
     @Getter
     @Setter
@@ -77,7 +81,7 @@ public class CommunityController {
                                             LocalDateTime.now(), 
                                             0, 
                                             userSessions.getUserId(), 
-                                            false);       
+                                            false);     
         Thread asynOpt = new Thread(()->{
             try {
                 for(String i : request.getCategory()){
@@ -90,6 +94,10 @@ public class CommunityController {
                                                                 LocalDate.now(), 
                                                                 true, 
                                                                 EIsa.ISA_ADMIN);
+                File profile = new File(null, id, null, EFileStatus.PROFILE, request.getProfile());
+                File cover = new File(null, id, null, EFileStatus.COVER, request.getCover());
+                fileRepo.save(profile);
+                fileRepo.save(cover);
                 userCommunityRepo.save(userCommunity);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.AppUser;
+import com.como.KHForum.entity.File;
+import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.EditProfileRequest;
 import com.como.KHForum.payload.request.generalRequest.UpdateProfileRequest;
 import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.AppUserRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
 
@@ -32,6 +35,7 @@ public class ProfileController {
     @Autowired UserRepo userRepo;
     @Autowired AppUserRepo appUserRepo;
     @Autowired UserSessions userSessions;
+    @Autowired FileRepo fileRepo;
 
     @GetMapping
     public ResponseEntity<?> profile(){
@@ -63,7 +67,11 @@ public class ProfileController {
                                    request.getCountry_code(), 
                                    request.getArea_number(), 
                                    userSessions.getUserId());
+        File profile = new File(userSessions.getUserId(), null, null, EFileStatus.PROFILE, request.getProfile());
+        File cover = new File(userSessions.getUserId(), null, null, EFileStatus.COVER, request.getCover());
         appUserRepo.save(user);
+        fileRepo.save(profile);
+        fileRepo.save(cover);
         return ResponseEntity.ok().body(new SuccessMessageResponse("Your informations is updated!", true));
     }
 }

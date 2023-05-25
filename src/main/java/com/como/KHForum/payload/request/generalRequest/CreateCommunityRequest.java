@@ -13,4 +13,6 @@ public class CreateCommunityRequest {
     @NotBlank
     private Set<String> category;
     private Set<String> sub_category;
+    private byte[] profile;
+    private byte[] cover;
 }

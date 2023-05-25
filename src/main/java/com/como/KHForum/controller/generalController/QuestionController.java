@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.como.KHForum.entity.File;
 import com.como.KHForum.entity.QuestionCollectionInfo;
 import com.como.KHForum.entity.Questionnaire;
+import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.CreateQuestionRequest;
 import com.como.KHForum.payload.request.generalRequest.VoteRequest;
 import com.como.KHForum.payload.response.generalResponse.QuestionCardResponse;
@@ -63,7 +64,7 @@ public class QuestionController {
                                                         0);
         questionnaireRepo.saveAndFlush(questionnaire);
         request.getPhoto().forEach(e->{
-            File q_photo = new File(questionnaire.getId(), e);
+            File q_photo = new File(null, null, questionnaire.getId(), EFileStatus.QUESTION, e);
             fileRepo.save(q_photo); 
         });                                            
         return ResponseEntity.ok(questionnaire);

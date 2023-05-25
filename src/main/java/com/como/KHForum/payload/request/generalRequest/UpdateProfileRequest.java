@@ -14,4 +14,6 @@ public class UpdateProfileRequest {
     private LocalDate dob;
     private String country_code;
     private String area_number;
+    private byte[] profile;
+    private byte[] cover;
 }
