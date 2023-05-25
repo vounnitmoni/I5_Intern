@@ -37,4 +37,8 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     // Set<Questionnaire> find20QuestionsByUserId(@Param("a_id") Long a_id, @Param("last_id") Long last_id);
     // @Query(value = "select max(a.id) from (select id from kh_forum.questionnaire where author_id = :id limit :quantity) as a", nativeQuery = true)
     // Long findLastIdOfLastTwentyByUserId(@Param("id") Long id, @Param("quantity") Integer q);
+
+    //-----------------------------------------------------------UserQuestion-------------------------------------------------------------------------------------------
+        // @Query(value = "select * from kh_forum.questionnaire where author_id = :id ")
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }

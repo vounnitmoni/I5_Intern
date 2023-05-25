@@ -27,6 +27,7 @@ import com.como.KHForum.entity.enums.ERole;
 import com.como.KHForum.payload.SignInRequest;
 import com.como.KHForum.payload.SignUpRequest;
 import com.como.KHForum.payload.response.authResponse.UserInfoResponse;
+import com.como.KHForum.payload.response.successResponse.SignUpSuccessResponse;
 import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.RoleRepo;
 import com.como.KHForum.repository.UserRepo;
@@ -34,6 +35,7 @@ import com.como.KHForum.webconfig.jwt.Utils;
 import com.como.KHForum.webconfig.service.UserDetailsImpl;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -51,13 +53,9 @@ public class AuthController {
 
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    
+    SecurityContextHolder.getContext().setAuthentication(authentication);   
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
     String accessToken = jwtUtils.generateAccessToken(userDetails);
     List<String> role = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
@@ -70,7 +68,7 @@ public class AuthController {
                                    accessToken,
                                    role));
   }
-  @PostMapping("/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity.badRequest().body(new SuccessMessageResponse("Error: Username is already taken!", false));
@@ -86,31 +84,28 @@ public class AuthController {
 
         Set<String> strRoles = request.getRole();
         Set<Role> roles = new HashSet<>();
-        
         strRoles.forEach(role -> {
             switch (role) {
-            case "orator":
-            Role oratorRole = roleRepository.findByName(ERole.ROLE_ORATOR)
-                .orElseThrow(() -> new RuntimeException());
-            roles.add(oratorRole);
-            break;
             case "user": 
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseThrow(()-> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-            break;
-            case "admin":
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(()-> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
+                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(()-> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
             break;
             }
-             
+            
         });
         user.setRoles(roles);
-        userRepository.save(user);
-
-        return ResponseEntity.ok().body(new SuccessMessageResponse("Register success", true ));
+        userRepository.saveAndFlush(user);
+        SignUpSuccessResponse signUpSuccessResponse = new SignUpSuccessResponse();
+        if(user != null){
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                String accessToken = jwtUtils.generateAccessToken(userDetails);
+                signUpSuccessResponse.setAccessToken(accessToken);
+        }
+        return ResponseEntity.ok().body(new SignUpSuccessResponse("Sign up successed!", true, signUpSuccessResponse.getAccessToken()));
   }
 
   @PostMapping("/signout")

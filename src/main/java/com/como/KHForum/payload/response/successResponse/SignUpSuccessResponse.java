@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SuccessMessageResponse {
+public class SignUpSuccessResponse {
     private String message;
     private Boolean status;
+    private String accessToken;
 }
