@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
 import com.como.KHForum.entity.QuestionCollectionInfo;
 import com.como.KHForum.entity.Questionnaire;
@@ -27,11 +28,13 @@ import com.como.KHForum.payload.request.generalRequest.VoteRequest;
 import com.como.KHForum.payload.response.generalResponse.QuestionCardResponse;
 import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
 import com.como.KHForum.repository.AnswerRepo;
+import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.CommunityRepo;
 import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.QuestionCollectionInfoRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
+import com.como.KHForum.service.ServiceUtils.Utility;
 import com.como.KHForum.webconfig.session.UserSessions;
 
 import jakarta.validation.Valid;
@@ -48,6 +51,8 @@ public class QuestionController {
     @Autowired AnswerRepo answerRepo;
     @Autowired CommentRepo commentRepo;
     @Autowired FileRepo fileRepo;
+    @Autowired AppUserRepo appUserRepo;
+    @Autowired Utility utility;
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody CreateQuestionRequest request){
@@ -98,7 +103,19 @@ public class QuestionController {
     public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
         Questionnaire q = questionnaireRepo.findAllById(q_id);
         Integer count_answer = answerRepo.countAnswerByQ_Id(q.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(q.getId()));
-        RandomQuestionResponse r = new RandomQuestionResponse(q_id, q.getQuestion(), q.getBody(), q.getCreate_stmp(), communityRepo.findCommunityNameById(q.getCommunity_id()), count_answer, q.getVote(), fileRepo.fileByQ_id(q_id));
+        RandomQuestionResponse r = new RandomQuestionResponse(q.getAuthor_id(), 
+                                                            q.getId(), 
+                                                            q.getCommunity_id(), 
+                                                            appUserRepo.userNameByAccId(q.getAuthor_id()), 
+                                                            q.getQuestion(), 
+                                                            q.getBody(), 
+                                                            communityRepo.findCommunityNameById(q.getCommunity_id()), 
+                                                            q.getVote(), 
+                                                            count_answer, 
+                                                            questionnaireRepo.castQStmpToDateTime(q.getId()), 
+                                                            utility.DateTimeConverter(questionnaireRepo.castQStmpToDateTime(q.getId())), 
+                                                            fileRepo.fileByQ_id(q.getId()), 
+                                                            null);
         return ResponseEntity.ok().body(r);
     }
 }

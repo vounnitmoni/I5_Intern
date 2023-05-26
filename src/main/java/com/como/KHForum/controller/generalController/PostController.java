@@ -49,11 +49,12 @@ public class PostController {
         private String username;
         private String question;
         private String description;
-        private List<byte[]> image;
         private Integer vote;
         private Integer comment;
         private LocalDateTime postStmp;
         private Integer ago;
+        private List<byte[]> image;
+        private byte[] profile;
     }
 //--------------------------------------------------------------------------------------------------
 

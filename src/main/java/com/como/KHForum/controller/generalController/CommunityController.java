@@ -94,8 +94,8 @@ public class CommunityController {
                                                                 LocalDate.now(), 
                                                                 true, 
                                                                 EIsa.ISA_ADMIN);
-                File profile = new File(null, id, null, EFileStatus.PROFILE, request.getProfile());
-                File cover = new File(null, id, null, EFileStatus.COVER, request.getCover());
+                File profile = new File(null, community.getId(), null, EFileStatus.PROFILE, request.getProfile());
+                File cover = new File(null, community.getId(), null, EFileStatus.COVER, request.getCover());
                 fileRepo.save(profile);
                 fileRepo.save(cover);
                 userCommunityRepo.save(userCommunity);

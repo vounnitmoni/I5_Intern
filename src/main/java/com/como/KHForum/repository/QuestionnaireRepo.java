@@ -1,5 +1,6 @@
 package com.como.KHForum.repository;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,4 +42,8 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     //-----------------------------------------------------------UserQuestion-------------------------------------------------------------------------------------------
         // @Query(value = "select * from kh_forum.questionnaire where author_id = :id ")
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //-----------cast date and time to datetime--------
+    @Query(value = "select cast(concat(create_stmp, ' ', time) as datetime) as a from kh_forum.questionnaire where id = :id", nativeQuery = true)
+    LocalDateTime castQStmpToDateTime(@Param("id") Long id);
 }

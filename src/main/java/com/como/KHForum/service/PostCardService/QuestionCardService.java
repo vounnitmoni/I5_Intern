@@ -20,7 +20,12 @@ import com.como.KHForum.repository.FollowerRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.repository.UserCategoryRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
+import com.como.KHForum.service.ServiceUtils.Utility;
 import com.como.KHForum.webconfig.session.UserSessions;
+
+import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 
 @Service
 public class QuestionCardService {
@@ -34,6 +39,7 @@ public class QuestionCardService {
     @Autowired CommentRepo commentRepo;
     @Autowired AppUserRepo appUserRepo;
     @Autowired FileRepo fileRepo;
+    @Autowired Utility utility;
 
     public Set<Questionnaire> questionCards(){
         Set<Long> community_id = userCommunityRepo.randomCommunityId(userSessions.getUserId());
@@ -45,17 +51,32 @@ public class QuestionCardService {
         Set<Questionnaire> randomCategoryQuestions = questionnaireRepo.randomQuestionnairesByCategories(category_id);
 
         Set<Questionnaire> post_questionnaires = new HashSet<>();
-        Stream.of(randomCommunityQuestions,randomCategoryQuestions, randomFolloweeQuestions).forEach(post_questionnaires::addAll);
+        Stream.of(randomCommunityQuestions,
+                  randomCategoryQuestions, 
+                  randomFolloweeQuestions)
+                  .forEach(post_questionnaires::addAll);
 
         return post_questionnaires;
     }
 
-    public Set<RandomQuestionResponse> customQuestionCard(){
+    public @Valid Set<RandomQuestionResponse> customQuestionCard(){
         Set<RandomQuestionResponse> responses = new HashSet<>();
         questionCards().forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
-            RandomQuestionResponse questionCardResponse = new RandomQuestionResponse(e.getId(), e.getQuestion(), e.getBody(), e.getCreate_stmp(), communityRepo.findCommunityNameById(e.getCommunity_id()), count_answer, e.getVote(), fileRepo.fileByQ_id(e.getId()));
-            responses.add(questionCardResponse);
+            RandomQuestionResponse questionResponse = new RandomQuestionResponse(e.getAuthor_id(), 
+                                                                                 e.getId(), 
+                                                                                 e.getCommunity_id(), 
+                                                                                 appUserRepo.userNameByAccId(e.getAuthor_id()), 
+                                                                                 e.getQuestion(), 
+                                                                                 e.getBody(), 
+                                                                                 communityRepo.findCommunityNameById(e.getCommunity_id()), 
+                                                                                 e.getVote(), 
+                                                                                 count_answer, 
+                                                                                 questionnaireRepo.castQStmpToDateTime(e.getId()), 
+                                                                                 utility.DateTimeConverter(questionnaireRepo.castQStmpToDateTime(e.getId())), 
+                                                                                 fileRepo.fileByQ_id(e.getId()), 
+                                                                                 null);
+            responses.add(questionResponse);
         });
         return responses;
     }
