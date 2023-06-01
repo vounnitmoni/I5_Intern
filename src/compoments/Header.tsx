@@ -1,5 +1,5 @@
 import { Box, Inline } from "@mobily/stacks";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { DrawerActionHelpers, DrawerActions, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Icon } from "@rneui/base";
 import { Image, Text } from "@rneui/themed";
@@ -10,15 +10,16 @@ import Dropdown from "./DropDown";
 import Navigator from "./Nagivation/Navigator";
 import RightDrawer from "./Nagivation/RightDrawer";
 import { RootStackParamList } from "./Nagivation/TypeNavigation";
+import { DrawerContentComponentProps, DrawerNavigationProp } from "@react-navigation/drawer";
 
 const Header : React.FC = () =>{
     const {t} = useTranslation();
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation = useNavigation()
     return( 
         <View style={styles.container}>
             <View style={styles.inlineContainer}>
                 <Inline style={styles.inlineChild1} alignX={"left"} space={2}>
-                    <TouchableOpacity onPress={()=> navigation.dispatch(DrawerActions.openDrawer())}>
+                    <TouchableOpacity onPress={()=> navigation.getParent()?.getParent()?.getParent()?.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name="menu" type="ionicons"/>
                     </TouchableOpacity>
                 </Inline>

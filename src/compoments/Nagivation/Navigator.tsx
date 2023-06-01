@@ -12,7 +12,7 @@ type navigationDrawer = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR
 const Navigator = () => {
   return (
     <Drawer.Navigator
-    id='left'
+    id='leftDrawer'
       screenOptions={{
         headerShown: false,
         drawerPosition: 'left',
@@ -20,7 +20,7 @@ const Navigator = () => {
           width: '80%',
         },
       }}>
-      <Drawer.Screen name="RootNavigation" component={RootNavigation} />
+      <Drawer.Screen name="RightDrawer" component={RightDrawer} />
     </Drawer.Navigator>
   );
 };

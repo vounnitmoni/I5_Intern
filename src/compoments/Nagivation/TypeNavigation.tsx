@@ -11,6 +11,7 @@ export type RootStackParamList = {
   RightDrawer: undefined;
   SpecificQuestionScreen: undefined;
   CommunityListScreen: undefined;
+  Header: undefined;
 };
 
 export type AuthStackParamList = {

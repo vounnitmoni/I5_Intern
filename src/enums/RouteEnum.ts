@@ -14,4 +14,7 @@ export enum ROUTES {
   MORE_INFO="MoreInfoScreen",
   INIT_COMMUNITY="FirstJoinCommunityScreen",
   CHOOSE_CATEGORY="ChooseCategoryScreen",
+  BOOKMARK= "BookMarkScreen",
+  PROFILE= "ProfileScreen",
+  SETTING= "SettingScreen",
 }

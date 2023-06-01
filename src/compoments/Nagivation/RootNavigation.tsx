@@ -16,6 +16,7 @@ const RootNavigation = () => {
       <Stack.Group>
         <Stack.Screen name="TabNavigation" component={TabNavigation} />
         {/* <Stack.Screen name="Navigator" component={Navigator}/> */}
+        <Stack.Screen name="Header" component={Header}/>
       </Stack.Group>
     </Stack.Navigator>
   );

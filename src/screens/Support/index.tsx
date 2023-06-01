@@ -8,12 +8,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { circularClick } from '../../store/onClickRecursiveReducer';
 import PostCard from '../../compoments/Post/PostCard';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 const SupportScreen = () => {
   const {t} = useTranslation();
   const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
   const dispatch = useAppDispatch();
-  
+  const navigation = useNavigation();
   const handleSignOut = () =>{
     
     API.Logout(null).then((res)=>{

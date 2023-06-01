@@ -43,6 +43,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
 
   const onSubmit = (formData: FormValues) => {
     setIsLoading(true);
+    navigation.navigate('MoreInfoScreen')
     API.Register({
       username: formData.username,
       email: formData.email,
@@ -153,7 +154,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
           size="lg"
           loading={isLoading}
           disabled={isLoading}
-          onPress={handleSubmit(onSubmit)}
+          onPress={()=> [handleSubmit(onSubmit), navigation.navigate('MoreInfoScreen')]}
         />
 
         <Inline space={2} alignX="center">

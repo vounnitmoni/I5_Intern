@@ -36,7 +36,7 @@ const Navigator = () => {
     <AuthStack.Navigator
       screenOptions={{headerShadowVisible: false, headerTitle: ''}}>
       {AuthNavigationData.map((item: any, index: number) => {
-        if(item.name == ROUTES.MORE_INFO || ROUTES.CHOOSE_CATEGORY || ROUTES.INIT_COMMUNITY){
+        if(item.name == ROUTES.MORE_INFO){
             return (
               <AuthStack.Screen
                 options={{

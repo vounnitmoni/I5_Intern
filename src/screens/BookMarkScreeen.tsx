@@ -1,8 +1,8 @@
 import { Text } from "@rneui/themed"
 
-const ProfileScreen = () =>{
+const BookMarkScreen = () =>{
     return(
         <Text>Book Mark</Text>
     )
 }
-export default ProfileScreen
+export default BookMarkScreen
