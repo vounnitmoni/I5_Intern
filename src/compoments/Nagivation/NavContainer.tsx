@@ -8,6 +8,9 @@ import RightDrawer from './RightDrawer';
 import SpecificQuestionScreen from '../../screens/SpecifiQuestionScreen';
 import QuestionScreen from '../../screens/Question';
 import CommunityListScreen from '../../screens/Question/communityList';
+import ProfileScreen from '../../screens/ProfileScreen';
+import SettingScreen from '../../screens/SettingScreen';
+import BookMarkScreen from '../../screens/BookMarkScreeen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -22,6 +25,9 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
+        <Stack.Screen name='ProfileScreen' component={ProfileScreen}/>
+        <Stack.Screen name='SettingScreen' component={SettingScreen}/>
+        <Stack.Screen name='BookMarkScreen' component={BookMarkScreen}/>
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>

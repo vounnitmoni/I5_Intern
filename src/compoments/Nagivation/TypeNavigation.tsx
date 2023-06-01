@@ -12,6 +12,9 @@ export type RootStackParamList = {
   SpecificQuestionScreen: undefined;
   CommunityListScreen: undefined;
   Header: undefined;
+  BookMarkScreen: undefined;
+  SettingScreen: undefined;
+  ProfileScreen: undefined;
 };
 
 export type AuthStackParamList = {

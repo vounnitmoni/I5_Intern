@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './TypeNavigation';
 import { ROUTES } from '../../enums/RouteEnum';
 import RightDrawer from './RightDrawer';
+import LeftDrawerContent from '../MultipleDrawer/LeftDrawerContent';
 
 const Drawer = createDrawerNavigator();
 type navigationDrawer = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR>
@@ -19,7 +20,8 @@ const Navigator = () => {
         drawerStyle: {
           width: '80%',
         },
-      }}>
+      }}
+      drawerContent={props => <LeftDrawerContent {...props}/>}>
       <Drawer.Screen name="RightDrawer" component={RightDrawer} />
     </Drawer.Navigator>
   );
