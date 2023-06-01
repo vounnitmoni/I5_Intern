@@ -9,6 +9,8 @@ import { click } from '../../store/questionId';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../compoments/Nagivation/TypeNavigation';
 import { ROUTES } from '../../enums/RouteEnum';
+import { updateUserAttributes } from '../../store/userInfoReducer';
+import { IUserAtt } from '../../interfaces/IAPI';
 
 interface IData{
   id: number;
@@ -23,8 +25,10 @@ interface IData{
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const [object, setObject] = useState<IData[]>([]);
+  const [userAttribute, setAttribute] = useState<IUserAtt>();
   const bool = false;
   const action = useAppSelector(state => state.questionId.q_id)
+  const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state)
   const dispatch = useAppDispatch();
 
   const setId = (id : number) =>{
@@ -35,10 +39,40 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
     let f = 0;
     return f = f + 1;
   }
+
   useEffect(()=>{
-    API.RandomQuestion({}).then(res => res.json()).then(async e => 
-      setObject(e)
-    );
+    API.ShortUserInfo({})
+      .then(res => res.json())
+      .then(async data => {
+        if(data.status === 200){
+          setAttribute(data);
+        }
+      })
+  },[userInfoStateChanged])
+
+  useEffect(()=>{
+    if(userAttribute){
+      dispatch(updateUserAttributes({
+        firstname: userAttribute?.firstname,
+        lastname: userAttribute?.lastname,
+        username: userAttribute?.username,
+        email: userAttribute?.email,
+        name_shortcut: userAttribute?.name_shortcut,
+        phone_number: userAttribute?.phone_number,
+        followee: userAttribute?.followee,
+        follower: userAttribute?.follower,
+        profile_pic: userAttribute?.profile_pic,
+        cover_pic: userAttribute?.cover_pic,
+      }))
+    }
+  },[userAttribute])
+
+  useEffect(()=>{
+    API.RandomQuestion({})
+      .then(res => res.json())
+      .then(async e => 
+        setObject(e)
+      );
   },[bool])
 
   return (

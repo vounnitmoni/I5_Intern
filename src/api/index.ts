@@ -28,6 +28,9 @@ export default class API {
     static async CommentAnswer(body: any, answer_id : number){
         return api.request(`api/all/comment/${answer_id}`, 'POST', body);
     }
+    static async ShortUserInfo(body?: any){
+        return api.request('api/all/profile/info', 'GET', body)
+    }
 //-------------------------------community----------------------------------------
     static async CreateCommunity(body: any){
         return api.request(`api/all/community/create`, 'POST', body);

@@ -15,6 +15,6 @@ export enum ROUTES {
   INIT_COMMUNITY="FirstJoinCommunityScreen",
   CHOOSE_CATEGORY="ChooseCategoryScreen",
   BOOKMARK= "BookMarkScreen",
-  PROFILE= "ProfileScreen",
+  PROFILE= "UserProfileScreen",
   SETTING= "SettingScreen",
 }

@@ -1,7 +1,7 @@
 import { Stack } from "@mobily/stacks"
 import { Text } from "@rneui/themed"
 import Header from "./SharedComponents/Header"
-import { View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import PostScreen from "./Screens/Community/PostScreen"
 import AboutScreen from "./Screens/Community/AboutScreen"
@@ -31,5 +31,4 @@ const UserProfileScreen = () =>{
         </Stack>
     )
 }
-
 export default UserProfileScreen;

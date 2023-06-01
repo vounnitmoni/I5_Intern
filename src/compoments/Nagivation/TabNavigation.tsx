@@ -33,7 +33,7 @@ const bottoms = [
     component: SupportScreen,
     label: 'Message',
     type: 'ionicon',
-    icon: 'chat',
+    icon: 'chatbubbles-outline',
   },
   {
     name: ROUTES.NOTIFICATION,

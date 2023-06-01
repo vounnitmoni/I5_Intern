@@ -28,3 +28,17 @@ export interface ICommentData{
     user_id: undefined;
     answer_id: undefined;
 }
+
+export interface IUserAtt {
+    firstname?: string;
+    lastname?: string;
+    username?: string;
+    email?: string;
+    phone_number?: string;
+    bio?: string;
+    name_shortcut?: string;
+    follower?: number;
+    followee?: number;
+    profile_pic?: string;
+    cover_pic?: string;
+}

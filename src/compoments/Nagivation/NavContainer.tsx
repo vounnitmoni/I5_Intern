@@ -11,6 +11,7 @@ import CommunityListScreen from '../../screens/Question/communityList';
 import ProfileScreen from '../../screens/ProfileScreen';
 import SettingScreen from '../../screens/SettingScreen';
 import BookMarkScreen from '../../screens/BookMarkScreeen';
+import UserProfileScreen from '../CommunityAndProfile/UserProfile';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -25,13 +26,15 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
-        <Stack.Screen name='ProfileScreen' component={ProfileScreen}/>
         <Stack.Screen name='SettingScreen' component={SettingScreen}/>
         <Stack.Screen name='BookMarkScreen' component={BookMarkScreen}/>
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
         <Stack.Screen name='CommunityListScreen' component={CommunityListScreen}/>
+      </Stack.Group>
+      <Stack.Group screenOptions={{headerShown: true}}>
+        <Stack.Screen name='UserProfileScreen' component={UserProfileScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );

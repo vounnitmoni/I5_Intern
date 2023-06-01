@@ -15,6 +15,7 @@ export type RootStackParamList = {
   BookMarkScreen: undefined;
   SettingScreen: undefined;
   ProfileScreen: undefined;
+  UserProfileScreen: undefined;
 };
 
 export type AuthStackParamList = {

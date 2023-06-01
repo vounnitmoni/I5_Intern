@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { circularClick } from "../../store/onClickRecursiveReducer"
 import { RootStackParamList } from "../Nagivation/TypeNavigation"
 import { StackNavigationProp } from "@react-navigation/stack"
+import { IUserData } from "./utils"
 
 const IRightDrawerMenu = [
     {
@@ -56,11 +57,8 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
     const {t} = useTranslation();
     const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
     const dispatch = useAppDispatch();
-    const [visible, setVisible] = useState(false);
-    const hideModal = () => setVisible(false);
-    useEffect(()=>{
-        console.log(visible)
-    },[visible])
+    const [userData, setUserData] = useState<IUserData>();
+
     const handleSignOut = () =>{  
         API.Logout(null).then((res)=>{
         if(res.status == 200){
@@ -75,6 +73,10 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
         })
     }
 
+    useEffect(()=>{
+
+    })
+
     return(
         <Stack style={styles.container} space={5}>
             <Columns alignY={"bottom"} style={styles.profile}>
@@ -83,22 +85,22 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
                 </Column>
                 <Column width={"3/5"}>
                     <Stack space={2}>
-                        <Text style={{fontWeight: '700'}}>Nitmoni Voun</Text>
-                        <Text>@username</Text>
+                        <Text style={{fontSize: 17,fontWeight: '700'}}>{userData?.firstname} {userData?.lastname}</Text>
+                        <Text>@{userData?.username}</Text>
                     </Stack>
                 </Column>
             </Columns>
             <Inline space={5}>
                 <TouchableOpacity>
                     <Inline>
-                        <Text style={{fontWeight: '700'}}>200</Text>
-                        <Text> Following</Text>
+                        <Text style={{fontWeight: '700'}}>{userData?.following || 0}</Text>
+                        <Text>  Following</Text>
                     </Inline>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> setVisible(true)}>
+                <TouchableOpacity>
                     <Inline>
-                        <Text style={{fontWeight: '700'}}>200</Text>
-                        <Text> Follower</Text>
+                        <Text style={{fontWeight: '700'}}>{userData?.follower || 0}</Text>
+                        <Text>  Follower</Text>
                     </Inline>
                 </TouchableOpacity>
             </Inline>

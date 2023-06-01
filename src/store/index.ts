@@ -12,12 +12,14 @@ import onClickRecursiveReducer from './onClickRecursiveReducer';
 import questionId from './questionId';
 import { QuestionRequestSlice } from './QuestionRequestionReducer';
 import PostQuestionReducer from './PostQuestionReducer';
+import userInfoReducer, { userAttributeSlice } from './userInfoReducer';
 
 const rootReducers = {
   setting: settingReducer,
   circular: onClickRecursiveReducer,
   question_id: questionId,
   question_request: PostQuestionReducer,
+  userAttribute: userInfoReducer,
 };
 
 const middlewares = [thunk];
@@ -53,6 +55,7 @@ export const store = configureStore({
     onClickRecursiveReducer,
     questionId,
     PostQuestionReducer,
+    userInfoReducer,
   },
   middleware: middlewares,
 });
