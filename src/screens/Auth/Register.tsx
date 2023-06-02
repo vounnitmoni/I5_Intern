@@ -11,6 +11,7 @@ import {AuthStackParamList} from '../../compoments/Nagivation/TypeNavigation';
 import variables from '../../assets/styles/variables';
 import styles from '../../assets/styles';
 import API from '../../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type FormValues = {
   username: string;
@@ -43,7 +44,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
 
   const onSubmit = (formData: FormValues) => {
     setIsLoading(true);
-    navigation.navigate('MoreInfoScreen')
+    console.log('hi')
     API.Register({
       username: formData.username,
       email: formData.email,
@@ -54,6 +55,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
       setIsLoading(false);
       if(res.accessToken){
         navigation.navigate('MoreInfoScreen');
+        AsyncStorage.setItem('token', res.accessToken)
       }else{
         Alert.alert(res.message)
       }
@@ -154,7 +156,7 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
           size="lg"
           loading={isLoading}
           disabled={isLoading}
-          onPress={()=> [handleSubmit(onSubmit), navigation.navigate('MoreInfoScreen')]}
+          onPress={handleSubmit(onSubmit)}
         />
 
         <Inline space={2} alignX="center">

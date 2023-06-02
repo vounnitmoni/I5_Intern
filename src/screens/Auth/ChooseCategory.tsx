@@ -3,6 +3,9 @@ import { Button, Icon, Text } from "@rneui/themed"
 import { useEffect, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Checkbox, Chip, List, RadioButton, Searchbar } from "react-native-paper"
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack"
+import { AuthStackParamList } from "../../compoments/Nagivation/TypeNavigation"
+import { ROUTES } from "../../enums/RouteEnum"
 
 interface chipData {
     id: number;
@@ -13,7 +16,9 @@ interface checkBoxData {
     isChecked: boolean;
 }
 
-const ChooseCategoryScreen : React.FC<{}> = ({}) =>{
+type navigator = NativeStackNavigationProp<AuthStackParamList, ROUTES.CHOOSE_CATEGORY>
+
+const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation}) =>{
     const [checked, setChecked] = useState(false)
     const [checkBoxData, setCheckBoxData] = useState<checkBoxData[]>()
     const [category, setCategory] = useState<chipData[]>();
@@ -80,7 +85,7 @@ const ChooseCategoryScreen : React.FC<{}> = ({}) =>{
                                 borderRadius: 15, 
                                 width: 150, 
                                 alignSelf: 'flex-end'}}
-                onPress={()=> null}
+                onPress={()=> navigation.navigate(ROUTES.INIT_COMMUNITY)}
                 />
         </Stack>
     )

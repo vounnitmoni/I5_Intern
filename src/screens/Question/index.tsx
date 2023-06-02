@@ -58,7 +58,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
             question: object.question,
             body: object.description,
             community: communityValue,
-            image: photo.map((x)=> x.uri)
+            photo: photo.map((x)=> x.base64)
         }).then(res => res.json()).then(()=>navigation.goBack())
     }
 
@@ -87,6 +87,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
             ).then(()=> {
                 setExist(true)
                 console.log(photo.map(e => e.base64))
+                
             })
         }
     return(

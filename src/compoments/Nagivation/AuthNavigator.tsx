@@ -6,6 +6,7 @@ import {ROUTES} from '../../enums/RouteEnum';
 import {AuthStackParamList} from './TypeNavigation';
 import MoreInfoScreen from '../../screens/Auth/MorInfo';
 import ChooseCategoryScreen from '../../screens/Auth/ChooseCategory';
+import FirstJoinCommunityScreen from '../../screens/Auth/JoinCommunity';
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
@@ -24,7 +25,7 @@ const AuthNavigationData = [
   },
   {
     name: ROUTES.INIT_COMMUNITY,
-    component: LoginScreen,
+    component: FirstJoinCommunityScreen,
   },
   {
     name: ROUTES.MORE_INFO,
@@ -37,12 +38,12 @@ const Navigator = () => {
     <AuthStack.Navigator
       screenOptions={{headerShadowVisible: false, headerTitle: ''}}>
       {AuthNavigationData.map((item: any, index: number) => {
-        if(item.name == ROUTES.MORE_INFO || ROUTES.CHOOSE_CATEGORY){
+        if(index === 2 || index === 3 || index === 4){
             return (
               <AuthStack.Screen
                 options={{
                   headerShown: false
-                }}
+                }}                
                 key={index}
                 name={item.name}
                 component={item.component}
@@ -63,3 +64,7 @@ const Navigator = () => {
 };
 
 export default Navigator;
+
+// cardStyle:{
+//   backgroundColor: 'black'
+// }

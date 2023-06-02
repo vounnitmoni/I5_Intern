@@ -29,7 +29,11 @@ export default class API {
         return api.request(`api/all/comment/${answer_id}`, 'POST', body);
     }
     static async ShortUserInfo(body?: any){
-        return api.request('api/all/profile/info', 'GET', body)
+        return api.request('api/auth/info', 'GET', body)
+    }
+
+    static async AddMoreProfileInfo(body?: any){
+        return api.request('api/auth/update', 'POST', body)
     }
 //-------------------------------community----------------------------------------
     static async CreateCommunity(body: any){

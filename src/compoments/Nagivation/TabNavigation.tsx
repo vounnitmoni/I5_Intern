@@ -87,8 +87,7 @@ const TabNavigation : React.FC<{navigation: navigation}> = ({navigation}) => {
                       size={size}
                     />
                   ),
-                  tabBarStyle:{display: 'none'}
-                  
+                  tabBarStyle:{display: 'none'},
                 }}
               />
             );
