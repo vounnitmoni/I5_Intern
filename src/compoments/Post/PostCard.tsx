@@ -12,7 +12,7 @@ const PostCard : React.FC<{
     title: string | undefined;
     description?: string | undefined;
     community: string | undefined;
-    image?: string[] | undefined;
+    image?: string[];
     vote: number | undefined;
     answer: number | undefined;
     botton?: boolean;

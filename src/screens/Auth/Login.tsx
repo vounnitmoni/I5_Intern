@@ -23,7 +23,6 @@ type FormValues = {
 type LoginScreen = StackNavigationProp<AuthStackParamList, ROUTES.LOGIN>;
 
 const LoginScreen: React.FC<{navigation: LoginScreen}> = ({navigation}) => {
-  const rootNav = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);

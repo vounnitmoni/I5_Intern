@@ -1,10 +1,13 @@
 import { Box, Column, Columns, Inline, Stack } from "@mobily/stacks"
+import { StackNavigationProp } from "@react-navigation/stack";
 import { Button } from "@rneui/base";
 import { CheckBox, Icon, Image, Input } from "@rneui/themed"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, Text,TouchableOpacity } from "react-native"
 import { RadioButton, TextInput } from "react-native-paper";
+import { AuthStackParamList, RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
+import { ROUTES } from "../../enums/RouteEnum";
 
 type FormValues = {
     firstname: string;
@@ -13,8 +16,8 @@ type FormValues = {
     dob: Date;
     number: string;
 }
-
-const MoreInfoScreen = () =>{
+type navigation = StackNavigationProp<AuthStackParamList, ROUTES.MORE_INFO>;
+const MoreInfoScreen : React.FC<{navigation: navigation}> = ({navigation}) =>{
     const [checked, setChecked] = useState('');
     const {
         handleSubmit,
@@ -40,7 +43,7 @@ const MoreInfoScreen = () =>{
             </Stack>
             <Stack style={{padding: 20, paddingLeft: 30}} space={4}>
                 <Inline space={3} alignY={'center'}>
-                    <Text style={{fontWeight: "700"}}>Firstname: </Text>
+                    <Text style={{color: 'black',fontWeight: "700"}}>Firstname: </Text>
                     <TextInput
                         mode="outlined" 
                         placeholder="Your firstname" 
@@ -50,7 +53,7 @@ const MoreInfoScreen = () =>{
                         style={{width: 250}}/>
                 </Inline>
                 <Inline space={3} alignY={'center'}>
-                    <Text style={{fontWeight: "700"}}>Lastname: </Text>
+                    <Text style={{color: 'black', fontWeight: "700"}}>Lastname: </Text>
                     <TextInput mode="outlined" 
                         placeholder="Your lastname" 
                         label={"Lastname"} 
@@ -61,17 +64,17 @@ const MoreInfoScreen = () =>{
                 </Inline>
                 <Columns alignY={'center'} >
                     <Column>
-                        <Text style={{fontWeight: "700"}}>Gender: </Text>
+                        <Text style={{color: 'black', fontWeight: "700"}}>Gender: </Text>
                     </Column>
                     <Column>
                         <Inline alignY={'center'}>
-                            <Text>Male</Text>
+                            <Text style={{color: 'black'}}>Male</Text>
                             <RadioButton
                                 value="M"
                                 status={ checked === 'M' ? 'checked' : 'unchecked' }
                                 onPress={() => setChecked('M')}
                             />
-                            <Text>Female</Text>
+                            <Text style={{color: 'black'}}>Female</Text>
                             <RadioButton
                                 value="F"
                                 status={ checked === 'F' ? 'checked' : 'unchecked' }
@@ -81,7 +84,7 @@ const MoreInfoScreen = () =>{
                     </Column>                    
                 </Columns>
                 <Inline space={3} alignY={'center'}>
-                    <Text style={{fontWeight: "700"}}>Date of birth: </Text>
+                    <Text style={{color: 'black', fontWeight: "700"}}>Date of birth: </Text>
                     <TextInput mode="outlined" 
                         placeholder="dd" 
                         maxLength={2}
@@ -104,7 +107,7 @@ const MoreInfoScreen = () =>{
                     {/* <Icon name="checkmark-circle-sharp" type="ionicon" color={'green'}/> */}
                 </Inline>
                 <Inline space={3} alignY={'center'}>
-                    <Text style={{fontWeight: "700"}}>Number:     </Text>
+                    <Text style={{color: 'black', fontWeight: "700"}}>Number:     </Text>
                     <TextInput mode="outlined" 
                         placeholder="Phone number" 
                         label={"Firstname"} 
@@ -124,7 +127,7 @@ const MoreInfoScreen = () =>{
                     }}
                     size="lg"
                     buttonStyle={{backgroundColor: "#EE5407", borderRadius: 15, width: 150, alignSelf: 'flex-end', marginRight: 26}}
-                    onPress={()=>null}
+                    onPress={()=> navigation.navigate(ROUTES.CHOOSE_CATEGORY)}
                 />
             </Stack>
         </Stack>

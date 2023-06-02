@@ -5,6 +5,7 @@ import LoginScreen from '../../screens/Auth/Login';
 import {ROUTES} from '../../enums/RouteEnum';
 import {AuthStackParamList} from './TypeNavigation';
 import MoreInfoScreen from '../../screens/Auth/MorInfo';
+import ChooseCategoryScreen from '../../screens/Auth/ChooseCategory';
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
@@ -19,7 +20,7 @@ const AuthNavigationData = [
   },
   {
     name: ROUTES.CHOOSE_CATEGORY,
-    component: LoginScreen,
+    component: ChooseCategoryScreen,
   },
   {
     name: ROUTES.INIT_COMMUNITY,
@@ -36,7 +37,7 @@ const Navigator = () => {
     <AuthStack.Navigator
       screenOptions={{headerShadowVisible: false, headerTitle: ''}}>
       {AuthNavigationData.map((item: any, index: number) => {
-        if(item.name == ROUTES.MORE_INFO){
+        if(item.name == ROUTES.MORE_INFO || ROUTES.CHOOSE_CATEGORY){
             return (
               <AuthStack.Screen
                 options={{
