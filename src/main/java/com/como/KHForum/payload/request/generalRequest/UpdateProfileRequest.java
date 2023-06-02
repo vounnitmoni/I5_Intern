@@ -10,6 +10,7 @@ import lombok.Setter;
 public class UpdateProfileRequest {
     private String firstname;
     private String lastname;
+    private String bio;
     private Integer gender;
     private LocalDate dob;
     private String country_code;

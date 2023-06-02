@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
+import com.como.KHForum.entity.User;
 import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.EditProfileRequest;
 import com.como.KHForum.payload.request.generalRequest.UpdateProfileRequest;
@@ -22,9 +24,14 @@ import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.UserRepo;
+import com.como.KHForum.service.FollowService.FollowService;
 import com.como.KHForum.webconfig.session.UserSessions;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @RestController
 @RequestMapping("api/all/profile")
@@ -36,6 +43,7 @@ public class ProfileController {
     @Autowired AppUserRepo appUserRepo;
     @Autowired UserSessions userSessions;
     @Autowired FileRepo fileRepo;
+    @Autowired FollowService followService;
 
     @GetMapping
     public ResponseEntity<?> profile(){
@@ -61,7 +69,8 @@ public class ProfileController {
     @PostMapping("/update")
     public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileRequest request){
         AppUser user = new AppUser(request.getFirstname(), 
-                                   request.getLastname(), 
+                                   request.getLastname(),
+                                   request.getBio(), 
                                    request.getGender(), 
                                    request.getDob(), 
                                    request.getCountry_code(), 
@@ -74,4 +83,44 @@ public class ProfileController {
         fileRepo.save(cover);
         return ResponseEntity.ok().body(new SuccessMessageResponse("Your informations is updated!", true));
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> drawerInfo(){
+        Long id = userSessions.getUserId();
+        AppUser appUser = appUserRepo.appUserInfoByAuthId(id);
+        User user = userRepo.userInfoById(id);
+        String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+        ShortInfoResponse response = new ShortInfoResponse(appUser.getFirstname(), 
+                                                           appUser.getLastname(),
+                                                           user.getUsername(),
+                                                           user.getEmail(),
+                                                           appUser.getArea_number(),
+                                                           appUser.getBio(),
+                                                           name_shortcut, 
+                                                           followService.FollowerAmount(id), 
+                                                           followService.FollowingAmount(id), 
+                                                           fileRepo.userProfilePic(id).getPhoto(),
+                                                           fileRepo.userCoverPic(id).getPhoto());
+        return ResponseEntity.ok().body(response);
+    }
+
+    //----------------------------------------------------------------------------
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    protected class ShortInfoResponse{
+        private String firstname;
+        private String lastname;
+        private String username;
+        private String email;
+        private String phone_number;
+        private String bio;
+        private String name_shortcut;
+        private Integer follower;
+        private Integer followee;
+        private byte[] profile_pic;
+        private byte[] cover_pic;
+    }
+    //----------------------------------------------------------------------------
 }

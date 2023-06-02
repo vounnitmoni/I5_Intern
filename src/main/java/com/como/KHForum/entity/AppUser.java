@@ -31,6 +31,7 @@ public class AppUser {
     private Long id;
     private String firstname;
     private String lastname;
+    private String bio;
     private Integer gender;
     @JsonFormat(pattern = "yyyy-MM-dd") private LocalDate dob;
     private String country_code;
@@ -64,14 +65,17 @@ public class AppUser {
         return country_code + " " + area_number;
     }
 
-    public AppUser(String firstname, String lastname, Integer gender, LocalDate dob, String country_code,
+    public AppUser(String firstname, String lastname, String bio, Integer gender, LocalDate dob, String country_code,
             String area_number, Long account_id) {
         this.firstname = firstname;
         this.lastname = lastname;
+        this.bio = bio;
         this.gender = gender;
         this.dob = dob;
         this.country_code = country_code;
         this.area_number = area_number;
         this.account_id = account_id;
     }
+
+    
 }

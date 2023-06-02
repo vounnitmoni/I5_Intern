@@ -18,6 +18,9 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long>{
     @Query(value = selectAll + "where account_id = :id", nativeQuery = true)
     Optional<AppUser> findAppUserByAuthId(@Param("id") Long id);
 
+    @Query(value = selectAll + "where account_id = :id", nativeQuery = true)
+    AppUser  appUserInfoByAuthId(@Param("id") Long id);
+
     @Query(value = "select user_category.category_id from kh_forum.app_user inner join kh_forum.user_category on app_user.id = user_category.user_id where account_id = :id", nativeQuery = true)
     List<Long> findCategoryIdList(@Param("id") Long id);
 
