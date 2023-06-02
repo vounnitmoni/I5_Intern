@@ -16,6 +16,7 @@ export type RootStackParamList = {
   SettingScreen: undefined;
   ProfileScreen: undefined;
   UserProfileScreen: undefined;
+  CreateCommunityScreen: undefined;
 };
 
 export type AuthStackParamList = {

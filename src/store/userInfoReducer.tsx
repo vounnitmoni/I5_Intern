@@ -50,13 +50,15 @@ export const userAttributeSlice = createSlice({
         cover_pic: action.payload.cover_pic,
       };
     },
+
     updateUserBio: (state, action: PayloadAction<IUserAtt>) => {
         return {
             ...state,
             bio: action.payload.bio,
         }
-    }
-    userInfoState: (state, action: PayloadAction<IUserAtt>) =>{
+    },
+
+    userInfoState: (state, action: PayloadAction<IUserAtt>) => {
         return{
             ...state,
             state: action.payload.state,
@@ -65,7 +67,7 @@ export const userAttributeSlice = createSlice({
   },
 });
 
-export const {currentAuthenticatedUser, updateUserAttributes, signOut} =
-  authSlice.actions;
+export const {updateUserAttributes, updateUserBio, userInfoState} =
+  userAttributeSlice.actions;
 
-export default authSlice.reducer;
+export default userAttributeSlice.reducer;

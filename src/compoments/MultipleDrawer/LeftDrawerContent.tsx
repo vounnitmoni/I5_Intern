@@ -1,14 +1,21 @@
 import { Inline, Stack } from "@mobily/stacks"
+import { useNavigation } from "@react-navigation/native";
 import { Icon, Image, Text } from "@rneui/themed"
 import { Key, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { ROUTES } from "../../enums/RouteEnum";
+import { RootStackParamList } from "../Nagivation/TypeNavigation";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface ICData {
     image: string;
     community_name: string;
 }
-
-const LeftDrawerContent = (props : any) =>{
+type navigation = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR>
+const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
+    navigation,
+    props
+}) =>{
     const [recentlyCommunityData, setRecentlyCommunityData] = useState<ICData[]>([]);
     const [yourCommunityData, setYourCommunityData] = useState<ICData[]>([])
     const [youOwnerCommunity, setYouOwnerCommunity] = useState<ICData[]>([])
@@ -35,7 +42,7 @@ const LeftDrawerContent = (props : any) =>{
             ): null}
             <View style={styles.line}/>
             <Text style={{fontWeight: '700'}}>Your Communities</Text>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={()=> navigation?.navigate('CreateCommunityScreen')}>
                 <Inline space={6}>
                     <Icon name="plus" type="antdesign"/>
                     <Text>Create a community</Text>

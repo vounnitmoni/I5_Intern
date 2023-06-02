@@ -17,4 +17,5 @@ export enum ROUTES {
   BOOKMARK= "BookMarkScreen",
   PROFILE= "UserProfileScreen",
   SETTING= "SettingScreen",
+  CREATE_COMMUNITY= "CreateCommunityScreen",
 }
