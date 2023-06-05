@@ -18,6 +18,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     User findUserByEmail(String email);
     Optional<User> findById(Long id);
 
-    @Query(value = "select * from kh_forum.user where id = :id", nativeQuery = true)
+    @Query(value = "select * from kh_forum.users where id = :id", nativeQuery = true)
     User userInfoById(@Param("id") Long id);
 }

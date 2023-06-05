@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.UserCategory;
@@ -51,12 +52,11 @@ public class CategoryController {
     }
 
     //list all category
-    @PostMapping("/list")
-    public ResponseEntity<?> list20Category(@RequestBody Integer amount){
-        Set<String> categories = new HashSet<>();
-        for(Integer i = 0; i<=amount; i++){
-            
+    @GetMapping("/list")
+    public ResponseEntity<?> list20Category(@RequestParam Integer request_time, @RequestBody Set<Long> prev_id){
+        if(request_time != 0){
+            return ResponseEntity.ok(categoryRepo.categoriesWithNotIn(prev_id));
         }
-        return null;
+        return ResponseEntity.ok(categoryRepo.categories());
     }
 }

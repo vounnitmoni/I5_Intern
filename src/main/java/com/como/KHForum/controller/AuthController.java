@@ -102,10 +102,14 @@ public class AuthController {
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
                 String accessToken = jwtUtils.generateAccessToken(userDetails);
                 signUpSuccessResponse.setAccessToken(accessToken);
+                return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                    .body(new SignUpSuccessResponse("Sign up successed!", true, signUpSuccessResponse.getAccessToken()));
         }
-        return ResponseEntity.ok().body(new SignUpSuccessResponse("Sign up successed!", true, signUpSuccessResponse.getAccessToken()));
+        return null;
+        
   }
 
   @PostMapping("/signout")

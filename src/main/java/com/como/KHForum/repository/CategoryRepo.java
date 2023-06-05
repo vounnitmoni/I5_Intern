@@ -24,4 +24,13 @@ public interface CategoryRepo extends JpaRepository<Category, Long> {
 
     Optional<Category> findByName(String name);
     Boolean existsByName(String name);
+
+    @Query(value = "select * from kh_forum.categories", nativeQuery = true)
+    List<Category> allCategory();
+
+//---------------------------------new approach---------------------------
+    @Query(value = "select * from kh_forum.categories order by rand() limit 20", nativeQuery = true)
+    Set<Category> categories();
+    @Query(value = "select * from kh_forum.categories where id not in (:setOf_id) order by rand() limit 20", nativeQuery = true)
+    Set<Category> categoriesWithNotIn(@Param("setOf_id") Set<Long> id);
 }
