@@ -44,7 +44,6 @@ const RegisterScreen: React.FC<{navigation: RegisterScreen}> = ({
 
   const onSubmit = (formData: FormValues) => {
     setIsLoading(true);
-    console.log('hi')
     API.Register({
       username: formData.username,
       email: formData.email,

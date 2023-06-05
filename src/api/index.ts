@@ -23,24 +23,29 @@ export default class API {
         return api.request(`/all/card/comments`, 'POST', body);
     }  
     static async AnswerQuestion(body : any){
-        return api.request('/api/all/answer', 'POST', body);
+        return api.request('/all/answer', 'POST', body);
     }
     static async CommentAnswer(body: any, answer_id : number){
-        return api.request(`api/all/comment/${answer_id}`, 'POST', body);
+        return api.request(`/all/comment/${answer_id}`, 'POST', body);
     }
     static async ShortUserInfo(body?: any){
-        return api.request('api/auth/info', 'GET', body)
+        return api.request('/all/profile/info', 'GET', body)
     }
-
     static async AddMoreProfileInfo(body?: any){
-        return api.request('api/auth/update', 'POST', body)
+        return api.request('/all/profile/update', 'POST', body)
     }
 //-------------------------------community----------------------------------------
     static async CreateCommunity(body: any){
-        return api.request(`api/all/community/create`, 'POST', body);
+        return api.request(`/all/community/create`, 'POST', body);
     }
     static async UserCommunity(body?: any){
         return api.request('/all/community/communities', 'GET', body);
     }
-    
+//-------------------------------Category-----------------------------------------
+    static async ListOfCategories(param?: number, body?: Set<number>){
+        return api.request(`all/category/list?request_time=${param}`, 'POST', body);
+    }
+    static async AddCategories(body?: any){
+        return api.request(`all/category/add`, 'GET', body);
+    }   
 }

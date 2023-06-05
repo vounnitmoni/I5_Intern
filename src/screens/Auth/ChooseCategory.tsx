@@ -2,37 +2,42 @@ import { Inline, Stack } from "@mobily/stacks"
 import { Button, Icon, Text } from "@rneui/themed"
 import { useEffect, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
+import { FlatList } from "react-native-gesture-handler"
 import { Checkbox, Chip, List, RadioButton, Searchbar } from "react-native-paper"
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack"
+import API from "../../api"
 import { AuthStackParamList } from "../../compoments/Nagivation/TypeNavigation"
 import { ROUTES } from "../../enums/RouteEnum"
-
-interface chipData {
-    id: number;
-    category: string;
-}
-interface checkBoxData {
-    category: string;
-    isChecked: boolean;
-}
 
 type navigator = NativeStackNavigationProp<AuthStackParamList, ROUTES.CHOOSE_CATEGORY>
 
 const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation}) =>{
     const [checked, setChecked] = useState(false)
-    const [checkBoxData, setCheckBoxData] = useState<checkBoxData[]>()
-    const [category, setCategory] = useState<chipData[]>();
+    const [id, setId] = useState<Set<number>>()
+    const [category, setCategory] = useState<string[]>([]);
+    const [request_time, setRequest_time] = useState(0)
     const [onPress, setOnPress] = useState(false)
+
     const handleOnPress = () => setOnPress(!onPress);
+
     const [value, setValue] = useState('')
 
     useEffect(()=>{
+        API.ListOfCategories(request_time, id).then(res => res.json)
+            .then(res => setCheckBoxData());
+    },[request_time])
 
-    })
+    const onSubmit = () =>{
+        const setData = new Set(category);
+        API.AddCategories({
+            setData
+        }).then((res)=>{
+            if(res.status === 200){
+                navigation.navigate(ROUTES.INIT_COMMUNITY)
+            }
+        }).catch(e => (e as Error).message);
+    }
 
-    useEffect(()=>{
-        setCategory([])
-    },[onPress])
     return (
         <Stack space={4} style={styles.container}>
             <Searchbar 
@@ -48,14 +53,14 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                                 <Chip key={index} 
                                     onClose={()=> [category.splice(index, 1), handleOnPress()]}
                                     closeIcon={"close"}>
-                                        {item.category}
+                                        {item}
                                 </Chip>                            
                             )
                         })
                     ) : <Text style={{alignSelf: 'center', opacity: 0.5}}>No category has chosen</Text>}
                     </Inline>
             </ScrollView>
-            <ScrollView style={styles.category}>
+            {/* <ScrollView style={styles.category}>
                 <Stack space={2}>
                     {checkBoxData?.length != 0 ? (
                         checkBoxData?.map((item, index)=>{
@@ -64,14 +69,20 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                                     <Text style={{fontSize: 15, fontWeight: '700'}}>{item.category}</Text>
                                     <Checkbox
                                         status={ item.isChecked ? 'checked' : 'unchecked' }
-                                        onPress={() => setChecked(!item.isChecked)}
+                                        onPress={() => [setChecked(), setCategory(item.category)]}
                                     />
                                 </Inline>
                             )
                         })
                     ): null}
                 </Stack>
-            </ScrollView>
+            </ScrollView> */}
+            <FlatList 
+                data={}
+                renderItem={}
+                onEndReached={}
+                onEndReachedThreshold={}
+            />
             <Button
                 title="Confirm"
                 icon={{
@@ -85,7 +96,7 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                                 borderRadius: 15, 
                                 width: 150, 
                                 alignSelf: 'flex-end'}}
-                onPress={()=> navigation.navigate(ROUTES.INIT_COMMUNITY)}
+                onPress={()=> [onSubmit()]}
                 />
         </Stack>
     )
