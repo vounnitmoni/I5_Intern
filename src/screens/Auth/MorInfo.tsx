@@ -39,6 +39,7 @@ const MoreInfoScreen : React.FC<{navigation: navigation}> = ({navigation}) =>{
             area_number: formData?.number,
             profile: formData?.profile
         }).then(data =>{
+            console.log(data.status)
             if(data.status === 200){
                 navigation.navigate(ROUTES.CHOOSE_CATEGORY)
             }

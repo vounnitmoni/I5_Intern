@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import API from "../../api"
 import { AuthStackParamList } from "../../compoments/Nagivation/TypeNavigation"
 import { ROUTES } from "../../enums/RouteEnum"
+import { current } from "@reduxjs/toolkit"
 
 interface ICategoryList {
     id: number;
@@ -22,7 +23,7 @@ type navigator = NativeStackNavigationProp<AuthStackParamList, ROUTES.CHOOSE_CAT
 const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation}) =>{
     const [data, setData] = useState<ICategoryList[]>([])
     const [id, setId] = useState<number[]>([])
-    const category : string[] = []
+    const [category, setCategory] = useState<string[]>([])
     const [foo, setFoo] = useState<ICategoryListWithCheckStatus[]>([])
     const [foo1, setFoo1] = useState<ICategoryListWithCheckStatus[]>([])
     const [request_time, setRequest_time] = useState(0)
@@ -55,29 +56,36 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
     useEffect(()=>{
         if(foo.length == 0){
             foo1?.forEach(item =>{
-                foo.push({
-                    id: item.id,
-                    name: item.name,
-                    checked: false,
-                })
+                setFoo(prev => [
+                    ...prev, 
+                    {
+                        id: item.id,
+                        name: item.name,
+                        checked: false
+                    }
+                ])
             })
         }else{
             foo1?.forEach((item)=>{
                 if(foo.includes(item)){
-                    foo.push({
-                        id: item.id,
-                        name: item.name,
-                        checked: false,
-                    })
+                    setFoo1(prev => [
+                        ...prev, 
+                        {
+                            id: item.id,
+                            name: item.name,
+                            checked: false
+                        }
+                    ])
                 }
             })
         }
-    },[foo])
+    },[foo1])
 
     const onSubmit = () =>{
         API.AddCategories({
             category_name: category
         }).then((res)=>{
+            console.log(res.status)
             if(res.status === 200){
                 navigation.navigate(ROUTES.INIT_COMMUNITY)
             }
@@ -85,13 +93,12 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
     }
 
     const onCheck = async (item: ICategoryListWithCheckStatus, index: number) =>{
-        foo.splice(index, 1, {
-            id: item.id,
-            name: item.name,
-            checked : !item.checked,
-        })
-    }
-
+            setFoo([...foo.map((item, i) =>
+                       i=== index ? { ...item, checked: !item.checked} : item
+                     ),
+                   ]);
+           }
+//note: for best practice, not to apply mutation approach in current state. Value changes, the state doesn't seem to update
     return (
         <Stack space={4} style={styles.container}>
             <Searchbar 
@@ -105,7 +112,12 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                         category?.map((item, index)=>{
                             return(                            
                                 <Chip key={index} 
-                                    onClose={()=> [category.splice(index, 1), handleClose()]}
+                                    onClose={()=> [category.splice(index, 1), handleClose().then(()=>{
+                                        setFoo([...foo.map((i) =>
+                                            i.name === item ? { ...i, checked: !i.checked} : i
+                                          ),
+                                        ]);
+                                    })]}
                                     closeIcon={"close"}>
                                         {item}
                                 </Chip>                            
@@ -116,18 +128,21 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
             </ScrollView>
             <ScrollView style={styles.category}>
                 <Stack space={2}>
-                    {foo1.length != 0 ? (
-                        foo1.map((item, index: number)=>{
+                    {foo.length != 0 ? (
+                        foo.map((item, index: number)=>{
                             return(
                                 <Inline key={index} alignX={"between"} alignY={'center'}>
                                     <Text style={{fontSize: 15, fontWeight: '700'}}>{item.name}</Text>
                                     <Checkbox
                                         status={ item.checked ? 'checked' : 'unchecked' }
                                         onPress={()=> onCheck(item, index).then(()=>{
-                                            if(item.checked){
-                                                category.push(item.name)
+                                            if(!item.checked){
+                                                setCategory(prev => [
+                                                    ...prev,
+                                                    item.name
+                                                ])
                                             }else{
-                                                category.filter(e => e !== item.name)
+                                                setCategory(current => current.filter(e => e !== item.name))
                                             }
                                         })}
                                     />
@@ -190,3 +205,4 @@ const styles = StyleSheet.create({
     }
 })
 export default ChooseCategoryScreen
+
