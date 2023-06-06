@@ -1,6 +1,5 @@
 package com.como.KHForum.controller.generalController;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +21,8 @@ import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CategoryRepo;
 import com.como.KHForum.repository.UserCategoryRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
+
+import jakarta.annotation.Nullable;
 
 @RestController
 @RequestMapping("api/all/category")
@@ -52,8 +53,8 @@ public class CategoryController {
     }
 
     //list all category
-    @GetMapping("/list")
-    public ResponseEntity<?> list20Category(@RequestParam Integer request_time, @RequestBody Set<Long> prev_id){
+    @PostMapping("/list")
+    public ResponseEntity<?> list20Category(@RequestParam Integer request_time, @RequestBody @Nullable Set<Long> prev_id){
         if(request_time != 0){
             return ResponseEntity.ok(categoryRepo.categoriesWithNotIn(prev_id));
         }

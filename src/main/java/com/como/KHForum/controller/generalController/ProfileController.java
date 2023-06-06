@@ -47,6 +47,7 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<?> profile(){
+        System.out.println("++++++++++++++++" + userSessions.getUserId());
         Optional<AppUser> appUserInfo = appUserRepo.findAppUserByAuthId(userSessions.getUserId());
         return ResponseEntity.ok(appUserInfo);
     }

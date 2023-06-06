@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.como.KHForum.entity.Questionnaire;
@@ -23,9 +22,7 @@ import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.service.ServiceUtils.Utility;
 import com.como.KHForum.webconfig.session.UserSessions;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Null;
 
 @Service
 public class QuestionCardService {
@@ -42,13 +39,10 @@ public class QuestionCardService {
     @Autowired Utility utility;
 
     public Set<Questionnaire> questionCards(){
-        Set<Long> community_id = userCommunityRepo.randomCommunityId(userSessions.getUserId());
-        Set<Long> followee_id = followerRepo.randomFollowee_id(userSessions.getUserId());
-        Set<Long> category_id = userCategoryRepo.randomCategories(userSessions.getUserId());
 
-        Set<Questionnaire> randomCommunityQuestions = questionnaireRepo.randQuestionnairesByCommunity(community_id);
-        Set<Questionnaire> randomFolloweeQuestions = questionnaireRepo.randQuestionnairesByFollowee(followee_id);
-        Set<Questionnaire> randomCategoryQuestions = questionnaireRepo.randomQuestionnairesByCategories(category_id);
+        Set<Questionnaire> randomCommunityQuestions = questionnaireRepo.randQuestionnairesByCommunity(userCommunityRepo.randomCommunityId(userSessions.getUserId()));
+        Set<Questionnaire> randomFolloweeQuestions = questionnaireRepo.randQuestionnairesByFollowee(followerRepo.randomFollowee_id(userSessions.getUserId()));
+        Set<Questionnaire> randomCategoryQuestions = questionnaireRepo.randomQuestionnairesByCategories(userCategoryRepo.randomCategories(userSessions.getUserId()));
 
         Set<Questionnaire> post_questionnaires = new HashSet<>();
         Stream.of(randomCommunityQuestions,
