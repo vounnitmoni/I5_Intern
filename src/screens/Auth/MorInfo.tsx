@@ -90,7 +90,7 @@ const MoreInfoScreen : React.FC<{navigation: navigation}> = ({navigation}) =>{
                         label={"Lastname"} 
                         maxLength={30}
                         outlineStyle={{borderRadius: 10}}
-                        onChangeText={text => setFormData(prev => ({...prev, Lastname: text}))}
+                        onChangeText={text => setFormData(prev => ({...prev, lastname: text}))}
                         style={{width: 250}}/>
                     {/* <Icon name="checkmark-circle-sharp" type="ionicon" color={'green'}/> */}
                 </Inline>

@@ -42,10 +42,10 @@ export default class API {
         return api.request('/all/community/communities', 'GET', body);
     }
 //-------------------------------Category-----------------------------------------
-    static async ListOfCategories(param?: number, body?: Set<number>){
-        return api.request(`all/category/list?request_time=${param}`, 'POST', body);
+    static async ListOfCategories(param?: number, body?: number[]){
+        return api.request(`/all/category/list?request_time=${param}`, 'POST', body);
     }
     static async AddCategories(body?: any){
-        return api.request(`all/category/add`, 'GET', body);
+        return api.request(`/all/category/add`, 'GET', body);
     }   
 }

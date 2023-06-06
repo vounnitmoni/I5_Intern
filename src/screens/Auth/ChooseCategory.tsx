@@ -1,41 +1,95 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Button, Icon, Text } from "@rneui/themed"
-import { useEffect, useState } from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
-import { FlatList } from "react-native-gesture-handler"
-import { Checkbox, Chip, List, RadioButton, Searchbar } from "react-native-paper"
+import { useCallback, useEffect, useState } from "react"
+import { FlatList, ScrollView, StyleSheet, View } from "react-native"
+import { Checkbox, Chip, Searchbar } from "react-native-paper"
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack"
 import API from "../../api"
 import { AuthStackParamList } from "../../compoments/Nagivation/TypeNavigation"
 import { ROUTES } from "../../enums/RouteEnum"
 
+interface ICategoryList {
+    id: number;
+    name: string;
+}
+
+interface ICategoryListWithCheckStatus extends ICategoryList {
+    checked?: boolean;
+}
+
 type navigator = NativeStackNavigationProp<AuthStackParamList, ROUTES.CHOOSE_CATEGORY>
 
 const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation}) =>{
-    const [checked, setChecked] = useState(false)
-    const [id, setId] = useState<Set<number>>()
-    const [category, setCategory] = useState<string[]>([]);
+    const [data, setData] = useState<ICategoryList[]>([])
+    const [id, setId] = useState<number[]>([])
+    const category : string[] = []
+    const [foo, setFoo] = useState<ICategoryListWithCheckStatus[]>([])
+    const [foo1, setFoo1] = useState<ICategoryListWithCheckStatus[]>([])
     const [request_time, setRequest_time] = useState(0)
-    const [onPress, setOnPress] = useState(false)
+    const [onClose, setOnClose] = useState(false)
 
-    const handleOnPress = () => setOnPress(!onPress);
+    const handleClose = async () => setOnClose(!onClose);
 
     const [value, setValue] = useState('')
 
     useEffect(()=>{
-        API.ListOfCategories(request_time, id).then(res => res.json)
-            .then(res => setCheckBoxData());
+        const test = () => API.ListOfCategories(request_time, id).then(res => res.json())
+            .then(res => setData(res))
+            .catch(e => (e as Error).message);
+        test();
     },[request_time])
 
+    useEffect(() =>{
+        data.forEach(item =>{
+            setFoo1(prev => [
+                ...prev, 
+                {
+                    id: item.id,
+                    name: item.name,
+                    checked: false
+                }
+            ])
+        })
+    },[data])
+
+    useEffect(()=>{
+        if(foo.length == 0){
+            foo1?.forEach(item =>{
+                foo.push({
+                    id: item.id,
+                    name: item.name,
+                    checked: false,
+                })
+            })
+        }else{
+            foo1?.forEach((item)=>{
+                if(foo.includes(item)){
+                    foo.push({
+                        id: item.id,
+                        name: item.name,
+                        checked: false,
+                    })
+                }
+            })
+        }
+    },[foo])
+
     const onSubmit = () =>{
-        const setData = new Set(category);
         API.AddCategories({
-            setData
+            category_name: category
         }).then((res)=>{
             if(res.status === 200){
                 navigation.navigate(ROUTES.INIT_COMMUNITY)
             }
         }).catch(e => (e as Error).message);
+    }
+
+    const onCheck = async (item: ICategoryListWithCheckStatus, index: number) =>{
+        foo.splice(index, 1, {
+            id: item.id,
+            name: item.name,
+            checked : !item.checked,
+        })
     }
 
     return (
@@ -51,7 +105,7 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                         category?.map((item, index)=>{
                             return(                            
                                 <Chip key={index} 
-                                    onClose={()=> [category.splice(index, 1), handleOnPress()]}
+                                    onClose={()=> [category.splice(index, 1), handleClose()]}
                                     closeIcon={"close"}>
                                         {item}
                                 </Chip>                            
@@ -60,29 +114,30 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                     ) : <Text style={{alignSelf: 'center', opacity: 0.5}}>No category has chosen</Text>}
                     </Inline>
             </ScrollView>
-            {/* <ScrollView style={styles.category}>
+            <ScrollView style={styles.category}>
                 <Stack space={2}>
-                    {checkBoxData?.length != 0 ? (
-                        checkBoxData?.map((item, index)=>{
+                    {foo1.length != 0 ? (
+                        foo1.map((item, index: number)=>{
                             return(
                                 <Inline key={index} alignX={"between"} alignY={'center'}>
-                                    <Text style={{fontSize: 15, fontWeight: '700'}}>{item.category}</Text>
+                                    <Text style={{fontSize: 15, fontWeight: '700'}}>{item.name}</Text>
                                     <Checkbox
-                                        status={ item.isChecked ? 'checked' : 'unchecked' }
-                                        onPress={() => [setChecked(), setCategory(item.category)]}
+                                        status={ item.checked ? 'checked' : 'unchecked' }
+                                        onPress={()=> onCheck(item, index).then(()=>{
+                                            if(item.checked){
+                                                category.push(item.name)
+                                            }else{
+                                                category.filter(e => e !== item.name)
+                                            }
+                                        })}
                                     />
                                 </Inline>
                             )
                         })
-                    ): null}
+                    ) : <Text>Jom mix ort rerender JG?????????</Text>}
                 </Stack>
-            </ScrollView> */}
-            <FlatList 
-                data={}
-                renderItem={}
-                onEndReached={}
-                onEndReachedThreshold={}
-            />
+            </ScrollView>
+            {/* <FlatList /> */}
             <Button
                 title="Confirm"
                 icon={{
