@@ -3,7 +3,7 @@ import { Button, Icon, Image, Text } from "@rneui/themed"
 import { useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { ROUTES } from "../../enums/RouteEnum"
-import { Modal, PaperProvider, Portal, Switch } from "react-native-paper"
+import { Avatar, Modal, PaperProvider, Portal, Switch } from "react-native-paper"
 import HomeScreen from "../../screens/Home"
 import { useTranslation } from "react-i18next"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
@@ -42,6 +42,16 @@ const IRightDrawerMenu = [
     }
 ]
 
+interface userAttribute {
+    firstname?: string;
+    lastname?: string;
+    username?: string;
+    follower?: number;
+    followee?: number;
+    name_shortcut?: string;
+    profile_pic?: string;
+}
+
 const Switchs = () =>{
     const [isSwitchOn, setIsSwitchOn] = useState(false);
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
@@ -58,48 +68,46 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
     const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
     const dispatch = useAppDispatch();
     const [userData, setUserData] = useState<IUserData>();
-
+    const userAtt : userAttribute = useAppSelector(state => state.userInfoReducer)
+    const name_shortcut = useAppSelector(state => state.userInfoReducer.name_shortcut)
     const handleSignOut = () =>{  
         API.Logout(null).then((res)=>{
-        if(res.status == 200){
-            AsyncStorage.removeItem("token");
-        }
+            if(res.status == 200){
+                AsyncStorage.removeItem("token");
+            }
         }).then(()=> {
-        if(action){
-            dispatch(circularClick(false))
-        }else{
-            dispatch(circularClick(true))
-        }  
+            if(action){
+                dispatch(circularClick(false))
+            }else{
+                dispatch(circularClick(true))
+            }  
         })
     }
-
-    useEffect(()=>{
-
-    })
 
     return(
         <Stack style={styles.container} space={5}>
             <Columns alignY={"bottom"} style={styles.profile}>
                 <Column width={"2/5"}>
-                    <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 80, height: 80, borderRadius: 40}}/>
+                    {userAtt.profile_pic ? (<Image source={{uri : `data:image/jpeg;base64,${userAtt.profile_pic}`}} style={{width: 80, height: 80, borderRadius: 40}}/>) 
+                             : (<Avatar.Text size={80} label={name_shortcut as any}/>)}
                 </Column>
                 <Column width={"3/5"}>
                     <Stack space={2}>
-                        <Text style={{fontSize: 17,fontWeight: '700'}}>{userData?.firstname} {userData?.lastname}</Text>
-                        <Text>@{userData?.username}</Text>
+                        <Text style={{fontSize: 17,fontWeight: '700'}}>{userAtt.firstname} {userAtt.lastname}</Text>
+                        <Text>@{userAtt.username}</Text>
                     </Stack>
                 </Column>
             </Columns>
             <Inline space={5}>
                 <TouchableOpacity>
                     <Inline>
-                        <Text style={{fontWeight: '700'}}>{userData?.following || 0}</Text>
+                        <Text style={{fontWeight: '700'}}>{userAtt.followee || 0}</Text>
                         <Text>  Following</Text>
                     </Inline>
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Inline>
-                        <Text style={{fontWeight: '700'}}>{userData?.follower || 0}</Text>
+                        <Text style={{fontWeight: '700'}}>{userAtt.followee || 0}</Text>
                         <Text>  Follower</Text>
                     </Inline>
                 </TouchableOpacity>
@@ -107,7 +115,7 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
             <Stack space={5}>
                 {IRightDrawerMenu.map((item, index) =>{
                     return(
-                        <TouchableOpacity key={item.name} onPress={()=> navigation.navigate(item.name as any)}>
+                        <TouchableOpacity key={index} onPress={()=> navigation?.navigate(item.name as any)}>
                             <Inline space={10}>
                                 <Icon name={item.icon} type={item.type}/>
                                 <Text>{item.label}</Text>

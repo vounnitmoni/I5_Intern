@@ -41,11 +41,17 @@ export default class API {
     static async UserCommunity(body?: any){
         return api.request('/all/community/communities', 'GET', body);
     }
+    static async CommunityRecommend(body?: any){
+        return api.request(`/all/community/communities/recommend`, 'POST', body);
+    }
+    static async JoinRecommendCommunity(body?: any){
+        return api.request(`/all/community/communities/recommend/join`, 'POST', body);
+    }
 //-------------------------------Category-----------------------------------------
     static async ListOfCategories(param?: number, body?: number[]){
         return api.request(`/all/category/list?request_time=${param}`, 'POST', body);
     }
     static async AddCategories(body?: any){
-        return api.request(`/all/category/add`, 'GET', body);
+        return api.request(`/all/category/add`, 'POST', body);
     }   
 }

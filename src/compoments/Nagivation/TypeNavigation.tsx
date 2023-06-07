@@ -17,6 +17,7 @@ export type RootStackParamList = {
   ProfileScreen: undefined;
   UserProfileScreen: undefined;
   CreateCommunityScreen: undefined;
+  FirstJoinCommunityScreen: undefined;
 };
 
 export type AuthStackParamList = {
@@ -25,6 +26,7 @@ export type AuthStackParamList = {
   MoreInfoScreen: undefined;
   ChooseCategoryScreen: undefined;
   FirstJoinCommunityScreen: undefined;
+  TabNavigation: undefined;
   // ConfirmScreen: {
   //   email: string;
   // };

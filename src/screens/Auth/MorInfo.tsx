@@ -67,7 +67,8 @@ const MoreInfoScreen : React.FC<{navigation: navigation}> = ({navigation}) =>{
     return(
         <Stack style={styles.container} space={3}>
             <Stack style={{alignItems: "center"}} space={2}>
-                <Image source={{uri: photo?.uri}} style={styles.image}/>
+                {photo?.uri ? (<Image source={{uri: photo?.uri}} style={styles.image}/>) 
+                            : (<Image source={require('./../../assets/images/blank_profile.jpg')} style={styles.image}/>)}
                 <TouchableOpacity onPress={()=> openGallery()}>
                     <Text style={{opacity: 0.8, color: 'blue'}}>Set your profile picture</Text>
                 </TouchableOpacity>

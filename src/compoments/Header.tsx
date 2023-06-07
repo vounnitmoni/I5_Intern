@@ -1,34 +1,28 @@
 import { Box, Inline } from "@mobily/stacks";
-import { DrawerActionHelpers, DrawerActions, useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/base";
 import { Image, Text } from "@rneui/themed";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Dropdown from "./DropDown";
-import Navigator from "./Nagivation/Navigator";
-import RightDrawer from "./Nagivation/RightDrawer";
-import { RootStackParamList } from "./Nagivation/TypeNavigation";
-import { DrawerContentComponentProps, DrawerNavigationProp } from "@react-navigation/drawer";
+import { useAppSelector } from "../store/hooks";
 
 const Header : React.FC = () =>{
-    const {t} = useTranslation();
+    const profile_pic = useAppSelector(state => state.userInfoReducer.profile_pic)
     const navigation = useNavigation()
     return( 
         <View style={styles.container}>
             <View style={styles.inlineContainer}>
-                <Inline style={styles.inlineChild1} alignX={"left"} space={2}>
+                <Inline style={styles.inlineChild1} alignX={"left"} space={2} alignY={'center'}>
                     <TouchableOpacity onPress={()=> navigation.getParent()?.getParent()?.getParent()?.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name="menu" type="ionicons"/>
                     </TouchableOpacity>
                 </Inline>
-                <Inline style={styles.inlineChild2} alignX={"right"} space={2}>
+                <Inline style={styles.inlineChild2} alignX={"right"} space={2} alignY={"center"}>
                     <TouchableOpacity>
                         <Icon name="search"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=> navigation.dispatch(DrawerActions.openDrawer())}>
-                        <Image source={require('./../assets/images/user.png')} style={{width: 25, height: 25, borderRadius: 25/2, borderColor: "black", borderWidth: 1}}/>
+                        <Image source={{uri: `data:image/jpeg;base64,${profile_pic}`}} style={{width: 27, height: 27, borderRadius: 27/2}}/>
                     </TouchableOpacity>
                 </Inline>
             </View>

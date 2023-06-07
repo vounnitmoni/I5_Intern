@@ -7,6 +7,7 @@ import {AuthStackParamList} from './TypeNavigation';
 import MoreInfoScreen from '../../screens/Auth/MorInfo';
 import ChooseCategoryScreen from '../../screens/Auth/ChooseCategory';
 import FirstJoinCommunityScreen from '../../screens/Auth/JoinCommunity';
+import TabNavigation from './TabNavigation';
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
@@ -38,7 +39,7 @@ const Navigator = () => {
     <AuthStack.Navigator
       screenOptions={{headerShadowVisible: false, headerTitle: ''}}>
       {AuthNavigationData.map((item: any, index: number) => {
-        if(index === 2 || index === 3 || index === 4){
+        if(index === 2 || index === 3 || index === 4 ){
             return (
               <AuthStack.Screen
                 options={{

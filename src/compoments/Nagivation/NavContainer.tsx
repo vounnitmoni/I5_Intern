@@ -13,6 +13,7 @@ import SettingScreen from '../../screens/SettingScreen';
 import BookMarkScreen from '../../screens/BookMarkScreeen';
 import UserProfileScreen from '../CommunityAndProfile/UserProfile';
 import CreateCommunityScreen from '../../screens/CreateCommunitySCreen';
+import HomeScreen from '../../screens/Home';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {

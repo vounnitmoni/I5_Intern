@@ -25,7 +25,7 @@ interface IData{
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const [object, setObject] = useState<IData[]>([]);
-  const [userAttribute, setAttribute] = useState<IUserAtt>();
+  const [userAttribute, setAttribute] = useState<IUserAtt>({});
   const bool = false;
   const action = useAppSelector(state => state.questionId.q_id)
   const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state)
@@ -35,21 +35,27 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
     dispatch(click(id));
   }
 
-  const flag = () =>{
-    let f = 0;
-    return f = f + 1;
-  }
-
   useEffect(()=>{
-    API.ShortUserInfo({})
+    API.ShortUserInfo(null)
       .then(res => res.json())
-      .then(async data => {
-        if(data.status === 200){
-          setAttribute(data);
-        }
+      .then(data => {
+          console.log("Hi")
+          setAttribute({
+            firstname: data.firstname,
+            lastname: data.lastname,
+            username: data.username,
+            email: data.email,
+            phone_number: data.phone_number,
+            name_shortcut: data.name_shortcut,
+            bio: data.bio,
+            followee: data.followee,
+            follower: data.follower,
+            profile_pic: data.profile_pic,
+            cover_pic: data.cover_pic,
+          });
       })
   },[userInfoStateChanged])
-
+  console.log(userAttribute)
   useEffect(()=>{
     if(userAttribute){
       dispatch(updateUserAttributes({

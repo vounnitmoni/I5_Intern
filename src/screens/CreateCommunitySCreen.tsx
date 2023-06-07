@@ -22,7 +22,7 @@ const CreateCommunityScreen = () =>{
                 <Text style={{fontWeight: "700"}}>Community type</Text>
                 <TouchableOpacity onPress={()=> setIsTouchOpen(true)}>
                     <Stack space={2}>
-                        <Inline space={1}>
+                        <Inline alignY={'center'} space={1}>
                             <Text style={{fontSize: 20, fontWeight: '700'}}>Public</Text>
                             <Icon name="caret-down" type="ionicon" size={20} style={{opacity: 0.5}}/>
                         </Inline>

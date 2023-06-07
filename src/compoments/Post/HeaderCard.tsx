@@ -1,6 +1,7 @@
 import { Box, Inline, Stack } from "@mobily/stacks";
 import { Icon, Image, Text } from "@rneui/themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { useAppSelector } from "../../store/hooks";
 
 const HeaderCard : React.FC <{
     community: string | undefined;
@@ -11,6 +12,8 @@ const HeaderCard : React.FC <{
     dotsOnPress?: ()=> void;
     usernameOnPress?: () => void;
 }> = ({community, communityOnPress, dotsOnPress, name, ago, ago_status, usernameOnPress}) =>{
+    const profile_pic = useAppSelector(state => state.userInfoReducer.profile_pic)
+
     return(
         <Box alignX={"between"} direction={"row"}>
             <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 30/2}}></Image>

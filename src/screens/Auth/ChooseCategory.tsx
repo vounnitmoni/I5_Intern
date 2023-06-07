@@ -112,7 +112,7 @@ const ChooseCategoryScreen : React.FC<{navigation : navigator}> = ({navigation})
                         category?.map((item, index)=>{
                             return(                            
                                 <Chip key={index} 
-                                    onClose={()=> [category.splice(index, 1), handleClose().then(()=>{
+                                    onClose={()=> [setCategory(current => current.splice(index, 1)), handleClose().then(()=>{
                                         setFoo([...foo.map((i) =>
                                             i.name === item ? { ...i, checked: !i.checked} : i
                                           ),
