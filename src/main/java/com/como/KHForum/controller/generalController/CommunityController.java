@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Community;
@@ -27,6 +29,8 @@ import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.entity.enums.EIsa;
 import com.como.KHForum.payload.request.generalRequest.CreateCommunityRequest;
 import com.como.KHForum.payload.response.CommunityResponse;
+import com.como.KHForum.payload.response.generalResponse.RecommedCommunityResponse;
+import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.CategoryRepo;
 import com.como.KHForum.repository.CommunityCategoryRepo;
 import com.como.KHForum.repository.CommunityRepo;
@@ -34,7 +38,9 @@ import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -146,5 +152,45 @@ public class CommunityController {
             user_commu.add(cr);
         });
         return ResponseEntity.ok(user_commu);
+    }
+
+    @PostMapping("/communities/recommend")
+    public ResponseEntity<?> recommendCommunity(@RequestBody @Nullable List<Long> id){
+        if(id.size() != 0){
+            List<RecommedCommunityResponse> list = new ArrayList<>();
+            communityRepo.recommendUserCommunityListLimit20WithNotInPrev(userSessions.getUserId(), id).forEach(e ->{
+                RecommedCommunityResponse response = new RecommedCommunityResponse(e.getId(), 
+                                                                                   e.getName(), 
+                                                                                   fileRepo.communityProfilePic(e.getId()).getPhoto(), 
+                                                                                   userCommunityRepo.communityMembers(e.getId()));
+                                                                                
+                list.add(response);
+            });
+            return ResponseEntity.ok(list);
+        }
+        List<RecommedCommunityResponse> list = new ArrayList<>();
+        communityRepo.recommendUserCommunityLimit20(userSessions.getUserId()).forEach(e ->{
+            RecommedCommunityResponse response = new RecommedCommunityResponse(e.getId(), 
+                                                                               e.getName(), 
+                                                                               fileRepo.communityProfilePic(e.getId()).getPhoto(), 
+                                                                               userCommunityRepo.communityMembers(e.getId()));
+                                                                            
+            list.add(response);
+        });
+        return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("/communities/recommend/join")
+    public ResponseEntity<?> joinRecommendCommunity(@RequestBody @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY) List<Long> id){
+        id.forEach(e -> {
+            UserCommunity userCommunity = new UserCommunity(userSessions.getUserId(), 
+                                                            e, 
+                                                            LocalTime.now(), 
+                                                            LocalDate.now(), 
+                                                            true, 
+                                                            EIsa.ISA_MEMBER);
+            userCommunityRepo.save(userCommunity);
+        });
+        return ResponseEntity.ok(new SuccessMessageResponse("You have successfully joined!", true));
     }
 }
