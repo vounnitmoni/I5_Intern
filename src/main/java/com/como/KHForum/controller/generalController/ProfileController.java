@@ -90,7 +90,8 @@ public class ProfileController {
         AppUser appUser = appUserRepo.appUserInfoByAuthId(id);
         User user = userRepo.userInfoById(id);
         String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
-        ShortInfoResponse response = new ShortInfoResponse(appUser.getFirstname(), 
+        ShortInfoResponse response = new ShortInfoResponse(userSessions.getUserId(),
+                                                           appUser.getFirstname(), 
                                                            appUser.getLastname(),
                                                            user.getUsername(),
                                                            user.getEmail(),
@@ -110,6 +111,7 @@ public class ProfileController {
     @Getter
     @Setter
     protected class ShortInfoResponse{
+        private Long id;
         private String firstname;
         private String lastname;
         private String username;
