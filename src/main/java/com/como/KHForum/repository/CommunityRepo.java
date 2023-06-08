@@ -31,4 +31,6 @@ public interface CommunityRepo extends JpaRepository<Community, Long> {
                     "where uc.user_id = :id order by rand()) and id not in (:prev_id) limit 20", nativeQuery = true)
     List<Community> recommendUserCommunityListLimit20WithNotInPrev(@Param("id") Long id, @Param("prev_id") List<Long> prev_id);
 
+    @Query(value = "select * from kh_forum.communities where id= :id", nativeQuery = true)
+    Community communityById(@Param("id") Long id);
 }

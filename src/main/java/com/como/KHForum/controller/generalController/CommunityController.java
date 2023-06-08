@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Community;
@@ -41,6 +41,8 @@ import com.como.KHForum.webconfig.session.UserSessions;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.annotation.Nullable;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -78,12 +80,29 @@ public class CommunityController {
             this.userCommunity = userCommunity;
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    protected class CommunityInfoResponse{
+        private Long id;
+        private String name;
+        private Integer members;
+        private String bio;
+        private byte[] profile_pic;
+        private byte[] cover_pic;
+        private Boolean is_joined;
+        private Boolean is_notified;
+        private EIsa isa;
+    }
 //---------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------
     @PostMapping("/create")
     public ResponseEntity<?> createCommunity(@RequestBody CreateCommunityRequest request){
         final Long id = userSessions.getUserId();
-        Community community = new Community(request.getName(), 
+        Community community = new Community(request.getName(),
+                                            request.getBio(), 
                                             LocalDateTime.now(), 
                                             0, 
                                             userSessions.getUserId(), 
@@ -98,7 +117,8 @@ public class CommunityController {
                                                                 community.getId(), 
                                                                 LocalTime.now(), 
                                                                 LocalDate.now(), 
-                                                                true, 
+                                                                true,
+                                                                false, 
                                                                 EIsa.ISA_ADMIN);
                 File profile = new File(null, community.getId(), null, EFileStatus.PROFILE, request.getProfile());
                 File cover = new File(null, community.getId(), null, EFileStatus.COVER, request.getCover());
@@ -133,7 +153,8 @@ public class CommunityController {
                                                         id, 
                                                         LocalTime.now(), 
                                                         LocalDate.now(), 
-                                                        true, 
+                                                        true,
+                                                        false, 
                                                         EIsa.ISA_MEMBER);
         if(userCommunityRepo.isExistsInCommunity(id, userSessions.getUserId()) == BigInteger.ZERO){
             userCommunityRepo.save(userCommunity);
@@ -141,6 +162,13 @@ public class CommunityController {
             return ResponseEntity.ok(new IsJoin(true));
         }
         return ResponseEntity.ok(userCommunity);
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}/not_join")
+    public ResponseEntity<?> noJoinCommunity(@PathVariable Long id){
+        userCommunityRepo.deleteUserJoinCommunity(id, userSessions.getUserId());
+        return ResponseEntity.ok("success");
     }
     //User Community List
     @GetMapping("/communities")
@@ -187,10 +215,63 @@ public class CommunityController {
                                                             e, 
                                                             LocalTime.now(), 
                                                             LocalDate.now(), 
-                                                            true, 
+                                                            true,
+                                                            false, 
                                                             EIsa.ISA_MEMBER);
             userCommunityRepo.save(userCommunity);
         });
         return ResponseEntity.ok(new SuccessMessageResponse("You have successfully joined!", true));
+    }
+//-------------------------------
+    //usercommunity-> is_joined, is_notified
+//-------------------------------
+    //each community info
+    @GetMapping("/info/{id}")
+    public ResponseEntity<?> eachCommunityInfo(@PathVariable Long id){
+        if(userCommunityRepo.isExistsInCommunity(id, userSessions.getUserId()) == BigInteger.ZERO){
+            CommunityInfoResponse response = new CommunityInfoResponse(id, 
+                                                                       communityRepo.communityById(id).getName(), 
+                                                                       userCommunityRepo.communityMembers(id), 
+                                                                       communityRepo.communityById(id).getBio(), 
+                                                                       fileRepo.communityProfilePic(id).getPhoto(), 
+                                                                       fileRepo.communityCoverPic(id).getPhoto(), 
+                                                                       false, 
+                                                                       false, 
+                                                                       EIsa.ISA_VISITOR);
+            return ResponseEntity.ok(response);
+        }
+        if(userCommunityRepo.findUserCommunityInfo(id, userSessions.getUserId()).getIsA() == EIsa.ISA_ADMIN){
+            CommunityInfoResponse response = new CommunityInfoResponse(id, 
+                                                                    communityRepo.communityById(id).getName(), 
+                                                                    userCommunityRepo.communityMembers(id), 
+                                                                    communityRepo.communityById(id).getBio(), 
+                                                                    fileRepo.communityProfilePic(id).getPhoto(), 
+                                                                    fileRepo.communityCoverPic(id).getPhoto(), 
+                                                                    true, 
+                                                                    true, 
+                                                                    EIsa.ISA_ADMIN);
+            return ResponseEntity.ok(response);
+        }else if(userCommunityRepo.findUserCommunityInfo(id, userSessions.getUserId()).getIsA() == EIsa.ISA_MODERATOR){
+            CommunityInfoResponse response = new CommunityInfoResponse(id, 
+                                                                    communityRepo.communityById(id).getName(), 
+                                                                    userCommunityRepo.communityMembers(id), 
+                                                                    communityRepo.communityById(id).getBio(), 
+                                                                    fileRepo.communityProfilePic(id).getPhoto(), 
+                                                                    fileRepo.communityCoverPic(id).getPhoto(), 
+                                                                    true, 
+                                                                    userCommunityRepo.findUserCommunityInfo(id, userSessions.getUserId()).getIsNotified(), 
+                                                                    EIsa.ISA_MODERATOR);
+            return ResponseEntity.ok(response);                                                       
+        }
+        CommunityInfoResponse response = new CommunityInfoResponse(id, 
+                                                                communityRepo.communityById(id).getName(), 
+                                                                userCommunityRepo.communityMembers(id), 
+                                                                communityRepo.communityById(id).getBio(), 
+                                                                fileRepo.communityProfilePic(id).getPhoto(), 
+                                                                fileRepo.communityCoverPic(id).getPhoto(), 
+                                                                true, 
+                                                                userCommunityRepo.findUserCommunityInfo(id, userSessions.getUserId()).getIsNotified(), 
+                                                                EIsa.ISA_MEMBER);
+        return ResponseEntity.ok(response);
     }
 }

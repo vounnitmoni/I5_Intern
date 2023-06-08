@@ -49,16 +49,18 @@ public class UserCommunity {
     private LocalTime join_time;
     private LocalDate join_date;
     private Boolean isAllowed;
+    private Boolean isNotified;
     @Column(columnDefinition = "ENUM('ISA_ADMIN', 'ISA_REVIEVER', 'ISA_MEMBER')")
     @Enumerated(EnumType.STRING)
     private EIsa isA;
 
-    public UserCommunity(Long userId, Long communityId, LocalTime join_time, LocalDate join_date, Boolean isAllowed, EIsa isA) {
+    public UserCommunity(Long userId, Long communityId, LocalTime join_time, LocalDate join_date, Boolean isAllowed, Boolean isNotified, EIsa isA) {
         this.userId = userId;
         this.communityId = communityId;
         this.join_time = join_time;
         this.join_date = join_date;
         this.isAllowed = isAllowed;
+        this.isNotified = isNotified;
         this.isA = isA;
     }  
 }
