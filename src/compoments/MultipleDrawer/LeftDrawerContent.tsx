@@ -6,10 +6,12 @@ import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { ROUTES } from "../../enums/RouteEnum";
 import { RootStackParamList } from "../Nagivation/TypeNavigation";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { setCommunityId } from "../../store/IdReducer";
 
 interface ICData {
-    image: string;
-    community_name: string;
+    id?: number;
+    name?: string;
 }
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR>
 const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
@@ -17,8 +19,9 @@ const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
     props
 }) =>{
     const [recentlyCommunityData, setRecentlyCommunityData] = useState<ICData[]>([]);
-    const [yourCommunityData, setYourCommunityData] = useState<ICData[]>([])
+    const yourCommunityData : ICData[] = useAppSelector(state => state.userCommunityListReducer)
     const [youOwnerCommunity, setYouOwnerCommunity] = useState<ICData[]>([])
+    const dispatch = useAppDispatch();
 
     return( 
         <Stack space={4} style={styles.container}>
@@ -34,7 +37,7 @@ const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
                         return(
                             <Inline key={index} space={6} alignY={"center"}>
                                 <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 15}}/>
-                                <Text>{item.community_name}</Text>
+                                <Text>{item.name}</Text>
                             </Inline>
                         )
                     })}
@@ -42,9 +45,9 @@ const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
             ): null}
             <View style={styles.line}/>
             <Text style={{fontWeight: '700'}}>Your Communities</Text>
-            <TouchableOpacity onPress={()=> navigation?.navigate('CreateCommunityScreen')}>
-                <Inline space={6}>
-                    <Icon name="plus" type="antdesign"/>
+            <TouchableOpacity onPress={()=> navigation?.navigate(ROUTES.CREATE_COMMUNITY)}>
+                <Inline space={3} alignY={'center'}>
+                    <Icon size={27} name="plus" type="antdesign"/>
                     <Text>Create a community</Text>
                 </Inline>
             </TouchableOpacity>
@@ -53,10 +56,12 @@ const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
                 <Stack space={4}>
                     {yourCommunityData.map((item: ICData, index: number)=>{
                         return(
-                            <Inline key={index} space={6} alignY={"center"}>
-                                <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 15}}/>
-                                <Text>{item.community_name}</Text>
-                            </Inline>
+                            <TouchableOpacity onPress={()=> [navigation?.navigate(ROUTES.COMMUNITY), dispatch(setCommunityId({community_id: item.id}))]} key={index}>
+                                <Inline space={3} alignY={"center"}>
+                                    <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 15}}/>
+                                    <View style={{width: 200}}><Text ellipsizeMode="tail" numberOfLines={1}>{item.name}</Text></View>
+                                </Inline>
+                            </TouchableOpacity>
                         )
                     })}
                 </Stack> 

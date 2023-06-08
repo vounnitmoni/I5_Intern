@@ -18,6 +18,7 @@ export type RootStackParamList = {
   UserProfileScreen: undefined;
   CreateCommunityScreen: undefined;
   FirstJoinCommunityScreen: undefined;
+  CommunityScreen: undefined;
 };
 
 export type AuthStackParamList = {

@@ -7,12 +7,12 @@ import _ from 'lodash';
 
 import settingReducer from './settingReducer';
 import settings from '../../config/settings';
-import AuthReducer from './onClickRecursiveReducer';
 import onClickRecursiveReducer from './onClickRecursiveReducer';
 import questionId from './questionId';
-import { QuestionRequestSlice } from './QuestionRequestionReducer';
 import PostQuestionReducer from './PostQuestionReducer';
-import userInfoReducer, { userAttributeSlice } from './userInfoReducer';
+import userInfoReducer from './userInfoReducer';
+import userCommunityListReducer from './userCommunityListReducer';
+import IdReducer from './IdReducer';
 
 const rootReducers = {
   setting: settingReducer,
@@ -20,6 +20,8 @@ const rootReducers = {
   question_id: questionId,
   question_request: PostQuestionReducer,
   userAttribute: userInfoReducer,
+  userCommunityList: userCommunityListReducer,
+  idReducer: IdReducer
 };
 
 const middlewares = [thunk];
@@ -56,6 +58,8 @@ export const store = configureStore({
     questionId,
     PostQuestionReducer,
     userInfoReducer,
+    userCommunityListReducer,
+    IdReducer,
   },
   middleware: middlewares,
 });

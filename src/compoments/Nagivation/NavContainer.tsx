@@ -14,6 +14,7 @@ import BookMarkScreen from '../../screens/BookMarkScreeen';
 import UserProfileScreen from '../CommunityAndProfile/UserProfile';
 import CreateCommunityScreen from '../../screens/CreateCommunitySCreen';
 import HomeScreen from '../../screens/Home';
+import CommunityScreen from '../CommunityAndProfile/CommunityProfile';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -38,6 +39,7 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='UserProfileScreen' component={UserProfileScreen}/>
+        <Stack.Screen name='CommunityScreen' component={CommunityScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

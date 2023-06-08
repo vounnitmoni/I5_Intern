@@ -11,6 +11,7 @@ import { RootStackParamList } from '../../compoments/Nagivation/TypeNavigation';
 import { ROUTES } from '../../enums/RouteEnum';
 import { updateUserAttributes } from '../../store/userInfoReducer';
 import { IUserAtt } from '../../interfaces/IAPI';
+import { communityListAttribute } from '../../store/userCommunityListReducer';
 
 interface IData{
   id: number;
@@ -22,10 +23,17 @@ interface IData{
   vote: number;
   photo: string[];
 }
+
+interface IUserCommunityShortInfo {
+  id?: number;
+  name?: string;
+}
+
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const [object, setObject] = useState<IData[]>([]);
   const [userAttribute, setAttribute] = useState<IUserAtt>({});
+  const [userCommunity, setUserCommunity] = useState<IUserCommunityShortInfo[]>([])
   const bool = false;
   const action = useAppSelector(state => state.questionId.q_id)
   const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state)
@@ -36,10 +44,23 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   }
 
   useEffect(()=>{
+    API.UserCommunity(null)
+       .then(res => res.json())
+       .then(data => {
+          setUserCommunity(data)
+       })
+  },[])
+
+  useEffect(()=>{
+    if(userCommunity){
+      userCommunity.forEach(e => dispatch(communityListAttribute(e)))
+    }
+  },[userCommunity])
+
+  useEffect(()=>{
     API.ShortUserInfo(null)
       .then(res => res.json())
       .then(data => {
-          console.log("Hi")
           setAttribute({
             firstname: data.firstname,
             lastname: data.lastname,
@@ -55,7 +76,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
           });
       })
   },[userInfoStateChanged])
-  console.log(userAttribute)
+
   useEffect(()=>{
     if(userAttribute){
       dispatch(updateUserAttributes({

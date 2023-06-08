@@ -9,7 +9,7 @@ const PostScreen = () =>{
             <TouchableOpacity style={{padding: 10}}>
                 <Text>Sorting</Text>
             </TouchableOpacity>
-            <FlatList 
+            {/* <FlatList 
                 data={object}
                 renderItem={(item)=>
                     <View style={{paddingBottom: 5}}>
@@ -24,7 +24,7 @@ const PostScreen = () =>{
                         />
                     </View>
                 }
-            />
+            /> */}
         </Stack>
     )
 }

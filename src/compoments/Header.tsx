@@ -4,10 +4,12 @@ import { Icon } from "@rneui/base";
 import { Image, Text } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Avatar } from "react-native-paper";
 import { useAppSelector } from "../store/hooks";
 
 const Header : React.FC = () =>{
     const profile_pic = useAppSelector(state => state.userInfoReducer.profile_pic)
+    const name_shortcut = useAppSelector(state => state.userInfoReducer.name_shortcut)
     const navigation = useNavigation()
     return( 
         <View style={styles.container}>
@@ -22,7 +24,8 @@ const Header : React.FC = () =>{
                         <Icon name="search"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=> navigation.dispatch(DrawerActions.openDrawer())}>
-                        <Image source={{uri: `data:image/jpeg;base64,${profile_pic}`}} style={{width: 27, height: 27, borderRadius: 27/2}}/>
+                        {profile_pic ? (<Image source={{uri: `data:image/jpeg;base64,${profile_pic}`}} style={{width: 27, height: 27, borderRadius: 27/2}}/>) 
+                                     : (<Avatar.Text size={27} label={name_shortcut as any}/>)}
                     </TouchableOpacity>
                 </Inline>
             </View>

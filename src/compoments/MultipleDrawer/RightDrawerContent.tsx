@@ -14,6 +14,9 @@ import { circularClick } from "../../store/onClickRecursiveReducer"
 import { RootStackParamList } from "../Nagivation/TypeNavigation"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { IUserData } from "./utils"
+import { communityListAttribute, removeCommunityListAttribute } from "../../store/userCommunityListReducer"
+import { removeUserInfo } from "../../store/userInfoReducer"
+import { removeAllId } from "../../store/IdReducer"
 
 const IRightDrawerMenu = [
     {
@@ -74,6 +77,9 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
         API.Logout(null).then((res)=>{
             if(res.status == 200){
                 AsyncStorage.removeItem("token");
+                dispatch(removeCommunityListAttribute())
+                dispatch(removeUserInfo())
+                dispatch(removeAllId())
             }
         }).then(()=> {
             if(action){

@@ -2,7 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface ICommunityList {
     id?: number;
-    community_name?: string;
+    name?: string;
+    state?: boolean;
 }
 
 const initialState: ICommunityList[] = []
@@ -16,13 +17,24 @@ export const communityListSlice = createSlice({
             ...state,
             {
                 id: action.payload.id,
-                community_name: action.payload.community_name
+                name: action.payload.name
             }
-        ]
+          ]
+    },
+    communityStateChange: (state, action: PayloadAction<ICommunityList>) => {
+      return[
+          ...state,
+          {
+            state: action.payload.state,
+          }
+      ]
+    },
+    removeCommunityListAttribute:()=>{
+      return[]
     }
   },
 });
 
-export const {communityListAttribute} = communityListSlice.actions;
+export const {communityListAttribute, communityStateChange, removeCommunityListAttribute} = communityListSlice.actions;
 
 export default communityListSlice.reducer;

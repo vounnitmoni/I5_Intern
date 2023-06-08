@@ -63,11 +63,28 @@ export const userAttributeSlice = createSlice({
             ...state,
             state: action.payload.state,
         }
+    },
+
+    removeUserInfo: () =>{
+      return{
+        firstname: undefined,
+        lastname: undefined,
+        username: undefined,
+        email: undefined,
+        phone_number: undefined,
+        bio: undefined,
+        name_shortcut: undefined,
+        follower: undefined,
+        followee: undefined,
+        profile_pic: undefined,
+        cover_pic: undefined,
+        state: false,
+      }
     }
   },
 });
 
-export const {updateUserAttributes, updateUserBio, userInfoState} =
+export const {updateUserAttributes, updateUserBio, userInfoState, removeUserInfo} =
   userAttributeSlice.actions;
 
 export default userAttributeSlice.reducer;
