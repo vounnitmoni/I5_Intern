@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 interface IUserAtt {
+    id?: number;
     firstname?: string;
     lastname?: string;
     username?: string;
@@ -17,6 +18,7 @@ interface IUserAtt {
 }
 
 const initialState: IUserAtt = {
+    id: undefined,
     firstname: undefined,
     lastname: undefined,
     username: undefined,
@@ -38,6 +40,7 @@ export const userAttributeSlice = createSlice({
     updateUserAttributes: (state, action: PayloadAction<IUserAtt>) => {
       return {
         ...state,
+        id: action.payload.id,
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         username: action.payload.username,
@@ -67,6 +70,7 @@ export const userAttributeSlice = createSlice({
 
     removeUserInfo: () =>{
       return{
+        id: undefined,
         firstname: undefined,
         lastname: undefined,
         username: undefined,

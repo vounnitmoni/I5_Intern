@@ -62,6 +62,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
       .then(res => res.json())
       .then(data => {
           setAttribute({
+            id: data.id,
             firstname: data.firstname,
             lastname: data.lastname,
             username: data.username,
@@ -80,6 +81,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   useEffect(()=>{
     if(userAttribute){
       dispatch(updateUserAttributes({
+        id: userAttribute?.id,
         firstname: userAttribute?.firstname,
         lastname: userAttribute?.lastname,
         username: userAttribute?.username,

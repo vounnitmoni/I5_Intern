@@ -16,7 +16,7 @@ import { StackNavigationProp } from "@react-navigation/stack"
 import { IUserData } from "./utils"
 import { communityListAttribute, removeCommunityListAttribute } from "../../store/userCommunityListReducer"
 import { removeUserInfo } from "../../store/userInfoReducer"
-import { removeAllId } from "../../store/IdReducer"
+import IdReducer, { removeAllId, setUserId } from "../../store/IdReducer"
 
 const IRightDrawerMenu = [
     {
@@ -71,6 +71,7 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
     const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
     const dispatch = useAppDispatch();
     const [userData, setUserData] = useState<IUserData>();
+    const userId = useAppSelector(state => state.userInfoReducer.id)
     const userAtt : userAttribute = useAppSelector(state => state.userInfoReducer)
     const name_shortcut = useAppSelector(state => state.userInfoReducer.name_shortcut)
     const handleSignOut = () =>{  
@@ -88,6 +89,12 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
                 dispatch(circularClick(true))
             }  
         })
+    }
+
+    const getUserId = (name: string) =>{
+        if(name === 'UserProfileScreen'){
+            dispatch(setUserId({user_id: userId}))
+        }
     }
 
     return(
@@ -121,7 +128,7 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
             <Stack space={5}>
                 {IRightDrawerMenu.map((item, index) =>{
                     return(
-                        <TouchableOpacity key={index} onPress={()=> navigation?.navigate(item.name as any)}>
+                        <TouchableOpacity key={index} onPress={()=> [navigation?.navigate(item.name as any), getUserId(item.name)]}>
                             <Inline space={10}>
                                 <Icon name={item.icon} type={item.type}/>
                                 <Text>{item.label}</Text>
