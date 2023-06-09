@@ -1,5 +1,6 @@
 package com.como.KHForum.controller.generalController;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.como.KHForum.payload.request.generalRequest.UpdateProfileRequest;
 import com.como.KHForum.payload.response.successResponse.SuccessMessageResponse;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.FileRepo;
+import com.como.KHForum.repository.FollowerRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.service.FollowService.FollowService;
 import com.como.KHForum.webconfig.session.UserSessions;
@@ -44,6 +46,7 @@ public class ProfileController {
     @Autowired UserSessions userSessions;
     @Autowired FileRepo fileRepo;
     @Autowired FollowService followService;
+    @Autowired FollowerRepo followerRepo;
 
     @GetMapping
     public ResponseEntity<?> profile(){
@@ -86,7 +89,7 @@ public class ProfileController {
 
     @GetMapping("/info")
     public ResponseEntity<?> drawerInfo(){
-        Long id = userSessions.getUserId();
+        Long id = userSessions.getUserId(); 
         AppUser appUser = appUserRepo.appUserInfoByAuthId(id);
         User user = userRepo.userInfoById(id);
         String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
@@ -102,6 +105,34 @@ public class ProfileController {
                                                            followService.FollowingAmount(id), 
                                                            fileRepo.userProfilePic(id).getPhoto(),
                                                            fileRepo.userCoverPic(id).getPhoto());
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/info/{id}")
+    public ResponseEntity<?> otherUserInfo(@PathVariable Long id){
+        AppUser appUser = appUserRepo.appUserInfoByAuthId(id);
+        User user = userRepo.userInfoById(id);
+        String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+        Boolean isFollowed = false;
+        
+        if(followerRepo.isFollowed(userSessions.getUserId(), id) == BigInteger.ONE){
+            isFollowed = true;
+        }
+
+        OtherUserInfoResponse response = new OtherUserInfoResponse(userSessions.getUserId(),
+                                                                appUser.getFirstname(), 
+                                                                appUser.getLastname(),
+                                                                user.getUsername(),
+                                                                user.getEmail(),
+                                                                appUser.getArea_number(),
+                                                                appUser.getBio(),
+                                                                name_shortcut, 
+                                                                followService.FollowerAmount(id), 
+                                                                followService.FollowingAmount(id), 
+                                                                fileRepo.userProfilePic(id).getPhoto(),
+                                                                fileRepo.userCoverPic(id).getPhoto(),
+                                                                isFollowed,
+                                                                false);
         return ResponseEntity.ok().body(response);
     }
 
@@ -123,6 +154,27 @@ public class ProfileController {
         private Integer followee;
         private byte[] profile_pic;
         private byte[] cover_pic;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    protected class OtherUserInfoResponse{
+        private Long id;
+        private String firstname;
+        private String lastname;
+        private String username;
+        private String email;
+        private String phone_number;
+        private String bio;
+        private String name_shortcut;
+        private Integer follower;
+        private Integer followee;
+        private byte[] profile_pic;
+        private byte[] cover_pic;
+        private Boolean is_followed;
+        private Boolean is_notified;
     }
     //----------------------------------------------------------------------------
 }
