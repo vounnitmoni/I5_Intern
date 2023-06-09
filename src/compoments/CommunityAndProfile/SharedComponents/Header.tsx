@@ -8,6 +8,13 @@ import { EISA } from "../../../enums/EISA"
 import { useAppSelector } from "../../../store/hooks"
 import { ScrollView } from "react-native-gesture-handler"
 
+enum EIdentfier{
+    ISA_ADMIN,
+    ISA_VISTOR,
+    ISA_MODERATOR,
+    ISA_MEMBER,
+}
+
 interface ICommunityInfo{
     id: number,
     name: string,

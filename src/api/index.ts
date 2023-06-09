@@ -31,6 +31,9 @@ export default class API {
     static async ShortUserInfo(body?: any){
         return api.request('/all/profile/info', 'GET', body)
     }
+    static async OtherUserShortInfo(id?: number){
+        return api.request(`/all/profile/info/${id}`, 'GET', null)
+    }
     static async AddMoreProfileInfo(body?: any){
         return api.request('/all/profile/update', 'POST', body)
     }
@@ -62,5 +65,12 @@ export default class API {
     }
     static async AddCategories(body?: any){
         return api.request(`/all/category/add`, 'POST', body);
-    }   
+    }
+//-------------------------------Folloing-------------------------------------------
+    static async FollowUser(body?: number){
+        return api.request(`/all/follow`, 'POST', body);
+    }
+    static async UnfollowUser(body?: number){
+        return api.request(`/all/follow`, 'DELETE', body);
+    }
 }

@@ -42,4 +42,6 @@ export interface IUserAtt {
     followee?: number;
     profile_pic?: string;
     cover_pic?: string;
+    is_followed?: boolean;
+    is_notified?: boolean;
 }

@@ -8,13 +8,14 @@ import AboutScreen from "./Screens/Community/AboutScreen"
 import UserPostScreen from "./Screens/User/UserPostScreen"
 import UserAnswerScreen from "./Screens/User/UserAnswerScreen"
 import UserAboutScreen from "./Screens/User/UserAboutScreen"
+import UserProfileHeader from "./SharedComponents/ProfileHeader"
 
 const TopTab = createMaterialTopTabNavigator();
 
 const UserProfileScreen = () =>{
     return(
         <Stack>
-            <Header/>
+            <UserProfileHeader />
             <View style={{height: '100%'}}>
                 <TopTab.Navigator>
                     <TopTab.Group screenOptions={{

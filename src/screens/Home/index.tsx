@@ -9,7 +9,7 @@ import { click } from '../../store/questionId';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../compoments/Nagivation/TypeNavigation';
 import { ROUTES } from '../../enums/RouteEnum';
-import { updateUserAttributes } from '../../store/userInfoReducer';
+import { updateAppUserAttributes } from '../../store/userInfoReducer';
 import { IUserAtt } from '../../interfaces/IAPI';
 import { communityListAttribute } from '../../store/userCommunityListReducer';
 
@@ -52,8 +52,11 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   },[])
 
   useEffect(()=>{
-    if(userCommunity){
-      userCommunity.forEach(e => dispatch(communityListAttribute(e)))
+    if(userCommunity.length != 0){
+      // userCommunity.forEach((e : IUserCommunityShortInfo) => dispatch(communityListAttribute([...e, {name: e.name, id: e.id}])))
+      Array.from(userCommunity, child => {
+        dispatch(communityListAttribute(child))
+      })
     }
   },[userCommunity])
 
@@ -80,7 +83,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
 
   useEffect(()=>{
     if(userAttribute){
-      dispatch(updateUserAttributes({
+      dispatch(updateAppUserAttributes({
         id: userAttribute?.id,
         firstname: userAttribute?.firstname,
         lastname: userAttribute?.lastname,
@@ -92,6 +95,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
         follower: userAttribute?.follower,
         profile_pic: userAttribute?.profile_pic,
         cover_pic: userAttribute?.cover_pic,
+        bio: userAttribute?.bio,
       }))
     }
   },[userAttribute])
