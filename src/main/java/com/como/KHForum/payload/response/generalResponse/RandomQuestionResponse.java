@@ -1,13 +1,11 @@
 package com.como.KHForum.payload.response.generalResponse;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.como.KHForum.service.ServiceUtils.Utility.Object;
+import com.como.KHForum.service.ServiceUtils.Utility.DateTimeObject;
 
 import jakarta.annotation.Nullable;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +26,7 @@ public class RandomQuestionResponse {
         private Integer vote;
         private Integer comment;
         private LocalDateTime postStmp;
-        private Object ago;
+        private DateTimeObject ago;
         private List<byte[]> image;
         @Nullable
         private byte[] profile;

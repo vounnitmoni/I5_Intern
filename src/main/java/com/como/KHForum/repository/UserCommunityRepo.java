@@ -23,6 +23,8 @@ public interface UserCommunityRepo extends JpaRepository<UserCommunity, Long> {
     //session user
     @Query(value = "select community_id from kh_forum.user_communties as uc where user_id = :user_id order by rand() limit 8", nativeQuery = true)
     Set<Long> randomCommunityId(@Param("user_id") Long id);
+    @Query(value = "select community_id from kh_forum.user_communties as uc where user_id = :user_id and id not in (:prev_id) order by rand() limit 8", nativeQuery = true)
+    Set<Long> randomCommunityIdWithMotIn(@Param("user_id") Long id, @Param("prev_id") Set<Long> prev_id);
 
     @Query(value = "select count(id) from kh_forum.user_communties where community_id = :id", nativeQuery = true)
     Integer communityMembers(@Param("id") Long id);

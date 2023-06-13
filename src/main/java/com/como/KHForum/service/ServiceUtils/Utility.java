@@ -17,18 +17,18 @@ public class Utility {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public class Object{
+    public class DateTimeObject{
         private Integer ago;
         private String ago_status;
     }
 //-----------------------------------------------Date + Time -> minute convert -> Ago Time------------------------------------------------
     String ago_status;
     Integer ago;
-    public Object DateTimeConverter(LocalDateTime dt_stmp){
+    public DateTimeObject DateTimeConverter(LocalDateTime dt_stmp){
         LocalDateTime now_stmp = LocalDateTime.now();
         Long minute = ChronoUnit.MINUTES.between(dt_stmp, now_stmp);
 
-        if(minute > 0 && minute < 1){
+        if(minute > 1){
             if(minute >= 60){
                 if(minute >= 60*24){
                   if(minute >= 60*24*30){
@@ -56,7 +56,7 @@ public class Utility {
             ago_status = "recently";
         }
 
-        Object object = new Object(ago, ago_status);
+        DateTimeObject object = new DateTimeObject(ago, ago_status);
         return object;
     }
 }

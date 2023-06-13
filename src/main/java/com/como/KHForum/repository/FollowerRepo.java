@@ -20,6 +20,8 @@ public interface FollowerRepo extends JpaRepository<Follower, Long>{
 
     @Query(value = "select followee_id from kh_forum.following where follower_id = :follower_id order by rand() limit 7", nativeQuery = true)
     Set<Long> randomFollowee_id(@Param("follower_id") Long follower_id);
+    @Query(value = "select followee_id from kh_forum.following where follower_id = :follower_id and id not in (:prev_id) order by rand() limit 7", nativeQuery = true)
+    Set<Long> randomFollowee_idWithNotIn(@Param("follower_id") Long follower_id, @Param("prev_id") Set<Long> prev_id);
 
     @Query(value = "select count(id) from kh_forum.following where followee_id = :user_id", nativeQuery = true)
     Integer followerAmount(@Param("user_id") Long user_id);

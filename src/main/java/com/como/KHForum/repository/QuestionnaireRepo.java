@@ -16,16 +16,23 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     Questionnaire findAllById(@Param("id") Long id);
     
     //random stufs from categories
-    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where q.community_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, time desc limit 5", nativeQuery = true)
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where q.community_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 5", nativeQuery = true)
     Set<Questionnaire> randomQuestionnairesByCategories(@Param("id") Set<Long> id);
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where q.community_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 5", nativeQuery = true)
+    Set<Questionnaire> randomQuestionnairesByCategoriesWithNotIn(@Param("id") Set<Long> id);
 
     //random stufs from user followee
-    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where author_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, time desc limit 7", nativeQuery = true)
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where author_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 7", nativeQuery = true)
     Set<Questionnaire> randQuestionnairesByFollowee(@Param("id") Set<Long> id);
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where author_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 7", nativeQuery = true)
+    Set<Questionnaire> randQuestionnairesByFolloweeWithNotIn(@Param("id") Set<Long> id);
+
 
     //random stufs from communities
-    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where community_id in :id and seens.questionnaire_id is null or seen = false order by create_stmp desc, time desc limit 7", nativeQuery = true)
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where community_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 7", nativeQuery = true)
     Set<Questionnaire> randQuestionnairesByCommunity(@Param("id") Set<Long> id);
+    @Query(value = "select q.* from kh_forum.questionnaire as q left join kh_forum.seens on q.id = seens.questionnaire_id where community_id in (:id) and seens.questionnaire_id is null or seen = false order by create_stmp desc, vote desc, time desc limit 7", nativeQuery = true)
+    Set<Questionnaire> randQuestionnairesByCommunityWithNotIn(@Param("id") Set<Long> id);
 
     //limit traffic 
     @Query(value = "select * from kh_forum.questionnaire where community_id = :c_id and id >= :last_id order by id desc limit 20", nativeQuery = true)
@@ -46,4 +53,14 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     //-----------cast date and time to datetime--------
     @Query(value = "select cast(concat(create_stmp, ' ', time) as datetime) as a from kh_forum.questionnaire where id = :id", nativeQuery = true)
     LocalDateTime castQStmpToDateTime(@Param("id") Long id);
+
+    @Query(value = "select * from kh_forum.questionnaire where author_id = :id order by create_stmp desc, vote desc, time desc limit 15", nativeQuery = true)
+    Set<Questionnaire> userQuestionSet(@Param("id") Long user_id);
+    @Query(value = "select * from kh_forum.questionnaire where community_id = :id order by create_stmp desc, vote desc, time desc limit 15", nativeQuery = true)
+    Set<Questionnaire> communityQuestionSet(@Param("id") Long community_id);
+
+    @Query(value = "select * from kh_forum.questionnaire where author_id = :id and id not in (:prev_id) order by create_stmp desc, vote desc, time desc limit 15", nativeQuery = true)
+    Set<Questionnaire> userQuestionSetNotInPrev(@Param("id") Long user_id, @Param("prev_id") Set<Long> prev_id);
+    @Query(value = "select * from kh_forum.questionnaire where community_id = :id and id not in (:prev_id) order by create_stmp desc, vote desc, time desc limit 15", nativeQuery = true)
+    Set<Questionnaire> communityQuestionSetNotInPrev(@Param("id") Long community_id, @Param("prev_id") Set<Long> prev_id);
 }

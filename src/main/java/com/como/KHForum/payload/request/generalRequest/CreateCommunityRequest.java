@@ -2,6 +2,7 @@ package com.como.KHForum.payload.request.generalRequest;
 
 import java.util.Set;
 
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class CreateCommunityRequest {
     @NotBlank
     private Set<String> category;
     private Set<String> sub_category;
+    @Lob
     private byte[] profile;
     private byte[] cover;
 }
