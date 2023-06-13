@@ -14,6 +14,7 @@ import { IUserAtt } from '../../interfaces/IAPI';
 import { communityListAttribute } from '../../store/userCommunityListReducer';
 import QuestionCard from '../../compoments/CommunityAndProfile/Components/QuestionCard';
 import { setCommunityId, setUserId } from '../../store/IdReducer';
+import { VoteStatus } from '../../enums/EVoteStatus';
 
 interface IData{
   id: number;
@@ -46,6 +47,7 @@ interface IQInfo{
   ago_number?: number;
   ago_string?: string;
   image?: string[];
+  vote_status: VoteStatus;
 }
 
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
@@ -67,7 +69,6 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
        .then(res => res.json())
        .then(data => {
           if(JSON.stringify(data) !== JSON.stringify(userCommunity)){
-            console.log(data.length)
             setUserCommunity(data)
           }
        })
@@ -177,10 +178,11 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
                     sharePress={sharePress}
                     upVotePress={upVotePress}
                     usernamePress={()=> usernamePress(item.author_id).then(()=> navigation.navigate(ROUTES.PROFILE))}
-                    vote={item.vote}/>}
-                    keyExtractor={(item, index) => index.toString()}
-                    onEndReached={loadMoreData}
-                    onEndReachedThreshold={0.5}
+                    vote={item.vote}
+                    vote_status={item.vote_status}/>}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached={loadMoreData}
+            onEndReachedThreshold={0.5}
           />
     </View>
 )

@@ -1,7 +1,8 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Icon, Image, Text } from "@rneui/themed"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {StyleSheet, TouchableOpacity, View} from "react-native"
+import { VoteStatus } from "../../../enums/EVoteStatus";
 import ImageSlide from "../../Post/ImageSlider";
 
 interface IQInfo{
@@ -15,10 +16,11 @@ interface IQInfo{
     ago_number?: number;
     ago_string?: string;
     image?: string[];
+    vote_status?: VoteStatus;
     communityPress?: ()=> void;
     usernamePress?: ()=> void;
-    upVotePress?: ()=> void;
-    downVotePress?: ()=> void;
+    upVotePress: ()=> void;
+    downVotePress: ()=> void;
     commentPress?: ()=> void | undefined;
     sharePress?: ()=> void;
     dotsPress?: ()=> void;
@@ -43,8 +45,30 @@ const QuestionCard: React.FC<IQInfo> = ({
     sharePress,
     upVotePress,
     usernamePress,
-    vote
+    vote,
+    vote_status,
 }) => {
+    const [upVote, setUpvote] = useState(false)
+    const [downVote, setDownVote] = useState(false)
+
+    useEffect(()=>{
+        if(vote_status === VoteStatus.UP_VOTE){
+            setUpvote(true)
+        }
+        if(vote_status === VoteStatus.DOWN_VOTE){
+            setDownVote(true)
+        }  
+    },[vote_status])
+
+    const insideUpVotePress = () => {
+        setUpvote(!upVote)
+        setDownVote(false)
+    }
+    const insideDownVotePress = () => {
+        setDownVote(!downVote)
+        setUpvote(false)
+    }
+
     return(
         <TouchableOpacity onPress={onPress} style={styles.container}>
             <Stack>
@@ -52,7 +76,7 @@ const QuestionCard: React.FC<IQInfo> = ({
                     <Inline space={2}>
                         <TouchableOpacity onPress={communityPress}>
                             {community_image ? (<Image source={{uri: `data:image/jpeg;base64,${community_image}`}} style={styles.image}/>) 
-                                            : (<Image source={require('./../../../assets/images/community_blank_logo.png')} style={styles.image}/>)}
+                                             : (<Image source={require('./../../../assets/images/community_blank_logo.png')} style={styles.image}/>)}
                         </TouchableOpacity>
                         <Stack>
                             <TouchableOpacity onPress={communityPress}>
@@ -78,12 +102,14 @@ const QuestionCard: React.FC<IQInfo> = ({
                        : (<Text  numberOfLines={2}>{description}</Text>)}
                 <Inline alignX={'between'} alignY={"center"}>
                     <Inline alignY={"center"} marginTop={1} marginBottom={1}>
-                        <TouchableOpacity onPress={upVotePress}>
-                            <Icon name="arrow-up-thin-circle-outline" type="material-community"/>
+                        <TouchableOpacity onPress={()=> [upVotePress(), insideUpVotePress()]}>
+                            {upVote === true ? (<Icon name="arrow-up-thin-circle-outline" type="material-community" color={'blue'}/>) 
+                                             : (<Icon name="arrow-up-thin-circle-outline" type="material-community"/>)}
                         </TouchableOpacity>
                         <Text>  {vote}  </Text>
-                        <TouchableOpacity onPress={downVotePress}>
-                            <Icon name="arrow-down-thin-circle-outline" type="material-community"/>      
+                        <TouchableOpacity onPress={()=>[downVotePress(), insideDownVotePress()]}>
+                            {downVote === true ? (<Icon name="arrow-down-thin-circle-outline" type="material-community" color={'blue'}/> ) 
+                                               : (<Icon name="arrow-down-thin-circle-outline" type="material-community"/>)}     
                         </TouchableOpacity> 
                         <Inline alignY={"center"}>
                                 <TouchableOpacity onPress={commentPress}>

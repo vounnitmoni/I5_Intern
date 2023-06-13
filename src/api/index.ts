@@ -83,4 +83,11 @@ export default class API {
     static async FeedPosts(body?: any){
         return api.request(`/all/post/feed`, 'POST', body)
     }
+//-------------------------------------------------------------------------------
+    static async QuestionUpVote(q_id: number){
+        return api.request(`/all/question/upvote/${q_id}`, 'PATCH', null)
+    }
+    static async QuestionDownVote(q_id: number){
+        return api.request(`/all/question/downvote/${q_id}`, 'PATCH', null)
+    }
 }

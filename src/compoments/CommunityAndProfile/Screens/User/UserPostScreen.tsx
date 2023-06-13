@@ -10,6 +10,7 @@ import { NavigationContainerProps } from "@react-navigation/native";
 import { RootStackParamList } from "../../../Nagivation/TypeNavigation";
 import { ROUTES } from "../../../../enums/RouteEnum";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { VoteStatus } from "../../../../enums/EVoteStatus";
 
 interface IQInfo{
     question_id?: number;
@@ -25,6 +26,7 @@ interface IQInfo{
     ago_number?: number;
     ago_string?: string;
     image?: string[];
+    vote_status?: VoteStatus;
 }
 
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.USER_POST>
@@ -59,12 +61,17 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const usernamePress = async (id?: number)=> {
         dispatch(setUserId({user_id: id}))
     }
+
+    const upVotePress = (q_id: number)=> {
+        API.QuestionUpVote(q_id).catch(e => (e as Error).message)
+    }
+    const downVotePress = (q_id: number)=> {
+        API.QuestionDownVote(q_id).catch(e => (e as Error).message)
+    }
+
     const commentPress = () => {}
     const dotsPress = () => {}
     const onPress = () => {}
-    const upVotePress = ()=> {}
-    const downVotePress = ()=> {}
-    
     const sharePress = () => {}
 
     return(     
@@ -84,14 +91,15 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                         community_name={item.community_name}
                         description={item.description}
                         dotsPress={dotsPress}
-                        downVotePress={downVotePress}
+                        downVotePress={() => downVotePress(item.question_id as number)}
                         image={item.image}
                         onPress={onPress}
                         question={item.question}
                         sharePress={sharePress}
-                        upVotePress={upVotePress}
+                        upVotePress={() => upVotePress(item.question_id as number)}
                         usernamePress={()=> usernamePress(item.author_id).then(()=> navigation.navigate(ROUTES.PROFILE))}
-                        vote={item.vote}/>}
+                        vote={item.vote}
+                        vote_status={item.vote_status}/>}
                 keyExtractor={(item, index) => index.toString()}
                 onEndReached={loadMoreData}
                 onEndReachedThreshold={0.5}
