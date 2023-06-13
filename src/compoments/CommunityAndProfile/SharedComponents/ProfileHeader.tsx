@@ -1,7 +1,7 @@
 import { Column, Columns, Inline, Stack } from "@mobily/stacks"
 import { Button, Icon, Image, Text } from "@rneui/themed"
 import { useEffect, useRef, useState } from "react"
-import { TouchableOpacity, View } from "react-native"
+import { TouchableOpacity, View, StyleSheet} from "react-native"
 import API from "../../../api"
 import { useAppSelector } from "../../../store/hooks"
 import { ScrollView } from "react-native-gesture-handler"
@@ -43,7 +43,7 @@ const UserProfileHeader = () =>{
                .then(data => setUserInfo(data))
             setIdentifier(Identifier.USER)
         }
-    },[_userId_, userId])
+    },[_userId_, userId, bellPress, followPress])
 
     useEffect(()=>{
         if(numberLinePress){
@@ -81,27 +81,24 @@ const UserProfileHeader = () =>{
                         </Stack>
                         <Inline space={4} alignX={"right"} alignY={"center"}>
                             {identifier === Identifier.USER && (
-                                <Inline>
-                                    {bellPress ? (<TouchableOpacity onPress={()=> onPressBell()}>
-                                                <Icon name="bell-ring" type="material-community" color={'blue'}/>
-                                            </TouchableOpacity>) 
-                                                            : (<TouchableOpacity onPress={()=> onPressBell}>
-                                                                    <Icon name="bell-outline" type="material-community"/>
-                                                                </TouchableOpacity>)}
+                                <Inline alignY={'center'}>
                                     {followPress  ? (
-                                                    <TouchableOpacity onPress={()=> [onPressFollow(), unfollowUser()]}>
+                                                    <TouchableOpacity style={styles.icon} onPress={()=> [onPressFollow(), unfollowUser()]}>
                                                         <Icon name="user-following" type="simple-line-icon" color={'blue'}/>
                                                     </TouchableOpacity>
                                                 ) : (
-                                                    <TouchableOpacity onPress={()=> [onPressFollow(), followUser()]}>
+                                                    <TouchableOpacity style={styles.icon} onPress={()=> [onPressFollow(), followUser()]}>
                                                         <Icon name="user-follow" type="simple-line-icon"/>
                                                     </TouchableOpacity>
                                                 )}
-                                    <TouchableOpacity>
+                                    {bellPress ? (<TouchableOpacity style={styles.icon} onPress={()=> onPressBell()}>
+                                                <Icon name="bell-ring" type="material-community" color={'blue'}/>
+                                            </TouchableOpacity>) 
+                                                            : (<TouchableOpacity style={styles.icon} onPress={()=> onPressBell}>
+                                                                    <Icon name="bell-outline" type="material-community"/>
+                                                                </TouchableOpacity>)}
+                                    <TouchableOpacity style={styles.icon}>
                                         <Icon name="chatbox-ellipses-outline" type="ionicon"/>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity>
-                                        <Icon name="" type="ionicons"/>
                                     </TouchableOpacity>
                                 </Inline>
                             )}
@@ -129,5 +126,10 @@ const UserProfileHeader = () =>{
        </ScrollView>
     )
 }
-
+const styles = StyleSheet.create({
+    icon:{
+        paddingRight: 5, 
+        paddingLeft: 5
+    }
+})
 export default UserProfileHeader

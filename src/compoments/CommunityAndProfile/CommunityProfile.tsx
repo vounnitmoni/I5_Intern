@@ -3,8 +3,9 @@ import { Text } from "@rneui/themed"
 import Header from "./SharedComponents/Header"
 import { View } from "react-native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
-import PostScreen from "./Screens/Community/PostScreen"
+import PostScreen from "./Screens/Community/CommunityPostScreen"
 import AboutScreen from "./Screens/Community/AboutScreen"
+import CommunityPostScreen from "./Screens/Community/CommunityPostScreen"
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -19,7 +20,7 @@ const CommunityScreen = () =>{
                             fontWeight: '600'
                         }
                     }}>
-                    <TopTab.Screen name="Post" component={PostScreen}/>
+                    <TopTab.Screen name="Post" component={CommunityPostScreen}/>
                     <TopTab.Screen name="About" component={AboutScreen}/>
                     </TopTab.Group>
                 </TopTab.Navigator>

@@ -2,7 +2,6 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import {RootStackParamList} from './TypeNavigation';
-import Header from '../Header';
 import Navigator from './Navigator';
 import RightDrawer from './RightDrawer';
 import SpecificQuestionScreen from '../../screens/SpecifiQuestionScreen';
@@ -15,6 +14,10 @@ import UserProfileScreen from '../CommunityAndProfile/UserProfile';
 import CreateCommunityScreen from '../../screens/CreateCommunitySCreen';
 import HomeScreen from '../../screens/Home';
 import CommunityScreen from '../CommunityAndProfile/CommunityProfile';
+import UserPostScreen from '../CommunityAndProfile/Screens/User/UserPostScreen';
+import CommunityPostScreen from '../CommunityAndProfile/Screens/Community/CommunityPostScreen';
+import SearchScreen from '../Search';
+import MainHeader from '../Header';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -36,10 +39,14 @@ const NavContainer = () => {
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
         <Stack.Screen name='CommunityListScreen' component={CommunityListScreen}/>
+        <Stack.Screen name= 'SearchScreen' component={SearchScreen}/>
+        <Stack.Screen name='MainHeader' component={MainHeader}/>
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
         <Stack.Screen name='UserProfileScreen' component={UserProfileScreen}/>
         <Stack.Screen name='CommunityScreen' component={CommunityScreen} />
+        <Stack.Screen name='UserPostScreen' component={UserPostScreen}/>
+        <Stack.Screen name='CommunityPostScreen' component={CommunityPostScreen}/>
       </Stack.Group>
     </Stack.Navigator>
   );

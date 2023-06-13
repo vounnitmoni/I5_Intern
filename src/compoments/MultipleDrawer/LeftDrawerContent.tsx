@@ -12,6 +12,7 @@ import { setCommunityId } from "../../store/IdReducer";
 interface ICData {
     id?: number;
     name?: string;
+    image?: string;
 }
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR>
 const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
@@ -58,7 +59,8 @@ const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
                         return(
                             <TouchableOpacity onPress={()=> [navigation?.navigate(ROUTES.COMMUNITY), dispatch(setCommunityId({community_id: item.id}))]} key={index}>
                                 <Inline space={3} alignY={"center"}>
-                                    <Image source={require('./../../assets/images/test-community-logo.png')} style={{width: 30, height: 30, borderRadius: 15}}/>
+                                    {item.image ? (<Image source={{uri : `data:image/jpeg;base64,${item.image}`}} style={{width: 30, height: 30, borderRadius: 15}}/>) 
+                                                                   : (<Image source={require('./../../assets/images/community_blank_logo.png')} style={{width: 30, height: 30, borderRadius: 15}}/>)}
                                     <View style={{width: 200}}><Text ellipsizeMode="tail" numberOfLines={1}>{item.name}</Text></View>
                                 </Inline>
                             </TouchableOpacity>

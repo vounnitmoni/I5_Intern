@@ -11,7 +11,7 @@ export type RootStackParamList = {
   RightDrawer: undefined;
   SpecificQuestionScreen: undefined;
   CommunityListScreen: undefined;
-  Header: undefined;
+  MainHeader: undefined;
   BookMarkScreen: undefined;
   SettingScreen: undefined;
   ProfileScreen: undefined;
@@ -19,6 +19,9 @@ export type RootStackParamList = {
   CreateCommunityScreen: undefined;
   FirstJoinCommunityScreen: undefined;
   CommunityScreen: undefined;
+  UserPostScreen: undefined;
+  CommunityPostScreen: undefined;
+  SearchScreen: undefined;
 };
 
 export type AuthStackParamList = {

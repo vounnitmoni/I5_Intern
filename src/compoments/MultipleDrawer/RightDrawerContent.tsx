@@ -70,7 +70,6 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
     const {t} = useTranslation();
     const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
     const dispatch = useAppDispatch();
-    const [userData, setUserData] = useState<IUserData>();
     const userId = useAppSelector(state => state.userInfoReducer.id)
     const userAtt : userAttribute = useAppSelector(state => state.userInfoReducer)
     const name_shortcut = useAppSelector(state => state.userInfoReducer.name_shortcut)
@@ -120,7 +119,7 @@ const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Inline>
-                        <Text style={{fontWeight: '700'}}>{userAtt.followee || 0}</Text>
+                        <Text style={{fontWeight: '700'}}>{userAtt.follower || 0}</Text>
                         <Text>  Follower</Text>
                     </Inline>
                 </TouchableOpacity>

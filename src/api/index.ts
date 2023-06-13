@@ -73,4 +73,14 @@ export default class API {
     static async UnfollowUser(body?: number){
         return api.request(`/all/follow`, 'DELETE', body);
     }
+//------------------------------Post------------------------------------------------
+    static async UserPosts(user_id: any, body?: any){
+        return api.request(`/all/post/user/${user_id}`, 'POST', body)
+    }
+    static async CommunityPosts(community_id: any, body?: any){
+        return api.request(`/all/post/com/${community_id}`, 'POST', body)
+    }
+    static async FeedPosts(body?: any){
+        return api.request(`/all/post/feed`, 'POST', body)
+    }
 }

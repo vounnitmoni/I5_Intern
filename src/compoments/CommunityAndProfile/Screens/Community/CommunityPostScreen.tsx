@@ -27,17 +27,16 @@ interface IQInfo{
     image?: string[];
 }
 
-type navigation = StackNavigationProp<RootStackParamList, ROUTES.USER_POST>
-const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
+type navigation = StackNavigationProp<RootStackParamList, ROUTES.COMMUNITY_POST>
+const CommunityPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const ref = useRef(0)
     const [apiData, setApiData] = useState<IQInfo[]>([])
     const [listPrevId, setListPrevId] = useState<number[]>([]);
-    const user_id = useAppSelector(state => state.IdReducer.user_id)
     const community_id = useAppSelector(state => state.IdReducer.community_id)
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        API.UserPosts(user_id, listPrevId).then(res => res.json())
+        API.CommunityPosts(community_id, listPrevId).then(res => res.json())
             .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
     },[ref.current]) 
 
@@ -48,7 +47,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
               })
         }
     },[apiData])
-
+    
     const loadMoreData = async () =>{
         ref.current = ref.current + 1;
     }
@@ -99,4 +98,4 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
         </View>
     )
 }
-export default UserPostScreen
+export default CommunityPostScreen

@@ -4,6 +4,7 @@ interface ICommunityList {
     id?: number;
     name?: string;
     state?: boolean;
+    image?: string;
 }
 
 const initialState: ICommunityList[] = []
@@ -17,7 +18,8 @@ export const communityListSlice = createSlice({
             ...state,
             {
                 id: action.payload.id,
-                name: action.payload.name
+                name: action.payload.name,
+                image: action.payload.image
             }
           ]
     },

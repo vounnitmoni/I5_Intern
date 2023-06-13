@@ -18,5 +18,9 @@ export enum ROUTES {
   PROFILE= "UserProfileScreen",
   SETTING= "SettingScreen",
   CREATE_COMMUNITY= "CreateCommunityScreen",
-  COMMUNITY = "CommunityScreen"
+  COMMUNITY = "CommunityScreen",
+  USER_POST= "UserPostScreen",
+  COMMUNITY_POST = "CommunityPostScreen",
+  SEARCH = "SearchScreen",
+  HEADER = "MainHeader",
 }

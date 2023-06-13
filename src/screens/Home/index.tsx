@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import PostCard from '../../compoments/Post/PostCard';
 import API from '../../api';
 import { Text } from '@rneui/base';
@@ -12,6 +12,8 @@ import { ROUTES } from '../../enums/RouteEnum';
 import { updateAppUserAttributes } from '../../store/userInfoReducer';
 import { IUserAtt } from '../../interfaces/IAPI';
 import { communityListAttribute } from '../../store/userCommunityListReducer';
+import QuestionCard from '../../compoments/CommunityAndProfile/Components/QuestionCard';
+import { setCommunityId, setUserId } from '../../store/IdReducer';
 
 interface IData{
   id: number;
@@ -27,16 +29,33 @@ interface IData{
 interface IUserCommunityShortInfo {
   id?: number;
   name?: string;
+  image?: string;
+}
+
+interface IQInfo{
+  question_id?: number;
+  community_id?: number;
+  author_id?: number;
+  community_image?: string;
+  community_name?: string;
+  author_name?: string;
+  question?: string;
+  description?: string;
+  vote?: number;
+  comment?: number;
+  ago_number?: number;
+  ago_string?: string;
+  image?: string[];
 }
 
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
-  const [object, setObject] = useState<IData[]>([]);
+  const ref = useRef(0)
+  const [apiData, setApiData] = useState<IQInfo[]>([])
   const [userAttribute, setAttribute] = useState<IUserAtt>({});
   const [userCommunity, setUserCommunity] = useState<IUserCommunityShortInfo[]>([])
-  const bool = false;
-  const action = useAppSelector(state => state.questionId.q_id)
   const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state)
+  const [listPrevId, setListPrevId] = useState<number[]>([]);
   const dispatch = useAppDispatch();
 
   const setId = (id : number) =>{
@@ -47,7 +66,10 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
     API.UserCommunity(null)
        .then(res => res.json())
        .then(data => {
-          setUserCommunity(data)
+          if(JSON.stringify(data) !== JSON.stringify(userCommunity)){
+            console.log(data.length)
+            setUserCommunity(data)
+          }
        })
   },[])
 
@@ -101,31 +123,67 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   },[userAttribute])
 
   useEffect(()=>{
-    API.RandomQuestion({})
-      .then(res => res.json())
-      .then(async e => 
-        setObject(e)
-      );
-  },[bool])
+    API.FeedPosts(listPrevId).then(res => res.json())
+            .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
+    },[ref.current]) 
 
-  return (
-    <FlatList 
-      data={object}
-      renderItem={(item)=>
-        <View style={{paddingBottom: 5}}>
-          <PostCard
-              title={item.item.question}
-              description={item.item.body}
-              community={item.item.community}
-              answer={item.item.answer}
-              vote={item.item.vote}
-              image={item.item.photo}
-              onPress={()=> [setId(item.item.id), navigation.navigate('SpecificQuestionScreen')]}
-            />
-        </View>
-    }
-  />
-  );
+  useEffect(()=>{
+      if(apiData.length != 0){
+          Array.from(apiData, child => {
+              setListPrevId(prev => [...prev, child.question_id as number])
+            })
+      }
+  },[apiData])
+
+
+  const loadMoreData = async () =>{
+      ref.current = ref.current + 1;
+  }
+
+  const communityPress = async (id?: number) => {
+      dispatch(setCommunityId({community_id: id}))
+  }
+  const usernamePress = async (id?: number)=> {
+      dispatch(setUserId({user_id: id}))
+  }
+  const commentPress = () => {}
+  const dotsPress = () => {}
+  const onPress = () => {}
+  const upVotePress = ()=> {}
+  const downVotePress = ()=> {}
+
+  const sharePress = () => {}
+
+  return(     
+    <View>
+        <FlatList
+            data={apiData}
+            renderItem={({item} : {item: IQInfo}) =>         
+                <QuestionCard 
+                    ago_number={item.ago_number}
+                    ago_string={item.ago_string}
+                    author_name={item.author_name}
+                    comment={item.comment}
+                    commentPress={commentPress}
+                    communityPress={()=> communityPress(item.community_id).then(()=> navigation.navigate(ROUTES.COMMUNITY))}
+                    community_image={item.community_image}
+                    community_name={item.community_name}
+                    description={item.description}
+                    dotsPress={dotsPress}
+                    downVotePress={downVotePress}
+                    image={item.image}
+                    onPress={onPress}
+                    question={item.question}
+                    sharePress={sharePress}
+                    upVotePress={upVotePress}
+                    usernamePress={()=> usernamePress(item.author_id).then(()=> navigation.navigate(ROUTES.PROFILE))}
+                    vote={item.vote}/>}
+                    keyExtractor={(item, index) => index.toString()}
+                    onEndReached={loadMoreData}
+                    onEndReachedThreshold={0.5}
+          />
+    </View>
+)
 };
 
 export default HomeScreen;
