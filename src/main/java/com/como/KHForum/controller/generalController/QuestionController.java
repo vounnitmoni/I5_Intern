@@ -2,30 +2,26 @@ package com.como.KHForum.controller.generalController;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
 import com.como.KHForum.entity.QuestionCollectionInfo;
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.entity.enums.EFileStatus;
+import com.como.KHForum.entity.enums.EVote;
 import com.como.KHForum.payload.request.generalRequest.CreateQuestionRequest;
-import com.como.KHForum.payload.request.generalRequest.VoteRequest;
-import com.como.KHForum.payload.response.generalResponse.QuestionCardResponse;
 import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.AppUserRepo;
@@ -37,6 +33,7 @@ import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.service.ServiceUtils.Utility;
 import com.como.KHForum.webconfig.session.UserSessions;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
@@ -75,30 +72,6 @@ public class QuestionController {
         return ResponseEntity.ok(questionnaire);
     }
 
-    @PostMapping("{question_id}/vote")
-    public ResponseEntity<?> voteQuestion(@RequestBody VoteRequest request, @PathVariable Long question_id){
-        QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
-                                                                                   question_id, 
-                                                                                   request.getVoted(), 
-                                                                                   request.getReported());
-        questionCollectionInfoRepo.saveAndFlush(questionCollectionInfo);
-
-        Thread asyncOpt = new Thread(()->{
-            try {
-                Questionnaire questionnaire = questionnaireRepo.findAllById(question_id);
-                if(questionCollectionInfo.getReported()){
-                    questionnaire.setReport(questionnaire.getReport()+1);
-                }else{
-                    questionnaire.setReport(questionnaire.getReport()-1);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }); 
-        asyncOpt.start();
-        return ResponseEntity.ok(questionCollectionInfo);
-    }
-
     @GetMapping("/{q_id}")
     public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
         Questionnaire q = questionnaireRepo.findAllById(q_id);
@@ -117,5 +90,67 @@ public class QuestionController {
                                                             fileRepo.fileByQ_id(q.getId()), 
                                                             null);
         return ResponseEntity.ok().body(r);
+    }
+
+    @Transactional
+    @PatchMapping("/upvote/{q_id}")
+    public ResponseEntity<?> upVoteQuestion(@PathVariable Long q_id){
+        Questionnaire questionnaire = questionnaireRepo.findAllById(q_id);
+        if(questionCollectionInfoRepo.existsUserInRecord(userSessions.getUserId(), q_id) == BigInteger.ONE){
+            if(questionCollectionInfoRepo.findUserVoteStatus(userSessions.getUserId(), q_id) == EVote.UP_VOTE){
+                questionnaire.setVote(questionnaire.getVote() - 1);
+                questionCollectionInfoRepo.deleteUserVote(userSessions.getUserId(), q_id);
+                return ResponseEntity.ok("1");
+            }else{
+                questionnaire.setVote(questionnaire.getVote() + 2);
+                questionCollectionInfoRepo.deleteUserVote(userSessions.getUserId(), q_id);
+                QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
+                                                                                           q_id, 
+                                                                                           true, 
+                                                                                           null,
+                                                                                           EVote.UP_VOTE);
+                questionCollectionInfoRepo.save(questionCollectionInfo);
+                return ResponseEntity.ok("2");
+            }
+        }
+        questionnaire.setVote(questionnaire.getVote() + 1);
+        QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
+                                                                                   q_id, 
+                                                                             true, 
+                                                                          null,
+                                                                                   EVote.UP_VOTE);
+        questionCollectionInfoRepo.save(questionCollectionInfo);
+        return ResponseEntity.ok("3");
+    }
+
+    @Transactional
+    @PatchMapping("/downvote/{q_id}")
+    public ResponseEntity<?> downVoteQuestion(@PathVariable Long q_id){
+        Questionnaire questionnaire = questionnaireRepo.findAllById(q_id);
+        if(questionCollectionInfoRepo.existsUserInRecord(userSessions.getUserId(), q_id) == BigInteger.ONE){
+            if(questionCollectionInfoRepo.findUserVoteStatus(userSessions.getUserId(), q_id) == EVote.DOWN_VOTE){
+                questionnaire.setVote(questionnaire.getVote() + 1);
+                questionCollectionInfoRepo.deleteUserVote(userSessions.getUserId(), q_id);
+                return ResponseEntity.ok("1");
+            }else{
+                questionnaire.setVote(questionnaire.getVote() - 2);
+                questionCollectionInfoRepo.deleteUserVote(userSessions.getUserId(), q_id);
+                QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
+                                                                                           q_id, 
+                                                                                           true, 
+                                                                                           null,
+                                                                                           EVote.DOWN_VOTE);
+                questionCollectionInfoRepo.save(questionCollectionInfo);
+                return ResponseEntity.ok("2");
+            }
+        }
+        questionnaire.setVote(questionnaire.getVote() - 1);
+        QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
+                                                                                   q_id, 
+                                                                             true, 
+                                                                          null,
+                                                                                   EVote.DOWN_VOTE);
+        questionCollectionInfoRepo.save(questionCollectionInfo);
+        return ResponseEntity.ok("3");
     }
 }

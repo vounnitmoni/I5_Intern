@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Questionnaire;
+import com.como.KHForum.entity.enums.EVote;
 import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
+import com.como.KHForum.repository.AnswerCollectionInfoRepo;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.CommunityRepo;
@@ -30,6 +32,7 @@ import com.como.KHForum.repository.UserCategoryRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.service.ServiceUtils.Utility;
+import com.como.KHForum.service.ServiceUtils.VoteStatusService;
 import com.como.KHForum.service.ServiceUtils.Utility.DateTimeObject;
 import com.como.KHForum.webconfig.session.UserSessions;
 
@@ -55,6 +58,8 @@ public class PostController {
     @Autowired UserCommunityRepo userCommunityRepo;
     @Autowired UserCategoryRepo userCategoryRepo;
     @Autowired FollowerRepo followerRepo;
+    @Autowired AnswerCollectionInfoRepo answerCollectionInfoRepo;
+    @Autowired VoteStatusService voteStatusService;
 //--------------------------------------------------------------------------------------------------
     @AllArgsConstructor
     @NoArgsConstructor
@@ -72,6 +77,7 @@ public class PostController {
         private Integer ago;
         private List<byte[]> image;
         private byte[] profile;
+        private EVote vote_status;
     }
 
     @AllArgsConstructor
@@ -92,6 +98,7 @@ public class PostController {
        private Integer ago_number;
        private String ago_string;
        private List<byte[]> image;
+       private EVote vote_status;
     }
 //--------------------------------------------------------------------------------------------------
     
@@ -102,6 +109,7 @@ public class PostController {
             questionnaireRepo.userQuestionSet(user_id).forEach(e -> {
                 Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
                 DateTimeObject object = serviceUtils.DateTimeConverter(questionnaireRepo.castQStmpToDateTime(e.getId()));
+
                 PostInfoResponse response = new PostInfoResponse(e.getId(),
                                                                  e.getCommunity_id(),
                                                                  e.getAuthor_id(),
@@ -114,7 +122,8 @@ public class PostController {
                                                                  count_answer, 
                                                                  object.getAgo(), 
                                                                  object.getAgo_status(), 
-                                                                 fileRepo.fileByQ_id(e.getId()));
+                                                                 fileRepo.fileByQ_id(e.getId()),
+                                                                 voteStatusService.questionVoteStatus(e.getId()));
                 response_set.add(response);
             });
             return ResponseEntity.ok(response_set);
@@ -134,7 +143,8 @@ public class PostController {
                                                             count_answer, 
                                                             object.getAgo(), 
                                                             object.getAgo_status(), 
-                                                            fileRepo.fileByQ_id(e.getId()));
+                                                            fileRepo.fileByQ_id(e.getId()),
+                                                            voteStatusService.questionVoteStatus(e.getId()));
             response_set.add(response);
         });
         return ResponseEntity.ok(response_set);       
@@ -159,7 +169,8 @@ public class PostController {
                                                                  count_answer, 
                                                                  object.getAgo(), 
                                                                  object.getAgo_status(), 
-                                                                 fileRepo.fileByQ_id(e.getId()));
+                                                                 fileRepo.fileByQ_id(e.getId()),
+                                                                 voteStatusService.questionVoteStatus(e.getId()));
                 response_set.add(response);
             });
             return ResponseEntity.ok(response_set);
@@ -179,7 +190,8 @@ public class PostController {
                                                             count_answer, 
                                                             object.getAgo(), 
                                                             object.getAgo_status(), 
-                                                            fileRepo.fileByQ_id(e.getId()));
+                                                            fileRepo.fileByQ_id(e.getId()),
+                                                            voteStatusService.questionVoteStatus(e.getId()));
             response_set.add(response);
         });
         return ResponseEntity.ok(response_set);       
@@ -225,7 +237,8 @@ public class PostController {
                                                                 count_answer, 
                                                                 object.getAgo(), 
                                                                 object.getAgo_status(), 
-                                                                fileRepo.fileByQ_id(e.getId()));
+                                                                fileRepo.fileByQ_id(e.getId()),
+                                                                voteStatusService.questionVoteStatus(e.getId()));
                 response_set.add(response);
             });
         }
@@ -252,7 +265,8 @@ public class PostController {
                                                             count_answer, 
                                                             object.getAgo(), 
                                                             object.getAgo_status(), 
-                                                            fileRepo.fileByQ_id(e.getId()));
+                                                            fileRepo.fileByQ_id(e.getId()),
+                                                            voteStatusService.questionVoteStatus(e.getId()));
             response_set.add(response);
         });
         return ResponseEntity.ok(response_set);

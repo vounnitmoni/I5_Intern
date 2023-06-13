@@ -1,9 +1,12 @@
 package com.como.KHForum.entity;
 
+import com.como.KHForum.entity.enums.EVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,11 +43,13 @@ public class AnswerCollectionInfo {
     @Column(name = "answer_id") private Long answer_id;
     private Boolean voted;
     private Boolean reported;
+    @Enumerated(EnumType.STRING) private EVote vote_status;
 
-    public AnswerCollectionInfo(Long user_id, Long answer_id, Boolean voted, Boolean reported) {
+    public AnswerCollectionInfo(Long user_id, Long answer_id, Boolean voted, Boolean reported, EVote vote_status) {
         this.user_id = user_id;
         this.answer_id = answer_id;
         this.voted = voted;
         this.reported = reported;
+        this.vote_status = vote_status;
     }  
 }

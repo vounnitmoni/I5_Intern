@@ -63,4 +63,11 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
     Set<Questionnaire> userQuestionSetNotInPrev(@Param("id") Long user_id, @Param("prev_id") Set<Long> prev_id);
     @Query(value = "select * from kh_forum.questionnaire where community_id = :id and id not in (:prev_id) order by create_stmp desc, vote desc, time desc limit 15", nativeQuery = true)
     Set<Questionnaire> communityQuestionSetNotInPrev(@Param("id") Long community_id, @Param("prev_id") Set<Long> prev_id);
+//--------------------------------------------
+
+    @Query(value = "select q.* from kh_forum.questionnaire as q "+
+                   "left join kh_forum.question_collection_info as qci "+
+                   "on q.id = qci.question_id where qci.question_id = :q_id", nativeQuery = true)
+    Questionnaire findQuestionUserVote(@Param("q_id") Long q_id);
+
 }

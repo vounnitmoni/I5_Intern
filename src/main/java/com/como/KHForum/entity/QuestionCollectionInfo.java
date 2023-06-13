@@ -2,10 +2,13 @@ package com.como.KHForum.entity;
 
 import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
 
+import com.como.KHForum.entity.enums.EVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,10 +46,13 @@ public class QuestionCollectionInfo {
 
     private Boolean voted;
     private Boolean reported;
-    public QuestionCollectionInfo(Long user_id, Long question_id, Boolean voted, Boolean reported) {
+    @Enumerated(EnumType.STRING) private EVote vote_status;
+
+    public QuestionCollectionInfo(Long user_id, Long question_id, Boolean voted, Boolean reported, EVote vote_status) {
         this.user_id = user_id;
         this.question_id = question_id;
         this.voted = voted;
         this.reported = reported;
+        this.vote_status = vote_status;
     }
 }
