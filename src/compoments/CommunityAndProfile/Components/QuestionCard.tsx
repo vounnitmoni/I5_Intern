@@ -21,7 +21,7 @@ interface IQInfo{
     usernamePress?: ()=> void;
     upVotePress: ()=> void;
     downVotePress: ()=> void;
-    commentPress?: ()=> void | undefined;
+    commentPress?: ()=> void;
     sharePress?: ()=> void;
     dotsPress?: ()=> void;
     onPress?: ()=> void;

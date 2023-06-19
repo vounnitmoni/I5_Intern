@@ -23,4 +23,5 @@ export enum ROUTES {
   COMMUNITY_POST = "CommunityPostScreen",
   SEARCH = "SearchScreen",
   HEADER = "MainHeader",
+  ANSWER_QUESTION = "AnswerQuestionScreen"
 }

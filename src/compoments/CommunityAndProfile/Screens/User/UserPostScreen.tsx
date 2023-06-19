@@ -1,16 +1,16 @@
-import { Text } from "@rneui/themed"
 import { useState, useEffect, useRef } from "react"
 import {FlatList, View} from "react-native"
 import API from "../../../../api";
 import { useAppSelector } from "../../../../store/hooks";
 import QuestionCard from "../../Components/QuestionCard";
 import { useDispatch } from "react-redux";
-import { setCommunityId, setUserId } from "../../../../store/IdReducer";
-import { NavigationContainerProps } from "@react-navigation/native";
+import { setCommunityId, setQuestionId, setUserId } from "../../../../store/IdReducer";
 import { RootStackParamList } from "../../../Nagivation/TypeNavigation";
 import { ROUTES } from "../../../../enums/RouteEnum";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { VoteStatus } from "../../../../enums/EVoteStatus";
+import { Text } from "@rneui/themed";
+import AnswerQuestion from "../../../Answer/AnswerQuestion";
 
 interface IQInfo{
     question_id?: number;
@@ -34,6 +34,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const ref = useRef(0)
     const [apiData, setApiData] = useState<IQInfo[]>([])
     const [listPrevId, setListPrevId] = useState<number[]>([]);
+    const [answerPopUp, setAnswerPopUp] = useState(false)
     const user_id = useAppSelector(state => state.IdReducer.user_id)
     const community_id = useAppSelector(state => state.IdReducer.community_id)
     const dispatch = useDispatch()
@@ -69,7 +70,10 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
         API.QuestionDownVote(q_id).catch(e => (e as Error).message)
     }
 
-    const commentPress = () => {}
+    const commentPress = async (id?: number) => {
+        dispatch(setQuestionId({question_id: id}))
+    }
+
     const dotsPress = () => {}
     const onPress = () => {}
     const sharePress = () => {}
@@ -85,7 +89,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                         ago_string={item.ago_string}
                         author_name={item.author_name}
                         comment={item.comment}
-                        commentPress={commentPress}
+                        commentPress={()=> commentPress(item.question_id).then(()=> setAnswerPopUp(true))}
                         communityPress={()=> communityPress(item.community_id).then(()=> navigation.navigate(ROUTES.COMMUNITY))}
                         community_image={item.community_image}
                         community_name={item.community_name}
@@ -104,6 +108,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                 onEndReached={loadMoreData}
                 onEndReachedThreshold={0.5}
             />
+            {answerPopUp && (<AnswerQuestion />)}
         </View>
     )
 }

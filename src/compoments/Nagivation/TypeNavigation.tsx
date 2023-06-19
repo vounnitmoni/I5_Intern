@@ -8,6 +8,7 @@ export type RootStackParamList = {
   SupportScreen: undefined;
   Navigator: undefined;
   QuestionScreen: undefined;
+  AnswerQuestionScreen: undefined;
   RightDrawer: undefined;
   SpecificQuestionScreen: undefined;
   CommunityListScreen: undefined;

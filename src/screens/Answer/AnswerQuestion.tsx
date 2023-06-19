@@ -9,7 +9,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
 import { ROUTES } from "../../enums/RouteEnum";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { Venue } from "./photoList";
+import { Venue } from "./../Question/photoList"
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { hasCommunity } from "../../store/onClickRecursiveReducer";
 import PostQuestionReducer, { resetData, setData } from "../../store/PostQuestionReducer";
@@ -25,9 +25,9 @@ interface imageData {
     uri: string;
 }
 
-type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
+type navigation = StackNavigationProp<RootStackParamList, ROUTES.ANSWER_QUESTION>
 
-const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
+const AnswerQuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
     const [next, setNext] = useState(false);
     const {t}=useTranslation();
     const communityStatus = useAppSelector(state => state.onClickRecursiveReducer.boolean)
@@ -98,7 +98,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                         <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> [post(), reset(), navigation.goBack()]}/>
                     </TouchableOpacity>
                     {communityStatus ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion(), console.log(photo.map(x=> x.uri))]}/>) 
-                                     : (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={()=> navigation.navigate(ROUTES.COMMUNITYLIST)}/>)}
+                               : (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={()=> navigation.navigate(ROUTES.COMMUNITYLIST)}/>)}
                 </Box>
 
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -107,6 +107,9 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                             <Venue image={{uri : item.uri} as any} key={index}/>
                         )
                     })}
+                    <TouchableOpacity >
+                        
+                    </TouchableOpacity>
                 </ScrollView>
                 <TextInput 
                     multiline 
@@ -122,7 +125,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                 <View style={{width: '90%', borderWidth: 0.2}}/>
                 <TextInput multiline 
                            placeholder="Text body (Optional)" 
-                           style={{color: "green", fontSize: 15, width: '95%'}} 
+                           style={{color: "black", fontSize: 15, width: '95%'}} 
                            placeholderTextColor={"#8996a1"}
                            onChangeText={text => setObject(prev => ({
                                 ...prev,
@@ -145,13 +148,12 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
     },
     containerChild:{
         minHeight: 500,
         margin: 10,
         backgroundColor: "#fff",
-        borderRadius: 10,
+        borderRadius: 10
     },
     wrapper:{
         padding: 12,
@@ -166,31 +168,4 @@ const styles = StyleSheet.create({
         paddingLeft: 12
     }
   })
-export default QuestionScreen
-
-
-
-
-
-
-//<Stack space={3}>
-            //     <View style={styles.containerChild}>
-            //         <Stack space={3} style={{margin: 10}}>
-            //             <TextInput multiline placeholder="Question" style={{color: "black", fontSize: 20, fontWeight: "600", width: '95%'}} placeholderTextColor={"#8996a1"}/>
-            //             <View style={{width: '90%', borderWidth: 0.2}}/>
-            //             <TextInput multiline placeholder="Text body (Optional)" style={{color: "black", fontSize: 15, width: '95%'}} placeholderTextColor={"#8996a1"}/>
-            //             <View style={{width: '90%', borderWidth: 0.2}}/>
-            //             <Dropdown label="community"/>
-            //         </Stack>
-            //     </View>
-            // </Stack>
-            // <Inline space={3} alignX={'right'} style={{marginRight: 10}}>
-            //     <Button radius={'sm'} type="solid" containerStyle={{width: 100}} buttonStyle={{backgroundColor: "red"}}>
-            //         Discard
-            //         <Icon name="clear" color="white" />
-            //     </Button>
-            //     <Button radius={'sm'} type="solid" containerStyle={{width: 100}} onPress={()=> setNext(true)}>
-            //         Post
-            //         <Icon name="navigate-next" color="white" />
-            //     </Button>
-            // </Inline>
+export default AnswerQuestionScreen;

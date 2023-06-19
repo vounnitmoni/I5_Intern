@@ -18,6 +18,7 @@ import UserPostScreen from '../CommunityAndProfile/Screens/User/UserPostScreen';
 import CommunityPostScreen from '../CommunityAndProfile/Screens/Community/CommunityPostScreen';
 import SearchScreen from '../Search';
 import MainHeader from '../Header';
+import AnswerQuestionScreen from '../../screens/Answer/AnswerQuestion';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
@@ -38,6 +39,7 @@ const NavContainer = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
+        <Stack.Screen name='AnswerQuestionScreen' component={AnswerQuestionScreen} />
         <Stack.Screen name='CommunityListScreen' component={CommunityListScreen}/>
         <Stack.Screen name= 'SearchScreen' component={SearchScreen}/>
         <Stack.Screen name='MainHeader' component={MainHeader}/>

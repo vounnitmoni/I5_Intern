@@ -13,10 +13,16 @@ enum Identifier{
     USER,
 }
 
+interface ITempData{
+    follower?: number; 
+    followee?: number;
+}
+
 const UserProfileHeader = () =>{
     const ref = useRef(0)
     const [numberOfLine, setNumberOfLine] = useState(2)
     const [numberLinePress, setNumberLinePress] = useState(false)
+    const [followAmount, setFollowAmount] = useState<ITempData>();
     const onPressNumberOfLine = () => setNumberLinePress(!numberLinePress)
     const [identifier, setIdentifier] = useState<Identifier>()
     const userId = useAppSelector(state => state.IdReducer.user_id)
@@ -42,8 +48,9 @@ const UserProfileHeader = () =>{
             API.OtherUserShortInfo(userId).then(res => res.json())
                .then(data => setUserInfo(data))
             setIdentifier(Identifier.USER)
+            setFollowAmount({followee: userInfo?.followee, follower: userInfo?.follower})
         }
-    },[_userId_, userId, bellPress, followPress])
+    },[_userId_, userId, bellPress])
 
     useEffect(()=>{
         if(numberLinePress){
@@ -55,9 +62,11 @@ const UserProfileHeader = () =>{
 
     const followUser = () =>{
         API.FollowUser(userId).catch(e => (e as Error).message)
+        setFollowAmount(prev => ({...prev, follower: (followAmount?.follower as number) + 1}))
     }
     const unfollowUser = () =>{
         API.UnfollowUser(userId).catch(e => (e as Error).message)
+        setFollowAmount(prev => ({...prev, follower: (followAmount?.follower as number) - 1}))
     }
     return(
        <ScrollView>
@@ -66,7 +75,7 @@ const UserProfileHeader = () =>{
                     <Columns paddingLeft={6} paddingRight={6} paddingTop={5} alignY={"center"}>
                         <Column>
                             {userInfo?.profile_pic ? (<Image source={{uri: `data:image/jpeg;base64,${userInfo?.profile_pic}`}} style={{height: 80, width: 80, borderRadius: 40}}/>) 
-                                                        : (<Avatar.Text label={name_shortcut as any}  style={{height: 80, width: 80, borderRadius: 40}}/>)}
+                                                   : (<Avatar.Text label={name_shortcut as any}  style={{height: 80, width: 80, borderRadius: 40}}/>)}
                         </Column>
                     </Columns>
                 </Image>
@@ -75,8 +84,8 @@ const UserProfileHeader = () =>{
                         <Stack>
                             <Text style={{fontWeight:"700", fontSize:23}}>{userInfo?.firstname} {userInfo?.lastname}</Text>
                             <Inline space={3}>
-                                <Text>{userInfo?.follower} Follower</Text>
-                                <Text>{userInfo?.followee} Following</Text>
+                                <Text>{followAmount?.follower} Follower</Text>
+                                <Text>{followAmount?.followee} Following</Text>
                             </Inline>
                         </Stack>
                         <Inline space={4} alignX={"right"} alignY={"center"}>
