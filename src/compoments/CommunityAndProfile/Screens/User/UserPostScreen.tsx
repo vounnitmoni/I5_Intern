@@ -11,6 +11,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { VoteStatus } from "../../../../enums/EVoteStatus";
 import { Text } from "@rneui/themed";
 import AnswerQuestion from "../../../Answer/AnswerQuestion";
+import { ITempData } from "../../../../interfaces/ITempData";
 
 interface IQInfo{
     question_id?: number;
@@ -29,26 +30,37 @@ interface IQInfo{
     vote_status?: VoteStatus;
 }
 
+interface IQTemp{
+    comment?: number;
+    vote?: number;
+    q_id?: number;
+}
+
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.USER_POST>
 const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const ref = useRef(0)
     const [apiData, setApiData] = useState<IQInfo[]>([])
     const [listPrevId, setListPrevId] = useState<number[]>([]);
     const [answerPopUp, setAnswerPopUp] = useState(false)
+    const [questionTempData, setQuestionTempData] = useState<IQTemp[]>([]);
     const user_id = useAppSelector(state => state.IdReducer.user_id)
     const community_id = useAppSelector(state => state.IdReducer.community_id)
     const dispatch = useDispatch()
 
     useEffect(()=>{
         API.UserPosts(user_id, listPrevId).then(res => res.json())
-            .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
-    },[ref.current]) 
+           .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
+    },[ref.current])
+    console.log(apiData) 
 
     useEffect(()=>{
         if(apiData.length != 0){
             Array.from(apiData, child => {
                 setListPrevId(prev => [...prev, child.question_id as number])
               })
+            Array.from(apiData, data => {
+                setQuestionTempData(prev => [...prev, {comment: data.comment, q_id: data.question_id, vote: data.vote}])
+            })
         }
     },[apiData])
 
@@ -59,15 +71,36 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const communityPress = async (id?: number) => {
         dispatch(setCommunityId({community_id: id}))
     }
+
     const usernamePress = async (id?: number)=> {
         dispatch(setUserId({user_id: id}))
     }
 
     const upVotePress = (q_id: number)=> {
         API.QuestionUpVote(q_id).catch(e => (e as Error).message)
+        questionTempData.forEach(e => {
+            if(e.q_id == q_id){
+                setApiData([...apiData.map((i)=> 
+                    i.question_id === e.q_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
+                                                i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.NOT_VOTE} 
+                                                                                     : {...i, vote: e.vote as number + 2, vote_status: VoteStatus.UP_VOTE})
+                                             : i)])
+            }
+        })
+
     }
+
     const downVotePress = (q_id: number)=> {
         API.QuestionDownVote(q_id).catch(e => (e as Error).message)
+        questionTempData.forEach(e => {
+            if(e.q_id == q_id){
+                setApiData([...apiData.map((i)=> 
+                    i.question_id === e.q_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
+                                                i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 2, vote_status: VoteStatus.DOWN_VOTE} 
+                                                                                     : {...i, vote: e.vote as number + 1, vote_status: VoteStatus.NOT_VOTE})
+                                             : i)])
+            }
+        })
     }
 
     const commentPress = async (id?: number) => {

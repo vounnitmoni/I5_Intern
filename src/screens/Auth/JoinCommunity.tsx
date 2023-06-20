@@ -109,7 +109,7 @@ const FirstJoinCommunityScreen : React.FC<{navigation : navigator}> = ({navigati
 
     const onCheck = async (item: ICommunityListWithCheckStatus, index: number) =>{
             setFoo([...foo.map((item, i) =>
-                       i=== index ? { ...item, checked: !item.checked} : item
+                       i === index ? { ...item, checked: !item.checked} : item
                      ),
                    ]);
            }

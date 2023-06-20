@@ -7,15 +7,11 @@ import { useAppSelector } from "../../../store/hooks"
 import { ScrollView } from "react-native-gesture-handler"
 import { IUserAtt } from "../../../interfaces/IAPI"
 import { Avatar } from "react-native-paper"
+import { ITempData } from "../../../interfaces/ITempData"
 
 enum Identifier{
     APP_USER,
     USER,
-}
-
-interface ITempData{
-    follower?: number; 
-    followee?: number;
 }
 
 const UserProfileHeader = () =>{
@@ -44,6 +40,7 @@ const UserProfileHeader = () =>{
         if(userId === _userId_){
             setUserInfo(userInfoReducer)
             setIdentifier(Identifier.APP_USER)
+            setFollowAmount({followee: userInfo?.followee, follower: userInfo?.follower})
         }else{
             API.OtherUserShortInfo(userId).then(res => res.json())
                .then(data => setUserInfo(data))

@@ -150,8 +150,8 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const commentPress = () => {}
   const dotsPress = () => {}
   const onPress = () => {}
-  const upVotePress = ()=> {}
-  const downVotePress = ()=> {}
+  const upVotePress = () => {}
+  const downVotePress = () => {}
 
   const sharePress = () => {}
 

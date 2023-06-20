@@ -62,8 +62,7 @@ const CommunityPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =
     const dotsPress = () => {}
     const onPress = () => {}
     const upVotePress = ()=> {}
-    const downVotePress = ()=> {}
-    
+    const downVotePress = ()=> {}   
     const sharePress = () => {}
 
     return(     
