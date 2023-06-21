@@ -15,9 +15,8 @@ interface ICData {
     image?: string;
 }
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.NAVIGATOR>
-const LeftDrawerContent: React.FC<{navigation?: navigation, props: any}> = ({
+const LeftDrawerContent: React.FC<{navigation?: navigation}> = ({
     navigation,
-    props
 }) =>{
     const [recentlyCommunityData, setRecentlyCommunityData] = useState<ICData[]>([]);
     const yourCommunityData : ICData[] = useAppSelector(state => state.userCommunityListReducer)

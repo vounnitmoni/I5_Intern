@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react"
-import {FlatList, View} from "react-native"
+import { useState, useEffect, useRef, useMemo } from "react"
+import {FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from "react-native"
 import API from "../../../../api";
 import { useAppSelector } from "../../../../store/hooks";
 import QuestionCard from "../../Components/QuestionCard";
@@ -9,9 +9,11 @@ import { RootStackParamList } from "../../../Nagivation/TypeNavigation";
 import { ROUTES } from "../../../../enums/RouteEnum";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { VoteStatus } from "../../../../enums/EVoteStatus";
-import { Text } from "@rneui/themed";
-import AnswerQuestion from "../../../Answer/AnswerQuestion";
-import { ITempData } from "../../../../interfaces/ITempData";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { Input, Text } from "@rneui/themed";
+import { Inline, Stack } from "@mobily/stacks";
+import { Icon } from "@rneui/base";
+import AnswerBottomSheet from "../../../BottomSheet/AnswerBottomSheet";
 
 interface IQInfo{
     question_id?: number;
@@ -39,6 +41,7 @@ interface IQTemp{
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.USER_POST>
 const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const ref = useRef(0)
+    const rbRef = useRef<RBSheet>(null) 
     const [apiData, setApiData] = useState<IQInfo[]>([])
     const [listPrevId, setListPrevId] = useState<number[]>([]);
     const [answerPopUp, setAnswerPopUp] = useState(false)
@@ -51,7 +54,6 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
         API.UserPosts(user_id, listPrevId).then(res => res.json())
            .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
     },[ref.current])
-    console.log(apiData) 
 
     useEffect(()=>{
         if(apiData.length != 0){
@@ -78,10 +80,10 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
 
     const upVotePress = (q_id: number)=> {
         API.QuestionUpVote(q_id).catch(e => (e as Error).message)
-        questionTempData.forEach(e => {
-            if(e.q_id == q_id){
+        apiData.forEach(e => {
+            if(e.question_id == q_id){
                 setApiData([...apiData.map((i)=> 
-                    i.question_id === e.q_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
+                    i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
                                                 i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.NOT_VOTE} 
                                                                                      : {...i, vote: e.vote as number + 2, vote_status: VoteStatus.UP_VOTE})
                                              : i)])
@@ -92,10 +94,10 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
 
     const downVotePress = (q_id: number)=> {
         API.QuestionDownVote(q_id).catch(e => (e as Error).message)
-        questionTempData.forEach(e => {
-            if(e.q_id == q_id){
+        apiData.forEach(e => {
+            if(e.question_id == q_id){
                 setApiData([...apiData.map((i)=> 
-                    i.question_id === e.q_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
+                    i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
                                                 i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 2, vote_status: VoteStatus.DOWN_VOTE} 
                                                                                      : {...i, vote: e.vote as number + 1, vote_status: VoteStatus.NOT_VOTE})
                                              : i)])
@@ -122,7 +124,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                         ago_string={item.ago_string}
                         author_name={item.author_name}
                         comment={item.comment}
-                        commentPress={()=> commentPress(item.question_id).then(()=> setAnswerPopUp(true))}
+                        commentPress={()=> [commentPress(item.question_id).then(()=> setAnswerPopUp(true)), rbRef.current?.open()]}
                         communityPress={()=> communityPress(item.community_id).then(()=> navigation.navigate(ROUTES.COMMUNITY))}
                         community_image={item.community_image}
                         community_name={item.community_name}
@@ -141,7 +143,7 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                 onEndReached={loadMoreData}
                 onEndReachedThreshold={0.5}
             />
-            {answerPopUp && (<AnswerQuestion />)}
+            <AnswerBottomSheet rbRef={rbRef} backPress={()=> rbRef.current?.close()}/>
         </View>
     )
 }

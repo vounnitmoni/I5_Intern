@@ -44,7 +44,7 @@ const NavContainer = () => {
         <Stack.Screen name= 'SearchScreen' component={SearchScreen}/>
         <Stack.Screen name='MainHeader' component={MainHeader}/>
       </Stack.Group>
-      <Stack.Group screenOptions={{headerShown: true}}>
+      <Stack.Group>
         <Stack.Screen name='UserProfileScreen' component={UserProfileScreen}/>
         <Stack.Screen name='CommunityScreen' component={CommunityScreen} />
         <Stack.Screen name='UserPostScreen' component={UserPostScreen}/>

@@ -86,8 +86,6 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                 })
             ).then(()=> {
                 setExist(true)
-                console.log(photo.map(e => e.base64))
-                
             })
         }
     return(

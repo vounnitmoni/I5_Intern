@@ -14,7 +14,7 @@ const TopTab = createMaterialTopTabNavigator();
 
 const UserProfileScreen = () =>{
     return(
-        <Stack style={{flex: 1}}>
+        <Stack>
             <UserProfileHeader />
             <View style={{height: '100%'}}>
                 <TopTab.Navigator>

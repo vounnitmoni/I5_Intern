@@ -1,9 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
-import PostCard from '../../compoments/Post/PostCard';
 import API from '../../api';
-import { Text } from '@rneui/base';
 import {FlatList, View} from 'react-native';
-import { Column, Stack } from '@mobily/stacks';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { click } from '../../store/questionId';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -136,7 +133,6 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
       }
   },[apiData])
 
-
   const loadMoreData = async () =>{
       ref.current = ref.current + 1;
   }
@@ -147,11 +143,37 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const usernamePress = async (id?: number)=> {
       dispatch(setUserId({user_id: id}))
   }
+
+  const upVotePress = (q_id: number)=> {
+    API.QuestionUpVote(q_id).catch(e => (e as Error).message)
+    apiData.forEach(e => {
+        if(e.question_id == q_id){
+            setApiData([...apiData.map((i)=> 
+                i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
+                                            i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.NOT_VOTE} 
+                                                                                 : {...i, vote: e.vote as number + 2, vote_status: VoteStatus.UP_VOTE})
+                                         : i)])
+          }
+      })
+
+  }
+
+  const downVotePress = (q_id: number)=> {
+      API.QuestionDownVote(q_id).catch(e => (e as Error).message)
+      apiData.forEach(e => {
+          if(e.question_id == q_id){
+              setApiData([...apiData.map((i)=> 
+                  i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
+                                              i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 2, vote_status: VoteStatus.DOWN_VOTE} 
+                                                                                   : {...i, vote: e.vote as number + 1, vote_status: VoteStatus.NOT_VOTE})
+                                          : i)])
+          }
+      })
+  }
+
   const commentPress = () => {}
   const dotsPress = () => {}
   const onPress = () => {}
-  const upVotePress = () => {}
-  const downVotePress = () => {}
 
   const sharePress = () => {}
 
@@ -171,12 +193,12 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
                     community_name={item.community_name}
                     description={item.description}
                     dotsPress={dotsPress}
-                    downVotePress={downVotePress}
+                    downVotePress={() => downVotePress(item.question_id as number)}
                     image={item.image}
                     onPress={onPress}
                     question={item.question}
                     sharePress={sharePress}
-                    upVotePress={upVotePress}
+                    upVotePress={() => upVotePress(item.question_id as number)}
                     usernamePress={()=> usernamePress(item.author_id).then(()=> navigation.navigate(ROUTES.PROFILE))}
                     vote={item.vote}
                     vote_status={item.vote_status}/>}

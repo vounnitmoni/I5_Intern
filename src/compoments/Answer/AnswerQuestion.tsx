@@ -6,7 +6,7 @@ import {useKeyboard} from './../../utils/keyboardHeight'
 const AnswerQuestion = () =>{
     const keyBoardHeight = useKeyboard()
     return(
-        <Stack style={[styles.container, {bottom: keyBoardHeight - 120}]}>
+        <Stack style={[styles.container]}>
             <Inline alignY={"center"} alignX={"right"} paddingRight={2.5}>
                 <Icon name="arrowsalt" type="antdesign"/>
             </Inline>
@@ -24,13 +24,13 @@ const AnswerQuestion = () =>{
 
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
-        paddingTop: 5,
-        width: '100%',
-        height: 150,
-        backgroundColor: '#fff',
-        position: 'absolute', //Here is the trick
-        paddingLeft: 12
+        // flex: 1,
+        // paddingTop: 5,
+        // width: '100%',
+        // height: 200,
+        // backgroundColor: '#fff',
+        // position: 'absolute', //Here is the trick
+        // paddingLeft: 12
     },
     footer:{
         position: 'relative',

@@ -63,9 +63,8 @@ const Switchs = () =>{
 }
 
 type RightDrawerScreen = StackNavigationProp<RootStackParamList, ROUTES.RIGHTDRAWER>;
-const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen, props: any}> = ({
+const RightDrawerContent : React.FC<{navigation?: RightDrawerScreen}> = ({
     navigation,
-    props
 }) =>{
     const {t} = useTranslation();
     const action = useAppSelector(state => state.onClickRecursiveReducer.bool)
