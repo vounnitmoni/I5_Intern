@@ -49,9 +49,21 @@ public class File {
     @JsonIgnore
     private Community community;
 
+    @ManyToOne(targetEntity = Comment.class)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    private Comment comment;
+
+    @ManyToOne(targetEntity = Answer.class)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    private Answer answer;
+
     @Column(name = "user_id") private Long user_id;
     @Column(name = "community_id") private Long community_id;
     @Column(name = "questionnaire_id") private Long questionnaire_id;
+    @Column(name = "answer_id") private Long answer_id;
+    @Column(name = "comment_id") private Long comment_id;
 
     @Enumerated(EnumType.STRING)
     private EFileStatus fileStatus;
@@ -60,10 +72,12 @@ public class File {
     @Column(name = "photo", columnDefinition="LONGBLOB")
     private byte[] photo;
 
-    public File(Long user_id, Long community_id, Long questionnaire_id, EFileStatus fileStatus, byte[] photo) {
+    public File(Long user_id, Long community_id, Long questionnaire_id, Long answer_id, Long comment_id, EFileStatus fileStatus, byte[] photo) {
         this.user_id = user_id;
         this.community_id = community_id;
         this.questionnaire_id = questionnaire_id;
+        this.answer_id = answer_id;
+        this.comment_id = comment_id;
         this.fileStatus = fileStatus;
         this.photo = photo;
     }   

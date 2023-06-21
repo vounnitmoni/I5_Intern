@@ -26,6 +26,9 @@ public class VoteStatusService {
 
     public EVote answerVoteStatus(Long a_id){
         EVote vote_status = EVote.NOT_VOTE;
+        if(answerCollectionInfoRepo.existsUserInRecord(userSessions.getUserId(), a_id) == BigInteger.ONE){
+            vote_status = answerCollectionInfoRepo.findVoteStatus(userSessions.getUserId(), a_id); 
+        }
         return vote_status;
     }
 }

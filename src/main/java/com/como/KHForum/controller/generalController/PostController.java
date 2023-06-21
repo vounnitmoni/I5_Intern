@@ -247,8 +247,8 @@ public class PostController {
         Set<Questionnaire> randomCategoryQuestions = questionnaireRepo.randomQuestionnairesByCategories(userCategoryRepo.randomCategories(userSessions.getUserId()));
         Set<Questionnaire> post_questionnaires = new HashSet<>();
         Stream.of(randomCommunityQuestions,
-                    randomCategoryQuestions, 
-                    randomFolloweeQuestions)
+                  randomCategoryQuestions, 
+                  randomFolloweeQuestions)
                     .forEach(post_questionnaires::addAll);
         post_questionnaires.forEach(e ->{
             Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));

@@ -79,8 +79,8 @@ public class ProfileController {
                                    request.getCountry_code(), 
                                    request.getArea_number(), 
                                    userSessions.getUserId());
-        File profile = new File(userSessions.getUserId(), null, null, EFileStatus.PROFILE, request.getProfile());
-        File cover = new File(userSessions.getUserId(), null, null, EFileStatus.COVER, request.getCover());
+        File profile = new File(userSessions.getUserId(), null, null, null, null, EFileStatus.PROFILE, request.getProfile());
+        File cover = new File(userSessions.getUserId(), null, null, null, null,EFileStatus.COVER, request.getCover());
         appUserRepo.save(user);
         fileRepo.save(profile);
         fileRepo.save(cover);

@@ -4,5 +4,7 @@ public enum EFileStatus {
     PROFILE,
     COVER,
     QUESTION,
+    ANSWER,
+    COMMENT,
     OTHER,
 }

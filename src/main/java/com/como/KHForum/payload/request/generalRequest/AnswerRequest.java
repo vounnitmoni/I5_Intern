@@ -8,4 +8,5 @@ import lombok.Setter;
 public class AnswerRequest {
     private String answer;
     private Long question_id;
+    private byte[] photo;
 }

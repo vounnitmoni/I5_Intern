@@ -120,8 +120,8 @@ public class CommunityController {
                                                                 true,
                                                                 false, 
                                                                 EIsa.ISA_ADMIN);
-                File profile = new File(null, community.getId(), null, EFileStatus.PROFILE, request.getProfile());
-                File cover = new File(null, community.getId(), null, EFileStatus.COVER, request.getCover());
+                File profile = new File(null, community.getId(), null, null, null,EFileStatus.PROFILE, request.getProfile());
+                File cover = new File(null, community.getId(), null, null, null, EFileStatus.COVER, request.getCover());
                 fileRepo.save(profile);
                 fileRepo.save(cover);
                 userCommunityRepo.save(userCommunity);
@@ -137,7 +137,7 @@ public class CommunityController {
                 asynOpt.start();
             }
         }
-        return ResponseEntity.ok(community);
+        return ResponseEntity.ok(community.getId());
     }
     //-------------------------------------------------------------------------------------------------------
     //user joins community

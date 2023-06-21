@@ -66,9 +66,9 @@ public class PostCardController {
     // }
 
 //------------------------------------------------------------------------------------------------
-    @PostMapping("/comments")
-    public ResponseEntity<?> test(@RequestBody FeedRequest request){
-        MainFeedResponse payload = mainFeedService.coreFeed(request.getQuestion_id(), request.getFlag());
-        return ResponseEntity.ok(payload);
-    }
+    // @PostMapping("/comments")
+    // public ResponseEntity<?> test(@RequestBody FeedRequest request){
+    //     MainFeedResponse payload = mainFeedService.coreFeed(request.getQuestion_id(), request.getFlag());
+    //     return ResponseEntity.ok(payload);
+    // }
 }

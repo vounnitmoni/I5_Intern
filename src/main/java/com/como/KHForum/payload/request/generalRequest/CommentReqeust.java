@@ -8,4 +8,5 @@ import lombok.Setter;
 public class CommentReqeust {
     private String comment;
     private Long parent_id;
+    private byte[] photo;
 }

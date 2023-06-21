@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Answer;
-import com.como.KHForum.entity.AnswerCollectionInfo;
+import com.como.KHForum.entity.File;
+import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.AnswerRequest;
-import com.como.KHForum.payload.request.generalRequest.VoteRequest;
 import com.como.KHForum.repository.AnswerCollectionInfoRepo;
 import com.como.KHForum.repository.AnswerRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
-
 
 @RestController
 @RequestMapping("api/all/answer")
@@ -30,6 +31,7 @@ public class AnswerController {
     @Autowired UserSessions userSessions;
     @Autowired AnswerRepo answerRepo;
     @Autowired AnswerCollectionInfoRepo answerCollectionInfoRepo;
+    @Autowired FileRepo fileRepo;
     
     @PostMapping
     public ResponseEntity<?> answerQuestion(@RequestBody AnswerRequest request){
@@ -41,8 +43,9 @@ public class AnswerController {
                                    request.getQuestion_id(), 
                                    userSessions.getUserId(),
                                    0);
-        answerRepo.save(answer);
-                                   
+        answerRepo.saveAndFlush(answer);
+        File file = new File(null, null, null, answer.getId(), null, EFileStatus.ANSWER, request.getPhoto());
+        fileRepo.save(file);                        
         return ResponseEntity.ok(answer);
     }
     //Use in useEffect
@@ -93,5 +96,8 @@ public class AnswerController {
     //     answerCollectionInfoRepo.save(answerCollectionInfo);
     //     return ResponseEntity.ok(answerCollectionInfo);
     // }
-
+    @GetMapping("/ofquestion/{q_id}")
+    public ResponseEntity<?> answerOfQuestion(@PathVariable Long q_id){
+        return null; 
+    }
 }

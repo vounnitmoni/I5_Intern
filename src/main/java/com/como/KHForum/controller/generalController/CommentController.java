@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Comment;
+import com.como.KHForum.entity.File;
+import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.CommentReqeust;
 import com.como.KHForum.repository.CommentRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.webconfig.session.UserSessions;
 
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ import jakarta.validation.Valid;
 public class CommentController {
     @Autowired CommentRepo commentRepo;
     @Autowired UserSessions userSessions;
+    @Autowired FileRepo fileRepo;
 //-----------------------------------------------------------------------------------------------------
     
 //-----------------------------------------------------------------------------------------------------
@@ -49,7 +53,9 @@ public class CommentController {
                                       request.getParent_id(), 
                                       answer_id,
                                       userSessions.getUserId());
-        commentRepo.save(comment);
+        commentRepo.saveAndFlush(comment);
+        File file = new File(null, null, null, null, comment.getId(), EFileStatus.COMMENT, request.getPhoto());
+        fileRepo.save(file);
         return ResponseEntity.ok(comment);
     }
 

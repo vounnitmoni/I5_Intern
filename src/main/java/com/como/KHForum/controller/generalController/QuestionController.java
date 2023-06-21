@@ -66,7 +66,7 @@ public class QuestionController {
                                                         0);
         questionnaireRepo.saveAndFlush(questionnaire);
         request.getPhoto().forEach(e->{
-            File q_photo = new File(null, null, questionnaire.getId(), EFileStatus.QUESTION, e);
+            File q_photo = new File(null, null, questionnaire.getId(), null, null, EFileStatus.QUESTION, e);
             fileRepo.save(q_photo); 
         });                                            
         return ResponseEntity.ok(questionnaire);
