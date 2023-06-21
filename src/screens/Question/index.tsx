@@ -95,7 +95,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                     <TouchableOpacity>
                         <Icon name="return-up-back-sharp" type="ionicon" onPress={()=> [post(), reset(), navigation.goBack()]}/>
                     </TouchableOpacity>
-                    {communityStatus ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion(), console.log(photo.map(x=> x.uri))]}/>) 
+                    {communityStatus ? (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Post"} onPress={()=> [post(), submitQuestion()]}/>) 
                                      : (<Button size="sm" buttonStyle={{borderRadius: 8, backgroundColor: '#3189e7'}} title={"Next"} onPress={()=> navigation.navigate(ROUTES.COMMUNITYLIST)}/>)}
                 </Box>
 
@@ -143,7 +143,6 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
     },
     containerChild:{
         minHeight: 500,

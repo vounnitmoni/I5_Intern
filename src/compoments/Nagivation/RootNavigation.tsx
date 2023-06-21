@@ -4,7 +4,7 @@ import TabNavigation from './TabNavigation';
 import {RootStackParamList} from './TypeNavigation';
 import Header from './../Header';
 import Navigator from './Navigator';
-import SearchScreen from '../Search';
+import SearchScreen from '../SearchBar/Search';
 import MainHeader from './../Header';
 
 const Stack = createStackNavigator<RootStackParamList>();

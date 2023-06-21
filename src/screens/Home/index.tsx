@@ -12,6 +12,8 @@ import { communityListAttribute } from '../../store/userCommunityListReducer';
 import QuestionCard from '../../compoments/CommunityAndProfile/Components/QuestionCard';
 import { setCommunityId, setUserId } from '../../store/IdReducer';
 import { VoteStatus } from '../../enums/EVoteStatus';
+import AnswerBottomSheet from '../../compoments/BottomSheet/AnswerBottomSheet';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 interface IData{
   id: number;
@@ -50,6 +52,7 @@ interface IQInfo{
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
   const ref = useRef(0)
+  const rbRef = useRef<RBSheet>(null)
   const [apiData, setApiData] = useState<IQInfo[]>([])
   const [userAttribute, setAttribute] = useState<IUserAtt>({});
   const [userCommunity, setUserCommunity] = useState<IUserCommunityShortInfo[]>([])
@@ -171,7 +174,9 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
       })
   }
 
-  const commentPress = () => {}
+  const commentPress = () => {
+      rbRef.current?.open()
+  }
   const dotsPress = () => {}
   const onPress = () => {}
 
@@ -187,7 +192,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
                     ago_string={item.ago_string}
                     author_name={item.author_name}
                     comment={item.comment}
-                    commentPress={commentPress}
+                    commentPress={() => [commentPress]}
                     communityPress={()=> communityPress(item.community_id).then(()=> navigation.navigate(ROUTES.COMMUNITY))}
                     community_image={item.community_image}
                     community_name={item.community_name}
@@ -206,6 +211,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.5}
           />
+          <AnswerBottomSheet rbRef={rbRef} backPress={()=> rbRef.current?.close()}/>
     </View>
 )
 };

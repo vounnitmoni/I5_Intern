@@ -23,6 +23,9 @@ export type RootStackParamList = {
   UserPostScreen: undefined;
   CommunityPostScreen: undefined;
   SearchScreen: undefined;
+  CommunitySearch: undefined;
+  QuestionSearch: undefined;
+  UserSearch: undefined;
 };
 
 export type AuthStackParamList = {

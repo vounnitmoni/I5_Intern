@@ -68,7 +68,7 @@ const UserProfileHeader = () =>{
     return(
        <ScrollView>
              <Stack style={{backgroundColor: '#fff'}} space={1}>
-                <Image source={{uri: `data:image/jpeg;base64,${userInfo?.cover_pic}`}} style={{backgroundColor: 'rgba(0, 0, 0, 0.4)', height: 180, justifyContent: 'flex-end'}}>
+                <Image source={{uri: `data:image/jpeg;base64,${userInfo?.cover_pic}`}} style={{backgroundColor: userInfo?.cover_pic ? undefined : 'rgba(0, 0, 0, 0.4)', height: 180, justifyContent: 'flex-end'}}>
                     <Columns paddingLeft={6} paddingRight={6} paddingTop={5} alignY={"center"}>
                         <Column>
                             {userInfo?.profile_pic ? (<Image source={{uri: `data:image/jpeg;base64,${userInfo?.profile_pic}`}} style={{height: 80, width: 80, borderRadius: 40}}/>) 

@@ -1,6 +1,6 @@
 import { Inline, Stack } from "@mobily/stacks";
 import { useNavigation } from "@react-navigation/native";
-import { Icon, Text } from "@rneui/themed";
+import { Icon, Image, Text } from "@rneui/themed";
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
@@ -13,7 +13,7 @@ enum ERBSheetHeight{
 
 interface IAnswerProps{
     answer?: string;
-    photo?: string[];
+    photo?: string;
 }
 
 interface IProps{
@@ -32,16 +32,10 @@ const AnswerBottomSheet: React.FC<IProps> = ({
     const [rbsInputHeight, setRbsInputHeight] = useState(0)
     const [rbsHeight, setRbsHeight] = useState<ERBSheetHeight>(ERBSheetHeight.MIN)
     const [exist, setExist] = useState(false)
-    const [answer, setAnswer] = useState('')
-    const [photo, setPhoto] = useState('')
-    const [answerProps, setAnswerProps] = useState<IAnswerProps>({
-        answer: '',
-        photo: [],
-    })
-
+    const [answerProps, setAnswerProps] = useState<IAnswerProps>()
     useEffect(()=>{
         if(rbsInputHeight >= 100) setRbsHeight(ERBSheetHeight.MAX) 
-    },[rbsInputHeight>100])
+    },[rbsInputHeight>200])
 
     const onToggle = () => {
         if(rbsHeight === ERBSheetHeight.MIN) setRbsHeight(ERBSheetHeight.MAX)
@@ -54,12 +48,11 @@ const AnswerBottomSheet: React.FC<IProps> = ({
                 mediaType: "photo"
             }).then((e : any) => 
                 e.assets!.map((item: any, index: string | number)=>{
-                    setAnswerProps({photo: e.assets[index].base64})})
+                    setAnswerProps(prev => ({...prev, photo: e.assets[index].uri}))})
             ).then(()=> {
                 setExist(true)
             })
         }
-
     const postAnswer = () => {
         
     }
@@ -75,19 +68,24 @@ const AnswerBottomSheet: React.FC<IProps> = ({
                      }}                     
                     >
                 <ScrollView >
-                    <Stack padding={2}>
+                    <Stack padding={2} 
+                           onLayout={(event)=> {
+                                        var {height} = event.nativeEvent.layout;
+                                        setRbsInputHeight(height);
+                                }}
+                            >
                         <TouchableOpacity style={{alignSelf: "flex-end"}} onPress={()=> onToggle()}>
                             {rbsHeight === ERBSheetHeight.MIN && <Icon name="arrowsalt" type="antdesign"/>}
                             {rbsHeight === ERBSheetHeight.MAX && <Icon name="shrink" type="antdesign"/>}
                         </TouchableOpacity>
                         <TextInput multiline 
                                     placeholder={"Add an answer..."}
-                                    style={{color: "black", fontSize: 15, width: '95%'}} 
+                                    style={{color: "black", fontSize: 15, width: '95%'}}
+                                    value={answerProps?.answer}
+                                    onChangeText={text => setAnswerProps(prev => ({...prev, answer: text}))} 
                                     placeholderTextColor={"#8996a1"}
-                                    onLayout={(event)=> {
-                                        var {height} = event.nativeEvent.layout;
-                                        setRbsInputHeight(height);
-                                }}/>
+                                    />
+                        {answerProps?.photo ? <Image source={{uri: answerProps.photo}} style={{width: "100%", height: 200}}/> : null}
                     </Stack>
                 </ScrollView>
                 <Inline style={[styles.footer]} alignX={'between'}>
@@ -96,10 +94,10 @@ const AnswerBottomSheet: React.FC<IProps> = ({
                             <Icon name="add-photo-alternate" type="materialicon" onPress={()=> openGallery()}/>
                             <Icon name="return-up-back-sharp" type="ionicon" onPress={backPress}/>
                         </Inline>
-                        {answerProps.answer != '' ? <TouchableOpacity onPress={()=> postAnswer()}>
-                                                        <Text style={{padding: 15, color: 'blue'}}>Post</Text>
-                                                    </TouchableOpacity>
-                                                  : <Text style={{padding: 15, color: 'blue', opacity: 0.4}}>Post</Text>}
+                        {answerProps?.answer || answerProps?.photo ? <TouchableOpacity onPress={()=> postAnswer()}>
+                                                                        <Text style={{padding: 15, color: 'blue'}}>Post</Text>
+                                                                     </TouchableOpacity>
+                                                                   : <Text style={{padding: 15, color: 'blue', opacity: 0.4}}>Post</Text>}
                 </Inline>    
             </RBSheet>
     )

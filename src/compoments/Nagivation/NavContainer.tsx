@@ -16,10 +16,12 @@ import HomeScreen from '../../screens/Home';
 import CommunityScreen from '../CommunityAndProfile/CommunityProfile';
 import UserPostScreen from '../CommunityAndProfile/Screens/User/UserPostScreen';
 import CommunityPostScreen from '../CommunityAndProfile/Screens/Community/CommunityPostScreen';
-import SearchScreen from '../Search';
+import SearchScreen from '../SearchBar/Search';
 import MainHeader from '../Header';
 import AnswerQuestionScreen from '../../screens/Answer/AnswerQuestion';
-
+import UserSearch from '../SearchBar/SearchBarComponents/User';
+import CommunitySearch from '../SearchBar/SearchBarComponents/Community';
+import QuestionSearch from '../SearchBar/SearchBarComponents/Question';
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
   return (
@@ -49,7 +51,7 @@ const NavContainer = () => {
         <Stack.Screen name='CommunityScreen' component={CommunityScreen} />
         <Stack.Screen name='UserPostScreen' component={UserPostScreen}/>
         <Stack.Screen name='CommunityPostScreen' component={CommunityPostScreen}/>
-      </Stack.Group>
+      </Stack.Group>     
     </Stack.Navigator>
   );
 };

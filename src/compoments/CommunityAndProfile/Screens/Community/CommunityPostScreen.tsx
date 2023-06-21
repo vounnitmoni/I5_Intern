@@ -11,6 +11,8 @@ import { RootStackParamList } from "../../../Nagivation/TypeNavigation";
 import { ROUTES } from "../../../../enums/RouteEnum";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { VoteStatus } from "../../../../enums/EVoteStatus";
+import RBSheet from "react-native-raw-bottom-sheet";
+import AnswerBottomSheet from "../../../BottomSheet/AnswerBottomSheet";
 
 interface IQInfo{
     question_id?: number;
@@ -32,6 +34,7 @@ interface IQInfo{
 type navigation = StackNavigationProp<RootStackParamList, ROUTES.COMMUNITY_POST>
 const CommunityPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const ref = useRef(0)
+    const rbRef = useRef<RBSheet>(null)
     const [apiData, setApiData] = useState<IQInfo[]>([])
     const [listPrevId, setListPrevId] = useState<number[]>([]);
     const community_id = useAppSelector(state => state.IdReducer.community_id)
@@ -104,7 +107,7 @@ const CommunityPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =
                         ago_string={item.ago_string}
                         author_name={item.author_name}
                         comment={item.comment}
-                        commentPress={commentPress}
+                        commentPress={() => [commentPress, rbRef.current?.open()]}
                         communityPress={()=> communityPress(item.community_id).then(()=> navigation.navigate(ROUTES.COMMUNITY))}
                         community_image={item.community_image}
                         community_name={item.community_name}
@@ -123,6 +126,7 @@ const CommunityPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =
                 onEndReached={loadMoreData}
                 onEndReachedThreshold={0.5}
             />
+            <AnswerBottomSheet rbRef={rbRef} backPress={()=> rbRef.current?.close()}/>
         </View>
     )
 }

@@ -16,7 +16,7 @@ const RightDrawer = () => {
           width: '65%',
         },
       }}
-      drawerContent={props => <RightDrawerContent />}>
+      drawerContent={props => <RightDrawerContent {...props}/>}>
       <Drawer.Screen name="RootNavigation" component={RootNavigation} />
     </Drawer.Navigator>
   );
