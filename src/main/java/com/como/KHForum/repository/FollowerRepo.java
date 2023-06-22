@@ -28,4 +28,15 @@ public interface FollowerRepo extends JpaRepository<Follower, Long>{
 
     @Query(value = "select count(id) from kh_forum.following where follower_id = :user_id", nativeQuery = true)
     Integer followingAmount(@Param("user_id") Long user_id);
+
+    @Query(value = "select * from kh_forum.following where followee_id = :user_id limit 15", nativeQuery = true)
+    Set<Follower> listFollower(@Param("user_id") Long user_id);
+    @Query(value = "select * from kh_forum.following where follower_id = :user_id limit 15", nativeQuery = true)
+    Set<Follower> listFollowing(@Param("user_id") Long user_id);
+
+    @Query(value = "select * from kh_forum.following where followee_id = :user_id and id not in (:prev_id) limit 15", nativeQuery = true)
+    Set<Follower> listFollowerWithNotIn(@Param("user_id") Long user_id, @Param("prev_id") Set<Long> prev_id);
+    @Query(value = "select * from kh_forum.following where follower_id = :user_id and id not in (:prev_id) limit 15", nativeQuery = true)
+    Set<Follower> listFollowingWithNotIn(@Param("user_id") Long user_id, @Param("prev_id") Set<Long> prev_id);
+
 }

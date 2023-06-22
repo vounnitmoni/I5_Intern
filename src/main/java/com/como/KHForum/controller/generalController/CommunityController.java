@@ -176,7 +176,7 @@ public class CommunityController {
         List<Community> userCommunities = communityRepo.findUserCommunityList(userSessions.getUserId());
         Set<CommunityResponse> user_commu = new HashSet<>();
         userCommunities.forEach(e ->{
-            CommunityResponse cr = new CommunityResponse(e.getId(), e.getName(), fileRepo.communityProfilePic(e.getId()).getPhoto());
+            CommunityResponse cr = new CommunityResponse(e.getId(), e.getName(), fileRepo.communityProfilePic(e.getId()).getPhoto(), userCommunityRepo.findUserCommunityInfo(e.getId(), userSessions.getUserId()).getIsA());
             user_commu.add(cr);
         });
         return ResponseEntity.ok(user_commu);

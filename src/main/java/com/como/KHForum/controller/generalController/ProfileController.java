@@ -1,7 +1,9 @@
 package com.como.KHForum.controller.generalController;
 
 import java.math.BigInteger;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
+import com.como.KHForum.entity.Follower;
 import com.como.KHForum.entity.User;
 import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.EditProfileRequest;
@@ -136,6 +139,102 @@ public class ProfileController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/info/following/{owner_id}")
+    public ResponseEntity<?> followFunction(@PathVariable Long owner_id, @RequestBody Set<Long> prev_id){
+        Set<UserFollowInfo> listUserFollow = new LinkedHashSet<>();
+        if(prev_id.size() == 0){
+            followerRepo.listFollowing(owner_id).forEach(e ->{
+                AppUser appUser = appUserRepo.appUserInfoByAuthId(e.getFollowee_id());
+                User user = userRepo.userInfoById(e.getFollowee_id());
+                String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+                Boolean isFollowed = false;
+                if(followerRepo.isFollowed(userSessions.getUserId(), e.getFollowee_id()) == BigInteger.ONE){
+                    isFollowed = true;
+                }
+                UserFollowInfo userFollowInfo = new UserFollowInfo(userSessions.getUserId(), 
+                                                                   owner_id, 
+                                                                   e.getFollowee_id(),
+                                                                   e.getId(),
+                                                                   appUser.getFirstname(), 
+                                                                   appUser.getLastname(),
+                                                                   user.getUsername(), 
+                                                                   name_shortcut, 
+                                                                   fileRepo.userProfilePic(e.getFollowee_id()).getPhoto(), 
+                                                                   isFollowed);
+                listUserFollow.add(userFollowInfo);
+            });
+        }
+        followerRepo.listFollowingWithNotIn(owner_id, prev_id).forEach(e ->{
+            AppUser appUser = appUserRepo.appUserInfoByAuthId(e.getFollowee_id());
+            User user = userRepo.userInfoById(e.getFollowee_id());
+            String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+            Boolean isFollowed = false;
+            if(followerRepo.isFollowed(userSessions.getUserId(), e.getFollowee_id()) == BigInteger.ONE){
+                isFollowed = true;
+            }
+            UserFollowInfo userFollowInfo = new UserFollowInfo(userSessions.getUserId(), 
+                                                               owner_id, 
+                                                               e.getFollowee_id(),
+                                                               e.getId(),
+                                                               appUser.getFirstname(), 
+                                                               appUser.getLastname(),
+                                                               user.getUsername(), 
+                                                               name_shortcut, 
+                                                               fileRepo.userProfilePic(e.getFollowee_id()).getPhoto(), 
+                                                               isFollowed);
+            listUserFollow.add(userFollowInfo);
+        });
+
+        return ResponseEntity.ok(listUserFollow);
+    }
+    @PostMapping("/info/follower/{owner_id}")
+    public ResponseEntity<?> followerFunction(@PathVariable Long owner_id, @RequestBody Set<Long> prev_id){
+        Set<UserFollowInfo> listUserFollow = new LinkedHashSet<>();
+        if(prev_id.size() == 0){
+            followerRepo.listFollower(owner_id).forEach(e ->{
+                AppUser appUser = appUserRepo.appUserInfoByAuthId(e.getFollower_id());
+                User user = userRepo.userInfoById(e.getFollower_id());
+                String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+                Boolean isFollowed = false;
+                if(followerRepo.isFollowed(userSessions.getUserId(), e.getFollower_id()) == BigInteger.ONE){
+                    isFollowed = true;
+                }
+                UserFollowInfo userFollowInfo = new UserFollowInfo(userSessions.getUserId(), 
+                                                                   owner_id, 
+                                                                   e.getFollower_id(),
+                                                                   e.getId(),
+                                                                   appUser.getFirstname(), 
+                                                                   appUser.getLastname(),
+                                                                   user.getUsername(), 
+                                                                   name_shortcut, 
+                                                                   fileRepo.userProfilePic(e.getFollower_id()).getPhoto(), 
+                                                                   isFollowed);
+                listUserFollow.add(userFollowInfo);
+            });
+        }
+        followerRepo.listFollowerWithNotIn(owner_id, prev_id).forEach(e ->{
+            AppUser appUser = appUserRepo.appUserInfoByAuthId(e.getFollower_id());
+            User user = userRepo.userInfoById(e.getFollower_id());
+            String name_shortcut = String.valueOf(appUser.getFirstname().charAt(0)) + String.valueOf(appUser.getLastname().charAt(0));
+            Boolean isFollowed = false;
+            if(followerRepo.isFollowed(userSessions.getUserId(), e.getFollowee_id()) == BigInteger.ONE){
+                isFollowed = true;
+            }
+            UserFollowInfo userFollowInfo = new UserFollowInfo(userSessions.getUserId(), 
+                                                               owner_id,
+                                                               e.getFollower_id(),
+                                                               e.getId(), 
+                                                               appUser.getFirstname(), 
+                                                               appUser.getLastname(),
+                                                               user.getUsername(), 
+                                                               name_shortcut, 
+                                                               fileRepo.userProfilePic(e.getFollower_id()).getPhoto(), 
+                                                               isFollowed);
+            listUserFollow.add(userFollowInfo);
+        });
+
+        return ResponseEntity.ok(listUserFollow);
+    }
     //----------------------------------------------------------------------------
     @AllArgsConstructor
     @NoArgsConstructor
@@ -175,6 +274,23 @@ public class ProfileController {
         private byte[] cover_pic;
         private Boolean is_followed;
         private Boolean is_notified;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    protected class UserFollowInfo{
+        private Long id;
+        private Long other_user_id;
+        private Long each_user_id;
+        private Long follow_id;
+        private String firstname;
+        private String lastname;
+        private String username;
+        private String name_shorcut;
+        private byte[] photo;
+        private Boolean is_followed;
     }
     //----------------------------------------------------------------------------
 }
