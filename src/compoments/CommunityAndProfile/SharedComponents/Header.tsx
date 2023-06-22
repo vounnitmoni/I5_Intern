@@ -44,6 +44,7 @@ const Header = () =>{
            .then(res => res.json())
            .then(data => setCommunityInfo(data))
     },[ref.current, bellPress, joinPress])
+    console.log(communityInfo)
 
     useEffect(()=>{
         setBellPress(communityInfo?.is_notified)

@@ -110,7 +110,9 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     }
 
     const dotsPress = () => {}
-    const onPress = () => {}
+    const onPress = async (id: number) => {
+        dispatch(setQuestionId({question_id: id}))
+    }
     const sharePress = () => {}
 
     return(     
@@ -132,7 +134,9 @@ const UserPostScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
                         dotsPress={dotsPress}
                         downVotePress={() => downVotePress(item.question_id as number)}
                         image={item.image}
-                        onPress={onPress}
+                        onPress={()=> onPress(item.question_id as number).then(()=>{
+                            navigation.navigate(ROUTES.SPECIFIC_QUESTION)
+                        })}
                         question={item.question}
                         sharePress={sharePress}
                         upVotePress={() => upVotePress(item.question_id as number)}

@@ -59,13 +59,13 @@ const AnswerBottomSheet: React.FC<IProps> = ({
         
     return(
         <RBSheet ref={rbRef} 
-                     closeOnPressBack={true}
-                     animationType="slide" 
-                     customStyles={{
-                        container:{
-                            height: rbsHeight
-                        }
-                     }}                     
+                 closeOnPressBack={true}
+                 animationType="slide" 
+                 customStyles={{
+                 container:{
+                    height: rbsHeight
+                  }
+                 }}                     
                     >
                 <ScrollView >
                     <Stack padding={2} 

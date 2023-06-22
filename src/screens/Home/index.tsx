@@ -14,6 +14,7 @@ import { setCommunityId, setUserId } from '../../store/IdReducer';
 import { VoteStatus } from '../../enums/EVoteStatus';
 import AnswerBottomSheet from '../../compoments/BottomSheet/AnswerBottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { EISA } from '../../enums/EISA';
 
 interface IData{
   id: number;
@@ -30,6 +31,7 @@ interface IUserCommunityShortInfo {
   id?: number;
   name?: string;
   image?: string;
+  isa?: EISA;
 }
 
 interface IQInfo{

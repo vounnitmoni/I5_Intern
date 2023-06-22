@@ -1,10 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { EISA } from '../enums/EISA';
 
 interface ICommunityList {
     id?: number;
     name?: string;
     state?: boolean;
     image?: string;
+    isa?: EISA;
 }
 
 const initialState: ICommunityList[] = []
@@ -19,7 +21,8 @@ export const communityListSlice = createSlice({
             {
                 id: action.payload.id,
                 name: action.payload.name,
-                image: action.payload.image
+                image: action.payload.image,
+                isa: action.payload.isa
             }
           ]
     },

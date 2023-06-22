@@ -13,6 +13,7 @@ import PostQuestionReducer from './PostQuestionReducer';
 import userInfoReducer from './userInfoReducer';
 import userCommunityListReducer from './userCommunityListReducer';
 import IdReducer from './IdReducer';
+import followReducer from './followReducer';
 
 const rootReducers = {
   setting: settingReducer,
@@ -21,7 +22,8 @@ const rootReducers = {
   question_request: PostQuestionReducer,
   userAttribute: userInfoReducer,
   userCommunityList: userCommunityListReducer,
-  idReducer: IdReducer
+  idReducer: IdReducer,
+  followReducer: followReducer,
 };
 
 const middlewares = [thunk];
@@ -60,6 +62,7 @@ export const store = configureStore({
     userInfoReducer,
     userCommunityListReducer,
     IdReducer,
+    followReducer,
   },
   middleware: middlewares,
 });

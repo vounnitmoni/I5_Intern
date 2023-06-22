@@ -7,6 +7,10 @@ import { Switch, TextInput } from "react-native-paper"
 import API from "../api"
 import CategoryBottomSheet from "../compoments/BottomSheet/CategoryBottomSheet"
 import RBSheet from "react-native-raw-bottom-sheet"
+import { StackActions, useNavigation } from "@react-navigation/native"
+import { useAppDispatch } from "../store/hooks"
+import { setCommunityId } from "../store/IdReducer"
+import { ROUTES } from "../enums/RouteEnum"
 
 interface CommunityRequest{
     name?: string;
@@ -16,6 +20,7 @@ interface CommunityRequest{
 }
 
 const CreateCommunityScreen = () =>{
+    const navigation = useNavigation()
     const rbRef = useRef<RBSheet>(null)
     const [isTouchOpen, setIsTouchOpen] = useState(false)
     const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -23,6 +28,11 @@ const CreateCommunityScreen = () =>{
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
     const onTouchClose = () => setIsTouchOpen(!isTouchOpen)
     const [communityData, setCommunityData] = useState<CommunityRequest>()
+    const dispatch = useAppDispatch()
+
+    const getCommunityCategories = (categories: string[]) =>{
+        setCommunityData(prev => ({...prev, category: categories}))
+    }
 
     const openGallery = async () =>{
         const data = await launchImageLibrary({
@@ -35,16 +45,17 @@ const CreateCommunityScreen = () =>{
                 })
             )
         }
-
+ 
     const onCreate = () =>{
         API.CreateCommunity({
             name: communityData?.name,
             bio: communityData?.bio,
             profile: communityData?.profile,
             category: communityData?.category
-        }).then(res => res.json()).then(()=> {
-
-        })
+        }).then(res => res.json()).then((data)=> {
+            dispatch(setCommunityId({community_id: data}))
+            navigation.dispatch(StackActions.push(ROUTES.COMMUNITY))
+        })  
     }
     return(
             <Stack space={4} style={styles.container}>
@@ -64,7 +75,9 @@ const CreateCommunityScreen = () =>{
                     </Inline>               
                 </Columns>
                 <Text style={{fontWeight: "700"}}>Community name</Text>
-                <TextInput mode="outlined" 
+                <TextInput mode="outlined"
+                        value={communityData?.name}
+                        onChangeText={text => setCommunityData(prev => ({...prev, name: text}))} 
                         placeholder="Please input community name" 
                         label={"Community_name"} 
                         maxLength={21}
@@ -75,7 +88,9 @@ const CreateCommunityScreen = () =>{
                 </Inline>
                 {isSwitchOn ? (
                     <TextInput mode="outlined"
-                            multiline 
+                            multiline
+                            value={communityData?.bio}
+                            onChangeText={text => setCommunityData(prev => ({...prev, bio: text}))} 
                             placeholder="Please input age" 
                             label={"Bio"}/>
                 ): null}
@@ -94,7 +109,7 @@ const CreateCommunityScreen = () =>{
                     buttonStyle={{backgroundColor: "#EE5407", borderRadius: 30}}
                     onPress={()=> onCreate()}
                 />
-                <CategoryBottomSheet rbRef={rbRef} backPress={()=> rbRef.current?.close()}/>               
+                <CategoryBottomSheet rbRef={rbRef} backPress={()=> rbRef.current?.close()} setCategories={getCommunityCategories}/>               
             </Stack>
     )
 }

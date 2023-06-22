@@ -90,4 +90,11 @@ export default class API {
     static async QuestionDownVote(q_id: number){
         return api.request(`/all/question/downvote/${q_id}`, 'PATCH', null)
     }
+//------------------------Thunh nas---------------------------------------------
+    static async ListFollowing(owner_id: number, body?: any){
+        return api.request(`/all/profile/info/following/${owner_id}`, 'POST', body)
+    }
+    static async ListFollower(owner_id: number, body?: any){
+        return api.request(`/all/profile/info/follower/${owner_id}`, 'POST', body)
+    }
 }

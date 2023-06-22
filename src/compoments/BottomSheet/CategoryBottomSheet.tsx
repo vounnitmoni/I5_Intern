@@ -1,16 +1,17 @@
 import { LegacyRef, useEffect, useState } from "react"
-import { FlatList, ScrollView } from "react-native";
+import { FlatList, GestureResponderEvent, ScrollView } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet"
 import API from "../../api";
 import { Inline } from "@mobily/stacks";
 import { Text } from "@rneui/themed";
 import { Checkbox } from "react-native-paper";
 
+type Handler = (myArgument: string[]) => void;
+
 interface IProps{
     rbRef: LegacyRef<RBSheet>
     backPress?: () => void;
-    nameValue: string[];
-    setNameValue: () => string[];
+    setCategories: Handler;
 }
 
 interface ICategoryList {
@@ -25,13 +26,12 @@ interface ICategoryListWithCheckStatus extends ICategoryList{
 const CategoryBottomSheet: React.FC<IProps> = ({
     rbRef,
     backPress,
-    nameValue,
-    setNameValue,
+    setCategories,
 }) =>{
     const [id, setId] = useState<number[]>([])
     const [request_time, setRequest_time] = useState(0)
     const [data, setData] = useState<ICategoryList[]>([])
-    const [name, setName] = useState<String[]>([])
+    const [name, setName] = useState<string[]>([])
     const [dataWithCheck, setDataWithCheck] = useState<ICategoryListWithCheckStatus[]>([])
 
     useEffect(()=>{
@@ -50,6 +50,11 @@ const CategoryBottomSheet: React.FC<IProps> = ({
             }])
         })
     },[data])
+
+    useEffect(()=>{
+        setCategories(name)
+    },[name])
+
     const loadMoreData = () =>{
 
     }
@@ -76,14 +81,11 @@ const CategoryBottomSheet: React.FC<IProps> = ({
                             status={ item.checked ? 'checked' : 'unchecked' }
                             onPress={()=> onCheck(item, index).then(()=>{
                                 if(!item.checked){
-                                    setName(prev => [
-                                        ...prev,
-                                        item.name
-                                    ])
+                                    setName(prev => [...prev, item.name])
                                 }else{
                                     setName(current => current.filter(e => e !== item.name))
                                 }
-                            }).then(()=> setNameValue(name))}
+                            })}
                         />
                     </Inline>
                 }

@@ -3,11 +3,12 @@ import { Button, Icon, Image, Text } from "@rneui/themed"
 import { useEffect, useRef, useState } from "react"
 import { TouchableOpacity, View, StyleSheet} from "react-native"
 import API from "../../../api"
-import { useAppSelector } from "../../../store/hooks"
+import { useAppDispatch, useAppSelector } from "../../../store/hooks"
 import { ScrollView } from "react-native-gesture-handler"
 import { IUserAtt } from "../../../interfaces/IAPI"
 import { Avatar } from "react-native-paper"
 import { ITempData } from "../../../interfaces/ITempData"
+import { EFollowPressStatus, followStatusClick } from "../../../store/followReducer"
 
 enum Identifier{
     APP_USER,
@@ -30,6 +31,7 @@ const UserProfileHeader = () =>{
     const onPressFollow = () => setFollowPress(!followPress)
     const onPressBell = () => setBellPress(!bellPress);
     const name_shortcut = userInfo?.name_shortcut
+    const dispatch = useAppDispatch()
 
     useEffect(()=>{
         setBellPress(userInfo?.is_notified)
@@ -65,6 +67,14 @@ const UserProfileHeader = () =>{
         API.UnfollowUser(userId).catch(e => (e as Error).message)
         setFollowAmount(prev => ({...prev, follower: (followAmount?.follower as number) - 1}))
     }
+
+    const onPressFollowerStatus = () =>{
+        dispatch(followStatusClick({toggle: true, follow_status: EFollowPressStatus.FOLLOWER}))
+    }
+
+    const onPressFolloweeStatus = () =>{
+        dispatch(followStatusClick({toggle: true, follow_status: EFollowPressStatus.FOLLOWEE}))
+    }
     return(
        <ScrollView>
              <Stack style={{backgroundColor: '#fff'}} space={1}>
@@ -81,8 +91,12 @@ const UserProfileHeader = () =>{
                         <Stack>
                             <Text style={{fontWeight:"700", fontSize:23}}>{userInfo?.firstname} {userInfo?.lastname}</Text>
                             <Inline space={3}>
-                                <Text>{followAmount?.follower} Follower</Text>
-                                <Text>{followAmount?.followee} Following</Text>
+                                <TouchableOpacity onPress={onPressFollowerStatus}>
+                                    <Text>{followAmount?.follower} Follower</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={onPressFolloweeStatus}>
+                                    <Text>{followAmount?.followee} Following</Text>
+                                </TouchableOpacity>
                             </Inline>
                         </Stack>
                         <Inline space={4} alignX={"right"} alignY={"center"}>

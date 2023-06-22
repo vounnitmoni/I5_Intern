@@ -1,101 +1,36 @@
+import { Column, Columns, Inline, Stack } from "@mobily/stacks"
 import { Text } from "@rneui/themed"
-import { useAppDispatch, useAppSelector } from "../store/hooks"
-import React, { useEffect, useState } from "react"
-import API from "../api"
-import PostCard from "../compoments/Post/PostCard";
-import { ScrollView, View } from "react-native";
-import { Stack } from "@mobily/stacks";
-import CommentCard from "../compoments/Post/CommentCard";
-import { IAnswerData, ICommentData, IQuestionData } from "../interfaces/IAPI";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-interface IData {
-    answer: IAnswerData[];
-    comment: ICommentData[];
-}
+import { useState } from "react"
+import { StyleSheet, StatusBar, TextInput} from "react-native"
+import { Avatar } from "react-native-paper"
+import QuestionCard from "../compoments/CommunityAndProfile/Components/QuestionCard"
 
 const SpecificQuestionScreen = () =>{
-    const question_id = useAppSelector(state => state.questionId.q_id);
-    const [object, setObject] = useState<IQuestionData>();
-    const [answerObject, setAnswerObject] = useState<IData>({
-        answer: [],
-        comment: [],
-    });
-    const flag : number = 0;
-
-    useEffect(()=>{ 
-        API.QuestionById({},question_id).then(res => res.json())
-        .then(async e => setObject(e))
-        .catch(e => (e as Error).message);
-    }, [])
-
-    useEffect(()=>{
-        API.AnswerandComment({question_id, flag}).then(res => res.json()).then(async data =>{
-            await AsyncStorage.mergeItem('data', JSON.stringify(data));
-        }).then(async () =>{
-            await AsyncStorage.getItem('data').then((req : any)=> JSON.parse(req))
-                .then(async data=>{
-                    setAnswerObject({
-                        answer: data.answers,
-                        comment: data.comments,
-                    })
-                })
-                .catch(e => (e as Error).message);
-        })
-        
-    },[flag])
-    const recursiveComment = (props : number) : React.ReactNode | React.ReactNode[] => 
-            <Stack>
-                {answerObject.comment.map((item, index)=>{
-                    {answerObject.comment.map((item1, index1)=>{
-                        if(item1.parent_id === item.id){
-                            return(
-                                <CommentCard ago={49} styleProp={{minusMaxWidth: 20}} answer={item1.comment} key={index1}/>
-                            )
-                        }
-                    })}
-                    if(item.parent_id == props){
-                        return(
-                            <CommentCard ago={49} styleProp={{minusMaxWidth: 15}} answer={item.comment} key={index} />
-                        )
-                    }
-                })}
-            </Stack>
-
-    const renderAnswer = (props: any) : React.ReactNode | React.ReactNode[] => 
-            <Stack space={3}>
-                {answerObject.comment.map((item, index)=>{
-                    if(item.answer_id == props && item.parent_id === null){
-                        return(
-                            <CommentCard key={index} styleProp={{minusMaxWidth: 10}} ago={30} answer={item.comment} children={recursiveComment(item.id)}/>
-                        )
-                    }else if(item.id){
-
-                    }
-                })}
-            </Stack>
-            
+    const [photo, setPhoto] = useState()
     return(
-       <ScrollView >
-            <Stack space={2}>
-                <PostCard 
-                        title={object?.question}
-                        description={object?.body}
-                        community={object?.community}
-                        answer={object?.answer}
-                        vote={object?.vote}
-                        image={object?.photo}
-                        onPress={()=> console.log(object?.body)}
-                    />
-                {answerObject.answer.map((item, index)=>{
-                    return(
-                        <CommentCard answer={item.answer} ago={20} key={index} children={renderAnswer(item.id)} />
-                    )
-                })}
-            </Stack>
-       </ScrollView>
+        <Stack style={styles.container}>
+            <Columns style={{width: '90%'}} alignX={"between"} alignY={"center"}>
+                {photo ? <Image /> : <Avatar.Text label="XD" size={35}/>}
+                <Column width={'4/5'}>
+                    <TextInput multiline 
+                            placeholder={"Add an answer..."}
+                            style={{color: "black", fontSize: 15}}
+                            placeholderTextColor={"#8996a1"}/>
+                </Column>
+            </Columns>
+        </Stack>
     )
 }
+
+const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        marginTop: StatusBar.currentHeight,
+        padding: 10,
+        backgroundColor: ''
+    }
+})
+
 export default SpecificQuestionScreen
 
 

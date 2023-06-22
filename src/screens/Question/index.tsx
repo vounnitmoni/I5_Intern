@@ -126,8 +126,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                                 ...prev,
                                 description : text
                            }))}
-                           value={object.description}/>
-                        
+                           value={object.description}/>        
             </Stack>
             <View style={[styles.footer]}>
                 <Inline space={4} alignX={"left"}>

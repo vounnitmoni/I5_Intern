@@ -26,6 +26,7 @@ export type RootStackParamList = {
   CommunitySearch: undefined;
   QuestionSearch: undefined;
   UserSearch: undefined;
+  FollowModal: undefined;
 };
 
 export type AuthStackParamList = {

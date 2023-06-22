@@ -22,6 +22,7 @@ import AnswerQuestionScreen from '../../screens/Answer/AnswerQuestion';
 import UserSearch from '../SearchBar/SearchBarComponents/User';
 import CommunitySearch from '../SearchBar/SearchBarComponents/Community';
 import QuestionSearch from '../SearchBar/SearchBarComponents/Question';
+import FollowModal from '../Modals/FollowModal';
 const Stack = createStackNavigator<RootStackParamList>();
 const NavContainer = () => {
   return (
@@ -34,7 +35,6 @@ const NavContainer = () => {
         <Stack.Screen name='Navigator' component={Navigator}/>
       </Stack.Group>
       <Stack.Group screenOptions={{headerShown: true}}>
-        <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
         <Stack.Screen name='SettingScreen' component={SettingScreen}/>
         <Stack.Screen name='BookMarkScreen' component={BookMarkScreen}/>
         <Stack.Screen options={{headerTitle: 'Create a community'}} name='CreateCommunityScreen' component={CreateCommunityScreen}/>
@@ -43,7 +43,7 @@ const NavContainer = () => {
         <Stack.Screen name='QuestionScreen' component={QuestionScreen}/>
         <Stack.Screen name='AnswerQuestionScreen' component={AnswerQuestionScreen} />
         <Stack.Screen name='CommunityListScreen' component={CommunityListScreen}/>
-        <Stack.Screen name= 'SearchScreen' component={SearchScreen}/>
+        <Stack.Screen name='SearchScreen' component={SearchScreen}/>
         <Stack.Screen name='MainHeader' component={MainHeader}/>
       </Stack.Group>
       <Stack.Group>
@@ -51,6 +51,7 @@ const NavContainer = () => {
         <Stack.Screen name='CommunityScreen' component={CommunityScreen} />
         <Stack.Screen name='UserPostScreen' component={UserPostScreen}/>
         <Stack.Screen name='CommunityPostScreen' component={CommunityPostScreen}/>
+        <Stack.Screen name='SpecificQuestionScreen' component={SpecificQuestionScreen}/>
       </Stack.Group>     
     </Stack.Navigator>
   );
