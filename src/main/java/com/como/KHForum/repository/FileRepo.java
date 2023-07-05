@@ -24,5 +24,11 @@ public interface FileRepo extends JpaRepository<File,Long>{
     @Query(value = "select * from kh_forum.file where user_id = :id and file_status = 'COVER'", nativeQuery = true)
     File userCoverPic(@Param("id") Long id);
 
+    @Query(value = "select * from kh_forum.file where answer_id = :id and file_status = 'ANSWER'", nativeQuery = true)
+    File AnswerPhoto(@Param("id") Long id);
+
+    @Query(value = "select * from kh_forum.file where comment_id = :id and file_status = 'COMMENT'", nativeQuery = true)
+    File CommentPhoto(@Param("id") Long id);
+
 
 }

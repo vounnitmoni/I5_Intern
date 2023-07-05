@@ -3,6 +3,7 @@ package com.como.KHForum.repository;
 import java.math.BigInteger;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,8 @@ public interface AnswerCollectionInfoRepo extends JpaRepository<AnswerCollection
 
     @Query(value = "select vote_status from kh_forum.answer_collection_info where user_id= :user_id and answer_id = :a_id", nativeQuery = true)
     EVote findVoteStatus(@Param("user_id") Long user_id, @Param("a_id") Long a_id);
+
+    @Modifying
+    @Query(value = "delete from kh_forum.answer_collection_info where user_id = :user_id and answer_id = :q_id", nativeQuery = true)
+    void deleteUserVote(@Param("user_id") Long user_id, @Param("q_id") Long q_id);
 }

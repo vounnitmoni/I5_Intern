@@ -1,6 +1,7 @@
 package com.como.KHForum.repository;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -27,5 +28,11 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
 
     @Query(value = "select id from kh_forum.answers where question_id = :id", nativeQuery = true)
     List<Long> listAnswerIdByQ_Id(@Param("id") Long id);
+
+    @Query(value = "select * from kh_forum.answers where question_id = :id order by vote desc, create_date desc, create_time desc limit 15", nativeQuery = true)
+    Set<Answer> listAnswerByQ_Id(@Param("id") Long id);
+
+    @Query(value = "select cast(concat(create_date, ' ', create_time) as datetime) as a from kh_forum.answers where id = :id", nativeQuery = true)
+    LocalDateTime castAStmpToDateTime(@Param("id") Long id);
 
 }

@@ -3,6 +3,7 @@ package com.como.KHForum.controller.generalController;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,18 @@ import com.como.KHForum.repository.CommunityRepo;
 import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.QuestionCollectionInfoRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
+import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.service.ServiceUtils.Utility;
+import com.como.KHForum.service.ServiceUtils.Utility.DateTimeObject;
+import com.como.KHForum.service.ServiceUtils.VoteStatusService;
 import com.como.KHForum.webconfig.session.UserSessions;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @RestController
 @RequestMapping("api/all/question")
@@ -50,6 +58,8 @@ public class QuestionController {
     @Autowired FileRepo fileRepo;
     @Autowired AppUserRepo appUserRepo;
     @Autowired Utility utility;
+    @Autowired UserRepo userRepo;
+    @Autowired VoteStatusService voteStatusService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody CreateQuestionRequest request){
@@ -73,23 +83,25 @@ public class QuestionController {
     }
 
     @GetMapping("/{q_id}")
-    public ResponseEntity<RandomQuestionResponse> eachQuestionInfo(@PathVariable Long q_id){
-        Questionnaire q = questionnaireRepo.findAllById(q_id);
-        Integer count_answer = answerRepo.countAnswerByQ_Id(q.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(q.getId()));
-        RandomQuestionResponse r = new RandomQuestionResponse(q.getAuthor_id(), 
-                                                            q.getId(), 
-                                                            q.getCommunity_id(), 
-                                                            appUserRepo.userNameByAccId(q.getAuthor_id()), 
-                                                            q.getQuestion(), 
-                                                            q.getBody(), 
-                                                            communityRepo.findCommunityNameById(q.getCommunity_id()), 
-                                                            q.getVote(), 
-                                                            count_answer, 
-                                                            questionnaireRepo.castQStmpToDateTime(q.getId()), 
-                                                            utility.DateTimeConverter(questionnaireRepo.castQStmpToDateTime(q.getId())), 
-                                                            fileRepo.fileByQ_id(q.getId()), 
-                                                            null);
-        return ResponseEntity.ok().body(r);
+    public ResponseEntity<?> eachQuestionInfo(@PathVariable Long q_id){
+        Questionnaire e = questionnaireRepo.findAllById(q_id);
+        Integer count_answer = answerRepo.countAnswerByQ_Id(e.getId()) + commentRepo.countCommentsByAnswer_Id(answerRepo.listAnswerIdByQ_Id(e.getId()));
+        DateTimeObject object = utility.DateTimeConverter(questionnaireRepo.castQStmpToDateTime(e.getId()));
+        PostInfoResponse response = new PostInfoResponse(e.getId(),
+                                                                 e.getCommunity_id(),
+                                                                 e.getAuthor_id(),
+                                                                 fileRepo.communityProfilePic(e.getCommunity_id()).getPhoto(), 
+                                                                 communityRepo.communityById(e.getCommunity_id()).getName(),
+                                                                 userRepo.userInfoById(e.getAuthor_id()).getUsername(), 
+                                                                 e.getQuestion(), 
+                                                                 e.getBody(), 
+                                                                 e.getVote(), 
+                                                                 count_answer, 
+                                                                 object.getAgo(), 
+                                                                 object.getAgo_status(), 
+                                                                 fileRepo.fileByQ_id(e.getId()),
+                                                                 voteStatusService.questionVoteStatus(e.getId()));
+        return ResponseEntity.ok().body(response);
     }
 
     @Transactional
@@ -152,5 +164,26 @@ public class QuestionController {
                                                                                    EVote.DOWN_VOTE);
         questionCollectionInfoRepo.save(questionCollectionInfo);
         return ResponseEntity.ok("3");
+    }
+//--------------------------------------------------
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    protected class PostInfoResponse{
+       private Long question_id;
+       private Long community_id;
+       private Long author_id;
+       private byte[] community_image;
+       private String community_name;
+       private String author_name;
+       private String question;
+       private String description;
+       private Integer vote;
+       private Integer comment;
+       private Integer ago_number;
+       private String ago_string;
+       private List<byte[]> image;
+       private EVote vote_status;
     }
 }
