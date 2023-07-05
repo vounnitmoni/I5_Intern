@@ -16,8 +16,8 @@ export default class API {
     static async RandomQuestion(body?: any){
         return api.request('/all/post', 'GET', body);
     }
-    static async QuestionById(body: any, q_id: number){
-        return api.request(`/all/question/${q_id}`, 'GET', body);
+    static async QuestionById(q_id: number){
+        return api.request(`/all/question/${q_id}`, 'GET', null);
     }
     static async AnswerandComment(body: any){
         return api.request(`/all/card/comments`, 'POST', body);
@@ -96,5 +96,12 @@ export default class API {
     }
     static async ListFollower(owner_id: number, body?: any){
         return api.request(`/all/profile/info/follower/${owner_id}`, 'POST', body)
+    }
+
+    static async ListComment(answer_id: number, body?: any){
+        return api.request(`/all/comment/ofanswer/${answer_id}`, 'POST', body);
+    }
+    static async ListAnswer(q_id: number){
+        return api.request(`/all/answer/ofquestion/${q_id}`, 'GET', null);
     }
 }

@@ -5,6 +5,8 @@ interface IId{
     user_id?: number;
     question_id?: number;
     answer_id?: number;
+    comment_id?: number;
+    comment_parent?: number | null;
 }
 
 const initialState: IId = {
@@ -12,6 +14,8 @@ const initialState: IId = {
     user_id: undefined,
     question_id: undefined,
     answer_id: undefined,
+    comment_id: undefined,
+    comment_parent: null,
 };
 
 export const idSlice = createSlice({
@@ -42,6 +46,26 @@ export const idSlice = createSlice({
             answer_id: action.payload.answer_id        
         }
     },
+    setCommentId: (state, action: PayloadAction<IId>) =>{
+        return{
+            ...state,
+            comment_id: action.payload.comment_id        
+        }
+    },
+    setParentCommentId: (state, action: PayloadAction<IId>) =>{
+        return{
+            ...state,
+            comment_parent: action.payload.comment_parent       
+        }
+    },
+    setBothCommentId: (state, action: PayloadAction<IId>) =>{
+        return{
+            ...state,
+            comment_parent: action.payload.comment_parent,
+            comment_id: action.payload.comment_id,       
+        }
+    },
+
 
     removeAllId: () =>{
         return{
@@ -49,6 +73,8 @@ export const idSlice = createSlice({
             user_id: undefined,
             question_id: undefined,
             answer_id: undefined,
+            comment_id: undefined,
+            comment_parent: null,
         }
     }
   },
@@ -58,6 +84,9 @@ export const {setCommunityId,
               setAnswerId, 
               setQuestionId, 
               setUserId, 
-              removeAllId} = idSlice.actions;
+              removeAllId,
+              setBothCommentId,
+              setCommentId,
+              setParentCommentId} = idSlice.actions;
 
 export default idSlice.reducer;

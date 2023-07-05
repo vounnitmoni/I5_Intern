@@ -1,9 +1,10 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Icon, Image, Text } from "@rneui/themed"
 import React, { useEffect, useState } from "react"
-import {StyleSheet, TouchableOpacity, View} from "react-native"
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from "react-native"
 import { VoteStatus } from "../../../enums/EVoteStatus";
 import ImageSlide from "../../Post/ImageSlider";
+import CommentList from "../../Answer/CommentList";
 
 interface IQInfo{
     community_image?: string;
@@ -25,6 +26,8 @@ interface IQInfo{
     sharePress?: ()=> void;
     dotsPress?: ()=> void;
     onPress?: ()=> void;
+    style?: StyleProp<ViewStyle>;
+    numberOfLine?: number;
 }
 
 const QuestionCard: React.FC<IQInfo> = ({
@@ -47,6 +50,8 @@ const QuestionCard: React.FC<IQInfo> = ({
     usernamePress,
     vote,
     vote_status,
+    style,
+    numberOfLine,
 }) => {
     const [upVote, setUpvote] = useState(false)
     const [downVote, setDownVote] = useState(false)
@@ -70,7 +75,7 @@ const QuestionCard: React.FC<IQInfo> = ({
     }
 
     return(
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={[styles.container, style]}>
             <Stack>
                 <Inline space={3} alignX={"between"} alignY={'center'}>
                     <Inline space={2}>
@@ -99,7 +104,7 @@ const QuestionCard: React.FC<IQInfo> = ({
                 {image?.length != 0 ? (<View style={{marginTop: 2, marginBottom: 2}}>
                                 <ImageSlide base64={image as string[]}/>
                           </View>) 
-                       : (<Text  numberOfLines={2}>{description}</Text>)}
+                       : (<Text  numberOfLines={numberOfLine != null ? numberOfLine : 2}>{description}</Text>)}
                 <Inline alignX={'between'} alignY={"center"}>
                     <Inline alignY={"center"} marginTop={1} marginBottom={1}>
                         <TouchableOpacity onPress={()=> [upVotePress(), insideUpVotePress()]}>
@@ -116,12 +121,12 @@ const QuestionCard: React.FC<IQInfo> = ({
                                     <Icon style={{marginLeft: 30}} name="comment-outline" type="material-community"/>
                                 </TouchableOpacity> 
                                 <Text>  {comment}</Text>             
-                        </Inline>    
+                        </Inline>   
                     </Inline>
                     <TouchableOpacity onPress={sharePress} style={{marginRight: 5}}>
                         <Icon name="share-social" type="ionicon"/>
                     </TouchableOpacity>
-                </Inline>   
+                </Inline>
             </Stack>    
         </TouchableOpacity>
     )
@@ -134,7 +139,6 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 5,
         paddingRight: 5,
-
         backgroundColor: '#fff'
     },
     image:{

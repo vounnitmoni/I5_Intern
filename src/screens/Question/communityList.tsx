@@ -1,6 +1,6 @@
 import { Box, Inline, Stack } from "@mobily/stacks";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Button, CheckBox, Icon, SearchBar, Text } from "@rneui/themed";
+import { Button, CheckBox, Icon, Image, SearchBar, Text } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, View} from "react-native"
 import API from "../../api";
@@ -9,10 +9,12 @@ import { ROUTES } from "../../enums/RouteEnum";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { hasCommunity } from "../../store/onClickRecursiveReducer";
 import { setData } from "../../store/PostQuestionReducer";
+import userCommunityListReducer from "../../store/userCommunityListReducer";
 
 interface ICommunityList{
     id: number,
-    name: string
+    name: string,
+    image: string,
 }
 
 type itemProps = {
@@ -46,10 +48,10 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
                 }).then(()=>{
                     navigation.goBack()
                 })}>
-                    <Inline space={5} style={{width: "100%", backgroundColor: 'red', justifyContent: 'center'}}>
-                        <View style={{width: 50, height: 50, borderRadius: 50/2, backgroundColor: 'yellow'}}></View>
+                    <Inline space={5} style={{width: "100%", justifyContent: 'center'}}>
+                        {item.image ? <Image source={{uri: `data:image/jpeg;base64,${item.image}`}} style={{width: 50, height: 50, borderRadius: 50/2}} /> : <Image source={require('./../../assets/images/community_blank_logo.png')} style={{width: 50, height: 50, borderRadius: 50/2}} />}
                         <Stack>
-                            <Text style={{fontSize: 20, fontWeight: '500'}}>{item.name}</Text>
+                            <Text style={{fontSize: 20, fontWeight: '500'}}>{item.name} members</Text>
                             <Text>{item.id}</Text>
                         </Stack>
                     </Inline>

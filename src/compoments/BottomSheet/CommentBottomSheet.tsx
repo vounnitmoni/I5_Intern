@@ -7,6 +7,7 @@ import { launchImageLibrary } from "react-native-image-picker";
 import RBSheet from "react-native-raw-bottom-sheet";
 import API from "../../api";
 import { useAppSelector } from "../../store/hooks";
+import AppbarAction from "react-native-paper/lib/typescript/src/components/Appbar/AppbarAction";
 import { ROUTES } from "../../enums/RouteEnum";
 
 enum ERBSheetHeight{
@@ -25,7 +26,7 @@ interface IProps{
     backPress?: () => void;
 }
 
-const AnswerBottomSheet: React.FC<IProps> = ({
+const CommentBottomSheet: React.FC<IProps> = ({
     onOpenGallery,
     rbRef,
     backPress,
@@ -34,7 +35,8 @@ const AnswerBottomSheet: React.FC<IProps> = ({
     const [rbsInputHeight, setRbsInputHeight] = useState(0)
     const [rbsHeight, setRbsHeight] = useState<ERBSheetHeight>(ERBSheetHeight.MIN)
     const [answerProps, setAnswerProps] = useState<IAnswerProps>()
-    const q_id = useAppSelector(state => state.IdReducer.question_id)
+    const parent_id = useAppSelector(state => state.IdReducer.comment_parent)
+    const answer_id = useAppSelector(state => state.IdReducer.answer_id)
     useEffect(()=>{
         if(rbsInputHeight >= 100) setRbsHeight(ERBSheetHeight.MAX) 
     },[rbsInputHeight>200])
@@ -54,16 +56,16 @@ const AnswerBottomSheet: React.FC<IProps> = ({
             )
         }
     const postAnswer = () => {
-        API.AnswerQuestion({
-            answer: answerProps?.answer as string,
-            question_id: q_id as number,
+        API.CommentAnswer({
+            comment: answerProps?.answer as string,
+            parent_id: parent_id as number,
             photo: answerProps?.photo as string,
-        }).then(res => {
-            if(res.status === 200) navigation.dispatch(StackActions.push(ROUTES.SPECIFIC_QUESTION))
-            console.log(res.status)
-        })
+        }, answer_id as number).then(res => {
+            if(res.status){
+                navigation.dispatch(StackActions.push(ROUTES.SPECIFIC_QUESTION))
+            }})
     }
-        
+    console.log(parent_id)
     return(
         <RBSheet ref={rbRef} 
                  closeOnPressBack={true}
@@ -86,7 +88,7 @@ const AnswerBottomSheet: React.FC<IProps> = ({
                             {rbsHeight === ERBSheetHeight.MAX && <Icon name="shrink" type="antdesign"/>}
                         </TouchableOpacity>
                         <TextInput multiline 
-                                    placeholder={"Add an answer..."}
+                                    placeholder={"Add a comment..."}
                                     style={{color: "black", fontSize: 15, width: '95%'}}
                                     value={answerProps?.answer}
                                     onChangeText={text => setAnswerProps(prev => ({...prev, answer: text}))} 
@@ -121,4 +123,4 @@ const styles = StyleSheet.create({
         paddingLeft: 12
     }
 })
-export default AnswerBottomSheet
+export default CommentBottomSheet
