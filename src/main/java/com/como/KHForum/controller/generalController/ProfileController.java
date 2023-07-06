@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
-import com.como.KHForum.entity.Follower;
 import com.como.KHForum.entity.User;
 import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.payload.request.generalRequest.EditProfileRequest;
