@@ -1,20 +1,20 @@
 import React, {useState, useEffect, useRef} from 'react';
 import API from '../../api';
 import {FlatList, View} from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { click } from '../../store/questionId';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../compoments/Nagivation/TypeNavigation';
-import { ROUTES } from '../../enums/RouteEnum';
-import { updateAppUserAttributes } from '../../store/userInfoReducer';
-import { IUserAtt } from '../../interfaces/IAPI';
-import { communityListAttribute } from '../../store/userCommunityListReducer';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {click} from '../../store/questionId';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../compoments/Nagivation/TypeNavigation';
+import {ROUTES} from '../../enums/RouteEnum';
+import {updateAppUserAttributes} from '../../store/userInfoReducer';
+import {IUserAtt} from '../../interfaces/IAPI';
+import {communityListAttribute} from '../../store/userCommunityListReducer';
 import QuestionCard from '../../compoments/CommunityAndProfile/Components/QuestionCard';
-import { setCommunityId, setUserId } from '../../store/IdReducer';
-import { VoteStatus } from '../../enums/EVoteStatus';
+import {setCommunityId, setQuestionId, setUserId} from '../../store/IdReducer';
+import {VoteStatus} from '../../enums/EVoteStatus';
 import AnswerBottomSheet from '../../compoments/BottomSheet/AnswerBottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { EISA } from '../../enums/EISA';
+import {EISA} from '../../enums/EISA';
 
 interface IData{
   id: number;
@@ -53,13 +53,14 @@ interface IQInfo{
 
 type HomeScreen = StackNavigationProp<RootStackParamList, ROUTES.HOME>;
 const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
-  const ref = useRef(0)
-  const rbRef = useRef<RBSheet>(null)
-  const [apiData, setApiData] = useState<IQInfo[]>([])
+  const ref = useRef(0);
+  const rbRef = useRef<RBSheet>(null);
+  const [apiData, setApiData] = useState<IQInfo[]>([]);
   const [userAttribute, setAttribute] = useState<IUserAtt>({});
-  const [userCommunity, setUserCommunity] = useState<IUserCommunityShortInfo[]>([])
-  const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state)
+  const [userCommunity, setUserCommunity] = useState<IUserCommunityShortInfo[]>([]);
+  const userInfoStateChanged = useAppSelector(state => state.userInfoReducer.state);
   const [listPrevId, setListPrevId] = useState<number[]>([]);
+  const [isFetching, setIsFetching] = useState(true);
   const dispatch = useAppDispatch();
 
   const setId = (id : number) =>{
@@ -127,16 +128,20 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
 
   useEffect(()=>{
     API.FeedPosts(listPrevId).then(res => res.json())
-            .then(data => {if(data.length){setApiData(data)}}).catch(e => (e as Error).message)
+            .then(data => {
+              if(data.length){setApiData(data)}
+              setIsFetching(false)
+            }).catch(e => (e as Error).message)
+    
     },[ref.current]) 
 
-  useEffect(()=>{
+    useEffect(()=>{
       if(apiData.length != 0){
           Array.from(apiData, child => {
               setListPrevId(prev => [...prev, child.question_id as number])
             })
       }
-  },[apiData])
+  },[])
 
   const loadMoreData = async () =>{
       ref.current = ref.current + 1;
@@ -151,43 +156,46 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
 
   const upVotePress = (q_id: number)=> {
     API.QuestionUpVote(q_id).catch(e => (e as Error).message)
-    apiData.forEach(e => {
-        if(e.question_id == q_id){
-            setApiData([...apiData.map((i)=> 
-                i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
-                                            i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.NOT_VOTE} 
-                                                                                 : {...i, vote: e.vote as number + 2, vote_status: VoteStatus.UP_VOTE})
-                                         : i)])
-          }
-      })
-
+    // apiData.forEach(e => {
+    //     if(e.question_id == q_id){
+    //         setApiData([...apiData.map((i)=> 
+    //             i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number + 1, vote_status: VoteStatus.UP_VOTE} :
+    //                                         i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.NOT_VOTE} 
+    //                                                                              : {...i, vote: e.vote as number + 2, vote_status: VoteStatus.UP_VOTE})
+    //                                      : i)])
+    //       }
+    //   })
   }
 
   const downVotePress = (q_id: number)=> {
       API.QuestionDownVote(q_id).catch(e => (e as Error).message)
-      apiData.forEach(e => {
-          if(e.question_id == q_id){
-              setApiData([...apiData.map((i)=> 
-                  i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
-                                              i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 2, vote_status: VoteStatus.DOWN_VOTE} 
-                                                                                   : {...i, vote: e.vote as number + 1, vote_status: VoteStatus.NOT_VOTE})
-                                          : i)])
-          }
-      })
+      // apiData.forEach(e => {
+      //     if(e.question_id == q_id){
+      //         setApiData([...apiData.map((i)=> 
+      //             i.question_id === e.question_id ? (i.vote_status === VoteStatus.NOT_VOTE ? {...i, vote: e.vote as number - 1, vote_status: VoteStatus.DOWN_VOTE} :
+      //                                         i.vote_status === VoteStatus.UP_VOTE ? {...i, vote: e.vote as number - 2, vote_status: VoteStatus.DOWN_VOTE} 
+      //                                                                              : {...i, vote: e.vote as number + 1, vote_status: VoteStatus.NOT_VOTE})
+      //                                             : i)])
+      //     }
+      // })
   }
 
   const commentPress = () => {
       rbRef.current?.open()
   }
+  
+  const onPress = async (id?: number) => {
+    dispatch(setQuestionId({question_id: id}))
+  }
   const dotsPress = () => {}
-  const onPress = () => {}
-
   const sharePress = () => {}
 
   return(     
     <View>
         <FlatList
             data={apiData}
+            onRefresh={() => [ref.current = ref.current+1, setIsFetching(true)]}
+            refreshing={isFetching}
             renderItem={({item} : {item: IQInfo}) =>         
                 <QuestionCard 
                     ago_number={item.ago_number}
@@ -202,7 +210,7 @@ const HomeScreen : React.FC<{navigation: HomeScreen}> = ({navigation}) => {
                     dotsPress={dotsPress}
                     downVotePress={() => downVotePress(item.question_id as number)}
                     image={item.image}
-                    onPress={onPress}
+                    onPress={() => onPress(item.question_id).then(() => navigation.navigate(ROUTES.SPECIFIC_QUESTION))}
                     question={item.question}
                     sharePress={sharePress}
                     upVotePress={() => upVotePress(item.question_id as number)}

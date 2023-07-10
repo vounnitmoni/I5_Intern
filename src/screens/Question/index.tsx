@@ -120,7 +120,7 @@ const QuestionScreen : React.FC<{navigation : navigation}> = ({navigation}) =>{
                 <View style={{width: '90%', borderWidth: 0.2}}/>
                 <TextInput multiline 
                            placeholder="Text body (Optional)" 
-                           style={{color: "green", fontSize: 15, width: '95%'}} 
+                           style={{color: 'black',fontSize: 15, width: '95%'}} 
                            placeholderTextColor={"#8996a1"}
                            onChangeText={text => setObject(prev => ({
                                 ...prev,

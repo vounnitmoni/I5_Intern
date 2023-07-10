@@ -1,15 +1,14 @@
-import { Box, Inline, Stack } from "@mobily/stacks";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { Button, CheckBox, Icon, Image, SearchBar, Text } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
+import {Box, Inline, Stack} from "@mobily/stacks";
+import {StackNavigationProp} from "@react-navigation/stack";
+import {Button, Icon, Image, SearchBar, Text} from "@rneui/themed";
+import React, {useEffect, useState} from "react";
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, View} from "react-native"
 import API from "../../api";
-import { RootStackParamList } from "../../compoments/Nagivation/TypeNavigation";
-import { ROUTES } from "../../enums/RouteEnum";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { hasCommunity } from "../../store/onClickRecursiveReducer";
-import { setData } from "../../store/PostQuestionReducer";
-import userCommunityListReducer from "../../store/userCommunityListReducer";
+import {RootStackParamList} from "../../compoments/Nagivation/TypeNavigation";
+import {ROUTES} from "../../enums/RouteEnum";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
+import {hasCommunity} from "../../store/onClickRecursiveReducer";
+import {setData} from "../../store/PostQuestionReducer";
 
 interface ICommunityList{
     id: number,
@@ -25,7 +24,6 @@ type navigation = StackNavigationProp<RootStackParamList, ROUTES.QUESTION>
 
 const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =>{
     const [community, setCommunity] = useState<ICommunityList[]>([]);
-    const [name, setName] = useState('')
     const action = useAppSelector(state => state.PostQuestionReducer.community)
     const dispatch = useAppDispatch();
     const [searchText, setSearchText] = useState('');
@@ -46,11 +44,10 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
                 }).then(()=>{
                     navigation.goBack()
                 })}>
-                    <Inline space={5} style={{width: "100%", justifyContent: 'center'}}>
+                    <Inline alignY={'center'} space={5} style={{width: "100%", justifyContent: 'center'}}>
                         {item.image ? <Image source={{uri: `data:image/jpeg;base64,${item.image}`}} style={{width: 50, height: 50, borderRadius: 50/2}} /> : <Image source={require('./../../assets/images/community_blank_logo.png')} style={{width: 50, height: 50, borderRadius: 50/2}} />}
                         <Stack>
-                            <Text style={{fontSize: 20, fontWeight: '500'}}>{item.name} members</Text>
-                            <Text>{item.id}</Text>
+                            <Text style={{fontSize: 20, fontWeight: '500'}}>{item.name}</Text>
                         </Stack>
                     </Inline>
                 </TouchableOpacity>
@@ -76,7 +73,7 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
                 <Stack space={3} style={[styles.wrapper]}>
                     <FlatList 
                         data = {community}
-                        renderItem = {(e)=> <View style={{paddingBottom: 10}}>
+                        renderItem = {(e)=> <View style={{paddingBottom: 5, paddingTop: 10}}>
                             {renderCommunity(e)}
                         </View>}
                     />

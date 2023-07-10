@@ -1,6 +1,6 @@
 import { Inline, Stack } from "@mobily/stacks"
 import { Icon, Image, Text } from "@rneui/themed"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from "react-native"
 import { VoteStatus } from "../../../enums/EVoteStatus";
 import ImageSlide from "../../Post/ImageSlider";
@@ -28,6 +28,7 @@ interface IQInfo{
     onPress?: ()=> void;
     style?: StyleProp<ViewStyle>;
     numberOfLine?: number;
+    enableImageWithText?: boolean;
 }
 
 const QuestionCard: React.FC<IQInfo> = ({
@@ -52,10 +53,14 @@ const QuestionCard: React.FC<IQInfo> = ({
     vote_status,
     style,
     numberOfLine,
+    enableImageWithText = false,
 }) => {
+    const ref = useRef(0)
     const [upVote, setUpvote] = useState(false)
     const [downVote, setDownVote] = useState(false)
-
+    const [voteValue, setVoteValue] = useState(vote)
+    const [Vote_Status, setVoteStatus] = useState<VoteStatus | undefined>(vote_status)
+    
     useEffect(()=>{
         if(vote_status === VoteStatus.UP_VOTE){
             setUpvote(true)
@@ -68,10 +73,37 @@ const QuestionCard: React.FC<IQInfo> = ({
     const insideUpVotePress = () => {
         setUpvote(!upVote)
         setDownVote(false)
+        
+        if(Vote_Status === VoteStatus.UP_VOTE) {
+            setVoteValue(voteValue as number - 1)
+            setVoteStatus(VoteStatus.NOT_VOTE)
+        }
+        if (Vote_Status === VoteStatus.DOWN_VOTE){
+            setVoteValue(voteValue as number + 2)
+            setVoteStatus(VoteStatus.UP_VOTE)
+        }
+        if(Vote_Status === VoteStatus.NOT_VOTE){
+            setVoteValue(voteValue as number + 1)
+            setVoteStatus(VoteStatus.UP_VOTE)
+        }
     }
+
     const insideDownVotePress = () => {
         setDownVote(!downVote)
         setUpvote(false)
+
+        if(Vote_Status === VoteStatus.UP_VOTE) {
+            setVoteValue(voteValue as number - 2)
+            setVoteStatus(VoteStatus.DOWN_VOTE)
+        }
+        if(Vote_Status === VoteStatus.DOWN_VOTE){
+            setVoteValue(voteValue as number + 1)
+            setVoteStatus(VoteStatus.NOT_VOTE)
+        }
+        if(Vote_Status === VoteStatus.NOT_VOTE){
+            setVoteValue(voteValue as number - 1)
+            setVoteStatus(VoteStatus.DOWN_VOTE)
+        }
     }
 
     return(
@@ -101,17 +133,27 @@ const QuestionCard: React.FC<IQInfo> = ({
                     </TouchableOpacity>
                 </Inline>
                 <Text style={{fontSize: 15,fontWeight: "700"}}>{question}</Text>
-                {image?.length != 0 ? (<View style={{marginTop: 2, marginBottom: 2}}>
+                {enableImageWithText === true 
+                    ? (
+                        <View>
+                            <Text>{description}</Text>
+                            <View style={{marginTop: 2, marginBottom: 2}}>
                                 <ImageSlide base64={image as string[]}/>
-                          </View>) 
-                       : (<Text  numberOfLines={numberOfLine != null ? numberOfLine : 2}>{description}</Text>)}
+                            </View>
+                        </View>
+                      ) : (<>
+                            {image?.length != 0 ? (<View style={{marginTop: 2, marginBottom: 2}}>
+                                                        <ImageSlide base64={image as string[]}/>
+                                                    </View>) 
+                                                : (<Text  numberOfLines={numberOfLine != null ? numberOfLine : 2}>{description}</Text>)}
+                           </>)}
                 <Inline alignX={'between'} alignY={"center"}>
                     <Inline alignY={"center"} marginTop={1} marginBottom={1}>
                         <TouchableOpacity onPress={()=> [upVotePress(), insideUpVotePress()]}>
                             {upVote === true ? (<Icon name="arrow-up-thin-circle-outline" type="material-community" color={'blue'}/>) 
                                              : (<Icon name="arrow-up-thin-circle-outline" type="material-community"/>)}
                         </TouchableOpacity>
-                        <Text>  {vote}  </Text>
+                        <Text> {voteValue} </Text>
                         <TouchableOpacity onPress={()=>[downVotePress(), insideDownVotePress()]}>
                             {downVote === true ? (<Icon name="arrow-down-thin-circle-outline" type="material-community" color={'blue'}/> ) 
                                                : (<Icon name="arrow-down-thin-circle-outline" type="material-community"/>)}     

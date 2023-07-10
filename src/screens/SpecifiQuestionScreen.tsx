@@ -141,6 +141,7 @@ const SpecificQuestionScreen = () =>{
                 vote_status={data?.vote_status}
                 style={{margin: -1}}
                 numberOfLine={0}
+                enableImageWithText={true}
             />
                 <Inline style={{width: '100%'}} alignY={"center"} alignX={"between"}>
                     {user_pic ? <Image source={{uri : `data:image/jpeg;base64,${user_pic}`}} style={{width: 35, height: 35, borderRadius: 35/2}}/> : <Avatar.Text label={name_shortcut as string} size={35}/>}
