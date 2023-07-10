@@ -70,6 +70,4 @@ public interface QuestionnaireRepo extends JpaRepository<Questionnaire, Long> {
                    "on q.id = qci.question_id where qci.question_id = :q_id", nativeQuery = true)
     Questionnaire findQuestionUserVote(@Param("q_id") Long q_id);
 
-    @Query(value = ":queryParam", nativeQuery = true)
-    Set<Questionnaire> searchQuestion(@Param("queryParam") String queryParam);
 }

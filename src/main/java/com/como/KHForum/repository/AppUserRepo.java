@@ -2,6 +2,7 @@ package com.como.KHForum.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,5 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long>{
 
     @Query(value = "select username from kh_forum.app_user where account_id = :id", nativeQuery = true)
     String userNameByAccId(@Param("id") Long id);
+
 }

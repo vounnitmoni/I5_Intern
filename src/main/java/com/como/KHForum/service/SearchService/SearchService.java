@@ -1,28 +1,43 @@
 package com.como.KHForum.service.SearchService;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.como.KHForum.entity.AppUser;
+import com.como.KHForum.entity.Community;
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CommentRepo;
+import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
+import com.como.KHForum.repository.UserRepo;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Service
 public class SearchService {
     @Autowired QuestionnaireRepo questionnaireRepo;
     @Autowired CommentRepo CommunityRepo;
     @Autowired AppUserRepo appUserRepo;
+    @Autowired FileRepo fileRepo;
+    @Autowired UserRepo userRepo;
+    @PersistenceContext EntityManager entityManager;
 
-    public ResponseEntity<?> searchQuestionService(String searchParam){
+    public Set<Questionnaire> searchQuestionService(String searchParam){
         // SELECT * FROM kh_forum.questionnaire where if(question like '%xu%', 1,0) + if(question like '%uu%', 1,0) + if(question like '%fu%', 1,0) + if(question like '%ue%', 1,0)
         // ORDER BY (if(question like '%xu%', 1,0) + if(question like '%uu%', 1,0) + if(question like '%fu%', 1,0) + if(question like '%ue%', 1,0)) desc
         final String baseQ = "Select * from kh_forum.questionnaire where ";
         final String questionLike = "question like ";
+        final String bodyLike = "body like ";
         final String or = "or ";
 
         String searchParamNoQuestionMark = searchParam.replaceAll("\\?.*", "");
@@ -31,31 +46,112 @@ public class SearchService {
         Set<String> finalQueries = new LinkedHashSet<>();
         Set<Questionnaire> finalResult = new LinkedHashSet<>();
 
-        finalQueries.add(baseQ + questionLike + "'" + searchParamNoQuestionMark + "'" + or + questionLike + "'%" + searchParamNoQuestionMark + "%'");
+        finalQueries.add(baseQ + questionLike + "'" + searchParamNoQuestionMark + "'" + or + questionLike + "'%" + searchParamNoQuestionMark + "%'" + or + 
+                         bodyLike + "'" + searchParamNoQuestionMark + "'" + or + bodyLike + "'%" + searchParamNoQuestionMark + "%' " + 
+                         "order by " + "question like '%" + searchParamNoQuestionMark + "%' " + "desc, " + "question like '" + searchParamNoQuestionMark + "%' " + "desc ");
         
         String ifQStatment = "";
+        String orderByStatement = "order by ";
         int j = searchParamSeparation.length - 1;
         for(String i : searchParamSeparation) {
             if(j-- == 0) {
-                ifQStatment = ifQStatment + "if(question like '%" + i + "%'" + ", 1,0) "; 
+                if(searchParamSeparation.length == 1){
+                    orderByStatement = orderByStatement + "question like '" + i + "%' desc, " + "question like '%" + i + "%' desc ";
+                } else{
+                    orderByStatement = orderByStatement + "question like '%" + i + "%' desc ";
+                }
+                ifQStatment = ifQStatment + "if(question like '%" + i + "%'" + ", 1,0) + " + "if(body like '%" + i + "%'" + ", 1,0) ";
+            } else {
+                orderByStatement = orderByStatement + "question like '" + i + "%' desc, " + "question like '%" + i + "%' desc, ";
+                ifQStatment = ifQStatment + "if(question like '%" + i + "%'" + ", 1,0) + " + "if(body like '%" + i + "%'" + ", 1,0) + ";   
             } 
-            ifQStatment = ifQStatment + "if(question like '%" + i + "%'" + ", 1,0) + "; 
         }
-        finalQueries.add(baseQ + ifQStatment + "order by " + ifQStatment + "desc ");
+        finalQueries.add(baseQ + ifQStatment + orderByStatement);
 
-        finalQueries.forEach(e -> {
-            Set<Questionnaire> result = questionnaireRepo.searchQuestion(e);
+        finalQueries.forEach(e ->{;
+        @SuppressWarnings("unchecked") List<Questionnaire> result = entityManager.createNativeQuery(e, Questionnaire.class).getResultList();
             result.forEach(r -> {
                 finalResult.add(r);
             });  
         });
-        return ResponseEntity.ok(finalResult);
+        return finalResult;
     }
 
-    public ResponseEntity<?> searchCommunity(String searchParam) {
-        return null;
+    public Set<UserSearchResponse> searchUserService(String searchParam) {
+        final String baseQ = "SELECT * FROM kh_forum.app_user where ";
+
+        String[] searchParamSeparation = searchParam.split("[\\p{Punct}\\s]+");
+        Set<UserSearchResponse> finalResult = new LinkedHashSet<>();
+
+        String ifQstatment = "";
+        String orderByStatement = "order by ";
+        int j = searchParamSeparation.length - 1;
+        for(String i : searchParamSeparation) {
+            if(j-- == 0) {
+                if(searchParamSeparation.length == 1){
+                    orderByStatement = orderByStatement + "firstname like '" + i + "%' desc, " + "firstname like '%" + i + "%' desc, " + "lastname like '" + i + "%' desc, " + "lastname like '%" + i + "%' desc, " + "username like '" + i + "%' desc, " + "username like '%" + i + "%' desc ";
+                } else{
+                    orderByStatement = orderByStatement + "firstname like '%" + i + "%' desc, " + "lastname like '%" + i + "%' desc, " + "username like '%" + i + "%' desc ";
+                }
+                ifQstatment = ifQstatment + "if(firstname like '%" + i + "%'" + ", 1,0) + " + "if(lastname like '%" + i + "%'" + ", 1,0) + " + "if(username like '%" + i + "%'" + ", 1,0) ";
+            } else {
+                ifQstatment = ifQstatment + "if(firstname like '%" + i + "%'" + ", 1,0) + " + "if(lastname like '%" + i + "%'" + ", 1,0) + " + "if(username like '%" + i + "%'" + ", 1,0) + ";
+                orderByStatement = orderByStatement + "firstname like '" + i + "%' desc, " + "firstname like '%" + i + "%' desc, " + "lastname like '" + i + "%' desc, " + "lastname like '%" + i + "%' desc, " + "username like '" + i + "%' desc, " + "username like '%" + i + "%' desc, ";
+            }
+        }
+
+        @SuppressWarnings("unchecked") List<AppUser> result = entityManager.createNativeQuery(baseQ + ifQstatment + orderByStatement , AppUser.class).getResultList();
+        result.forEach(e -> {
+            UserSearchResponse response = new UserSearchResponse(e.getAccount_id(), e.getFirstname(), e.getLastname(), userRepo.userInfoById(e.getAccount_id()).getUsername(), fileRepo.userProfilePic(e.getAccount_id()).getPhoto());
+            finalResult.add(response);
+        });
+
+        return finalResult;
     }
-    public ResponseEntity<?> searchUser(String searchParam) {
-        return null;
+
+    public Set<Community> searchCommunityService(String searchParam) {
+        // SELECT * FROM kh_forum.communities 
+        // where (if(name like '%Math%', 1,0) + if(name like '%12%', 1,0)) 
+        // order by if(name like '%Math%', 1,0) + if(name like '%12%', 1,0) desc;
+        final String baseQ = "Select * from kh_forum.communities where ";
+
+        String[] searchParamSeparation = searchParam.split("[\\p{Punct}\\s]+");
+        Set<Community> finalResult = new LinkedHashSet<>();
+
+        String ifQstatment = "";
+        String orderByStatement = "order by ";
+        int j = searchParamSeparation.length - 1;
+        for(String i : searchParamSeparation) {
+            if(j-- == 0) {
+                if(searchParamSeparation.length == 1){
+                    orderByStatement = orderByStatement + "name like '" + i + "%' desc, " + "name like '%" + i + "%' desc ";
+                } else{
+                    orderByStatement = orderByStatement + "name like '%" + i + "%' desc ";
+                }
+                ifQstatment = ifQstatment + "if(name like '%" + i + "%'" + ", 1,0) ";
+            } else {
+                ifQstatment = ifQstatment + "if(name like '%" + i + "%'" + ", 1,0) + ";
+                orderByStatement = orderByStatement + "name like '" + i + "%' desc, " + "name like '%" + i + "%' desc, ";
+            }
+        }
+        
+        @SuppressWarnings("unchecked") List<Community> result = entityManager.createNativeQuery(baseQ + ifQstatment + orderByStatement, Community.class).getResultList();
+        result.forEach(e -> {
+            finalResult.add(e);
+        });
+
+        return finalResult;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public class UserSearchResponse {
+        private Long id;
+        private String firstname;
+        private String lastname;
+        private String username;
+        private byte[] profile_pic;
     }
 }

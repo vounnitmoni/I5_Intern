@@ -20,4 +20,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query(value = "select * from kh_forum.users where id = :id", nativeQuery = true)
     User userInfoById(@Param("id") Long id);
+    
 }

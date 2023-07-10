@@ -128,8 +128,8 @@ public class QuestionController {
         questionnaire.setVote(questionnaire.getVote() + 1);
         QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 
                                                                                    q_id, 
-                                                                             true, 
-                                                                          null,
+                                                                                   true, 
+                                                                                   null,
                                                                                    EVote.UP_VOTE);
         questionCollectionInfoRepo.save(questionCollectionInfo);
         return ResponseEntity.ok("3");
