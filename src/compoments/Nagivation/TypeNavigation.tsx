@@ -16,12 +16,12 @@ export type RootStackParamList = {
   BookMarkScreen: undefined;
   SettingScreen: undefined;
   ProfileScreen: undefined;
-  UserProfileScreen: undefined;
+  UserProfileScreen: {id: number} | undefined;
   CreateCommunityScreen: undefined;
   FirstJoinCommunityScreen: undefined;
   CommunityScreen: undefined;
   UserPostScreen: undefined;
-  CommunityPostScreen: undefined;
+  CommunityPostScreen: {id: number} | undefined;
   SearchScreen: undefined;
   CommunitySearch: undefined;
   QuestionSearch: undefined;

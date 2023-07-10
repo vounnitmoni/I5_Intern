@@ -29,14 +29,12 @@ const CommunityListScreen: React.FC<{navigation: navigation}> = ({navigation}) =
     const action = useAppSelector(state => state.PostQuestionReducer.community)
     const dispatch = useAppDispatch();
     const [searchText, setSearchText] = useState('');
+    
     useEffect(()=>{
         API.UserCommunity({}).then(res => res.json())
         .then(async data => setCommunity(data))
         .catch(e => (e as Error).message);
     },[])
-    // useEffect(()=>{
-    //     Alert.alert("hello")
-    // },[searchText && 10000])
 
     const renderCommunity = ({item} : itemProps) =>{
         const asyncFunction = async () =>{

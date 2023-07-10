@@ -62,10 +62,6 @@ const SpecificQuestionScreen = () =>{
     const ref = useRef(0)
     const rbRef = useRef<RBSheet>(null) 
     const crbRef = useRef<RBSheet>(null)
-    const [answerPopUp, setAnswerPopUp] = useState(false)
-    const [questionTempData, setQuestionTempData] = useState<IQTemp>();
-    const user_id = useAppSelector(state => state.IdReducer.user_id)
-    const community_id = useAppSelector(state => state.IdReducer.community_id)
     const name_shortcut = useAppSelector(state => state.userInfoReducer.name_shortcut)
     const user_pic = useAppSelector(state => state.userInfoReducer.profile_pic)
     const dispatch = useDispatch()
