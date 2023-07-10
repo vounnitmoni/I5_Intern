@@ -104,4 +104,14 @@ export default class API {
     static async ListAnswer(q_id: number){
         return api.request(`/all/answer/ofquestion/${q_id}`, 'GET', null);
     }
+//-------------------------------------------------------------------------------
+    static async SearchCommunity(body: any){
+        return api.request('/all/search/community', 'POST', body);
+    }
+    static async SearchUser(body: any){
+        return api.request('/all/search/user', 'POST', body);
+    }
+    static async SearchQuestion(body: any){
+        return api.request('/all/search/question', 'POST', body);
+    }
 }

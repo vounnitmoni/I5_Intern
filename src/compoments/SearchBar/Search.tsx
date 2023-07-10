@@ -27,11 +27,11 @@ const SearchScreen = () =>{
                         fontWeight: '600'
                     }
                 }}>
-                    <TopTab.Screen name="Community">
-                        {prop => <CommunitySearch {...prop} search={searchParam}/>}
-                    </TopTab.Screen>
                     <TopTab.Screen name="Question">
                         {prop => <QuestionSearch {...prop} search={searchParam}/>}
+                    </TopTab.Screen>
+                    <TopTab.Screen name="Community">
+                        {prop => <CommunitySearch {...prop} search={searchParam}/>}
                     </TopTab.Screen>
                     <TopTab.Screen name="User">
                         {prop => <UserSearch {...prop} search={searchParam}/>}
