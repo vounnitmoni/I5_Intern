@@ -14,7 +14,9 @@ import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CommentRepo;
 import com.como.KHForum.repository.FileRepo;
 import com.como.KHForum.repository.QuestionnaireRepo;
+import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.repository.UserRepo;
+import com.como.KHForum.service.FollowService.FollowService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,10 +28,12 @@ import lombok.Setter;
 @Service
 public class SearchService {
     @Autowired QuestionnaireRepo questionnaireRepo;
-    @Autowired CommentRepo CommunityRepo;
+    @Autowired CommentRepo communityRepo;
     @Autowired AppUserRepo appUserRepo;
     @Autowired FileRepo fileRepo;
     @Autowired UserRepo userRepo;
+    @Autowired FollowService followService;
+    @Autowired UserCommunityRepo userCommunityRepo;
     @PersistenceContext EntityManager entityManager;
 
     public Set<Questionnaire> searchQuestionService(String searchParam){
@@ -102,21 +106,22 @@ public class SearchService {
 
         @SuppressWarnings("unchecked") List<AppUser> result = entityManager.createNativeQuery(baseQ + ifQstatment + orderByStatement , AppUser.class).getResultList();
         result.forEach(e -> {
-            UserSearchResponse response = new UserSearchResponse(e.getAccount_id(), e.getFirstname(), e.getLastname(), userRepo.userInfoById(e.getAccount_id()).getUsername(), fileRepo.userProfilePic(e.getAccount_id()).getPhoto());
+            Integer followerAmount = followService.FollowerAmount(e.getAccount_id());
+            UserSearchResponse response = new UserSearchResponse(e.getAccount_id(), e.getFirstname(), e.getLastname(), userRepo.userInfoById(e.getAccount_id()).getUsername(), followerAmount, fileRepo.userProfilePic(e.getAccount_id()).getPhoto());
             finalResult.add(response);
         });
 
         return finalResult;
     }
 
-    public Set<Community> searchCommunityService(String searchParam) {
+    public Set<CommunitySearchResponse> searchCommunityService(String searchParam) {
         // SELECT * FROM kh_forum.communities 
         // where (if(name like '%Math%', 1,0) + if(name like '%12%', 1,0)) 
         // order by if(name like '%Math%', 1,0) + if(name like '%12%', 1,0) desc;
         final String baseQ = "Select * from kh_forum.communities where ";
 
         String[] searchParamSeparation = searchParam.split("[\\p{Punct}\\s]+");
-        Set<Community> finalResult = new LinkedHashSet<>();
+        Set<CommunitySearchResponse> finalResult = new LinkedHashSet<>();
 
         String ifQstatment = "";
         String orderByStatement = "order by ";
@@ -137,7 +142,8 @@ public class SearchService {
         
         @SuppressWarnings("unchecked") List<Community> result = entityManager.createNativeQuery(baseQ + ifQstatment + orderByStatement, Community.class).getResultList();
         result.forEach(e -> {
-            finalResult.add(e);
+            CommunitySearchResponse response = new CommunitySearchResponse(e.getId(), e.getName(), userCommunityRepo.communityMembers(e.getId()), fileRepo.communityProfilePic(e.getId()).getPhoto());
+            finalResult.add(response);
         });
 
         return finalResult;
@@ -152,6 +158,18 @@ public class SearchService {
         private String firstname;
         private String lastname;
         private String username;
+        private Integer follower;
+        private byte[] profile_pic;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public class CommunitySearchResponse {
+        private Long id; 
+        private String name;
+        private Integer member;
         private byte[] profile_pic;
     }
 }
