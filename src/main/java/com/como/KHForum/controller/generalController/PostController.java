@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.entity.enums.EVote;
-import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
 import com.como.KHForum.repository.AnswerCollectionInfoRepo;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.CommentRepo;

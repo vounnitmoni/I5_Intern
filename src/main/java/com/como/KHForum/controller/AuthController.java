@@ -35,7 +35,6 @@ import com.como.KHForum.webconfig.jwt.Utils;
 import com.como.KHForum.webconfig.service.UserDetailsImpl;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Null;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

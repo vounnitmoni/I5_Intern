@@ -55,9 +55,7 @@ public class CategoryController {
     //list all category
     @PostMapping("/list")
     public ResponseEntity<?> list20Category(@RequestParam Integer request_time, @RequestBody @Nullable Set<Long> prev_id){
-        if(request_time != 0){
-            return ResponseEntity.ok(categoryRepo.categoriesWithNotIn(prev_id));
-        }
+        if(request_time != 0) return ResponseEntity.ok(categoryRepo.categoriesWithNotIn(prev_id));
         return ResponseEntity.ok(categoryRepo.categories());
     }
 }

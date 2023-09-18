@@ -23,6 +23,7 @@ public class UserSessions {
         Long id = authUser.getId();
         return id;
     }
+        
     public String getUsername(){
         String username = authUser.getUsername();
         return username;

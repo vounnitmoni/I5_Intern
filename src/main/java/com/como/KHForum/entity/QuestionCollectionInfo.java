@@ -1,7 +1,5 @@
 package com.como.KHForum.entity;
 
-import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
-
 import com.como.KHForum.entity.enums.EVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

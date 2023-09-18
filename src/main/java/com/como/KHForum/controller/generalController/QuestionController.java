@@ -23,7 +23,6 @@ import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.entity.enums.EVote;
 import com.como.KHForum.payload.request.generalRequest.CreateQuestionRequest;
-import com.como.KHForum.payload.response.generalResponse.RandomQuestionResponse;
 import com.como.KHForum.repository.AnswerRepo;
 import com.como.KHForum.repository.AppUserRepo;
 import com.como.KHForum.repository.CommentRepo;
@@ -154,7 +153,7 @@ public class QuestionController {
                                                                                            EVote.DOWN_VOTE);
                 questionCollectionInfoRepo.save(questionCollectionInfo);
                 return ResponseEntity.ok("2");
-            }
+            } 
         }
         questionnaire.setVote(questionnaire.getVote() - 1);
         QuestionCollectionInfo questionCollectionInfo = new QuestionCollectionInfo(userSessions.getUserId(), 

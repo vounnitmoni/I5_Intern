@@ -22,8 +22,6 @@ import com.como.KHForum.entity.Answer;
 import com.como.KHForum.entity.AnswerCollectionInfo;
 import com.como.KHForum.entity.AppUser;
 import com.como.KHForum.entity.File;
-import com.como.KHForum.entity.QuestionCollectionInfo;
-import com.como.KHForum.entity.Questionnaire;
 import com.como.KHForum.entity.User;
 import com.como.KHForum.entity.enums.EFileStatus;
 import com.como.KHForum.entity.enums.EVote;

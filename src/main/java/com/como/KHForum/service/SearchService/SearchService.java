@@ -17,6 +17,7 @@ import com.como.KHForum.repository.QuestionnaireRepo;
 import com.como.KHForum.repository.UserCommunityRepo;
 import com.como.KHForum.repository.UserRepo;
 import com.como.KHForum.service.FollowService.FollowService;
+import com.como.KHForum.webconfig.session.UserSessions;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,6 +36,7 @@ public class SearchService {
     @Autowired FollowService followService;
     @Autowired UserCommunityRepo userCommunityRepo;
     @PersistenceContext EntityManager entityManager;
+    @Autowired UserSessions sessions;
 
     public Set<Questionnaire> searchQuestionService(String searchParam){
         // SELECT * FROM kh_forum.questionnaire where if(question like '%xu%', 1,0) + if(question like '%uu%', 1,0) + if(question like '%fu%', 1,0) + if(question like '%ue%', 1,0)
